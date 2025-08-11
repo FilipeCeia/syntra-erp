@@ -1,0 +1,198 @@
+
+
+
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Vendas por Artigo</h1>
+        <div>
+            <button class="btn btn-outline-secondary me-2" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+            <button class="btn btn-success" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Exportar Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="dataInicio" class="form-label">Data Início</label>
+                    <input type="date" class="form-control" id="dataInicio" name="dataInicio" value="<%= filtros.dataInicio %>">
+                </div>
+                <div class="col-md-3">
+                    <label for="dataFim" class="form-label">Data Fim</label>
+                    <input type="date" class="form-control" id="dataFim" name="dataFim" value="<%= filtros.dataFim %>">
+                </div>
+                <div class="col-md-3">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <select class="form-select" id="categoria" name="categoria">
+                        <option value="">Todas as Categorias</option>
+                        <option value="eletronicos" <%= filtros.categoria === 'eletronicos' ? 'selected' : '' %>>Eletrônicos</option>
+                        <option value="roupas" <%= filtros.categoria === 'roupas' ? 'selected' : '' %>>Roupas</option>
+                        <option value="casa" <%= filtros.categoria === 'casa' ? 'selected' : '' %>>Casa e Jardim</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    <a href="/relatorios/vendas-artigo" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total de Artigos</h6>
+                            <h3 class="mb-0"><%= resumo.totalArtigos %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-boxes fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Quantidade Vendida</h6>
+                            <h3 class="mb-0"><%= resumo.quantidadeVendida.toLocaleString() %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Valor Total</h6>
+                            <h3 class="mb-0"><%= resumo.valorTotal %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Ticket Médio</h6>
+                            <h3 class="mb-0"><%= resumo.ticketMedio %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Top 10 Artigos Mais Vendidos</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="artigosChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Tabela de Artigos -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Detalhes por Artigo</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Código</th>
+                            <th>Artigo</th>
+                            <th>Categoria</th>
+                            <th>Quantidade</th>
+                            <th>Valor Unitário</th>
+                            <th>Valor Total</th>
+                            <th>% do Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% artigos.forEach(artigo => { %>
+                        <tr>
+                            <td><%= artigo.codigo %></td>
+                            <td><%= artigo.nome %></td>
+                            <td><%= artigo.categoria %></td>
+                            <td><%= artigo.quantidade.toLocaleString() %></td>
+                            <td><%= artigo.valorUnitario %></td>
+                            <td><%= artigo.valorTotal %></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2"><%= artigo.percentual %>%</span>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: <%= artigo.percentual %>%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gráfico de Artigos
+const ctx = document.getElementById('artigosChart').getContext('2d');
+const artigosChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: <%- JSON.stringify(artigos.slice(0, 10).map(a => a.nome)) %>,
+        datasets: [{
+            label: 'Quantidade Vendida',
+            data: <%- JSON.stringify(artigos.slice(0, 10).map(a => a.quantidade)) %>,
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+function exportToExcel() {
+    alert('Funcionalidade de exportação será implementada em breve!');
+}
+</script>

@@ -1,0 +1,333 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-plus"></i> Nova Compra de Mercadoria
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/compras/mercadoria" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button type="button" class="btn btn-info btn-sm" onclick="previewCompra()">
+        <i class="fas fa-eye"></i> Pré-visualizar
+      </button>
+    </div>
+  </div>
+
+  <form id="compraForm" method="POST" action="/compras/mercadoria">
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Dados do Fornecedor -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-truck"></i> Dados do Fornecedor
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor_id">Fornecedor *</label>
+                  <div class="input-group">
+                    <select class="form-control" id="fornecedor_id" name="fornecedor_id" required onchange="carregarDadosFornecedor()">
+                      <option value="">Selecione um fornecedor...</option>
+                      <option value="1" 
+                              data-nome="Fornecedor ABC Lda"
+                              data-nuit="400123456"
+                              data-endereco="Av. Julius Nyerere, 1234, Maputo"
+                              data-telefone="+258 21 123 456"
+                              data-email="geral@abc.co.mz">
+                        Fornecedor ABC Lda - 400123456
+                      </option>
+                      <option value="2" 
+                              data-nome="Tech Solutions Lda"
+                              data-nuit="400234567"
+                              data-endereco="Rua da Resistência, 567, Maputo"
+                              data-telefone="+258 21 234 567"
+                              data-email="info@techsolutions.co.mz">
+                        Tech Solutions Lda - 400234567
+                      </option>
+                      <option value="3" 
+                              data-nome="Distribuidora XYZ"
+                              data-nuit="400345678"
+                              data-endereco="Av. Marginal, 890, Maputo"
+                              data-telefone="+258 21 345 678"
+                              data-email="vendas@xyz.co.mz">
+                        Distribuidora XYZ - 400345678
+                      </option>
+                    </select>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary" onclick="novoFornecedor()">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor_nuit">NUIT</label>
+                  <input type="text" class="form-control" id="fornecedor_nuit" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="fornecedor_endereco">Endereço</label>
+                  <input type="text" class="form-control" id="fornecedor_endereco" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor_telefone">Telefone</label>
+                  <input type="text" class="form-control" id="fornecedor_telefone" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor_email">Email</label>
+                  <input type="email" class="form-control" id="fornecedor_email" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Artigos da Compra -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-shopping-cart"></i> Artigos
+            </h6>
+            <button type="button" class="btn btn-primary btn-sm" onclick="adicionarArtigo()">
+              <i class="fas fa-plus"></i> Adicionar Artigo
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="artigosTable">
+                <thead>
+                  <tr>
+                    <th width="30%">Artigo</th>
+                    <th width="15%">Quantidade</th>
+                    <th width="15%">Preço Unit.</th>
+                    <th width="10%">Desconto</th>
+                    <th width="15%">IVA</th>
+                    <th width="15%">Total</th>
+                    <th width="5%">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="artigosTableBody">
+                  <!-- Linhas serão adicionadas dinamicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Dados da Compra -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-file-invoice"></i> Dados da Compra
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="numero">Número da Compra</label>
+              <input type="text" class="form-control" id="numero" name="numero" value="CMP-2024-005" readonly>
+            </div>
+            <div class="form-group">
+              <label for="data_compra">Data da Compra *</label>
+              <input type="date" class="form-control" id="data_compra" name="data_compra" required>
+            </div>
+            <div class="form-group">
+              <label for="data_vencimento">Data de Vencimento</label>
+              <input type="date" class="form-control" id="data_vencimento" name="data_vencimento">
+            </div>
+            <div class="form-group">
+              <label for="forma_pagamento">Forma de Pagamento *</label>
+              <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
+                <option value="1">À Vista</option>
+                <option value="2">A Prazo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea class="form-control" id="observacoes" name="observacoes" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumo Financeiro -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-calculator"></i> Resumo Financeiro
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal:</span>
+              <span id="subtotal">0,00 MT</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Desconto:</span>
+              <span id="desconto_total">0,00 MT</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>IVA:</span>
+              <span id="iva_total">0,00 MT</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <strong>Total:</strong>
+              <strong id="total">0,00 MT</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fas fa-save"></i> Salvar Compra
+            </button>
+            <button type="button" class="btn btn-success btn-block" onclick="salvarEPagar()">
+              <i class="fas fa-credit-card"></i> Salvar e Pagar
+            </button>
+            <a href="/compras/mercadoria" class="btn btn-secondary btn-block">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+function carregarDadosFornecedor() {
+  const select = document.getElementById('fornecedor_id');
+  const option = select.options[select.selectedIndex];
+  
+  if (option.value) {
+    document.getElementById('fornecedor_nuit').value = option.dataset.nuit || '';
+    document.getElementById('fornecedor_endereco').value = option.dataset.endereco || '';
+    document.getElementById('fornecedor_telefone').value = option.dataset.telefone || '';
+    document.getElementById('fornecedor_email').value = option.dataset.email || '';
+  } else {
+    document.getElementById('fornecedor_nuit').value = '';
+    document.getElementById('fornecedor_endereco').value = '';
+    document.getElementById('fornecedor_telefone').value = '';
+    document.getElementById('fornecedor_email').value = '';
+  }
+}
+
+function adicionarArtigo() {
+  const tbody = document.getElementById('artigosTableBody');
+  const row = document.createElement('tr');
+  
+  row.innerHTML = `
+    <td>
+      <select class="form-control" name="artigo_id[]" required>
+        <option value="">Selecione um artigo...</option>
+        <option value="1" data-preco="150.00">Smartphone Samsung A54</option>
+        <option value="2" data-preco="3000.00">Notebook Dell Inspiron</option>
+        <option value="3" data-preco="250.00">Fones Bluetooth</option>
+      </select>
+    </td>
+    <td>
+      <input type="number" class="form-control" name="quantidade[]" min="1" value="1" required onchange="calcularLinha(this)">
+    </td>
+    <td>
+      <input type="number" class="form-control" name="preco_unitario[]" step="0.01" min="0" required onchange="calcularLinha(this)">
+    </td>
+    <td>
+      <input type="number" class="form-control" name="desconto[]" step="0.01" min="0" value="0" onchange="calcularLinha(this)">
+    </td>
+    <td>
+      <select class="form-control" name="iva_taxa[]" onchange="calcularLinha(this)">
+        <option value="0">Isento</option>
+        <option value="17" selected>17%</option>
+      </select>
+    </td>
+    <td>
+      <input type="text" class="form-control" readonly>
+    </td>
+    <td>
+      <button type="button" class="btn btn-sm btn-danger" onclick="removerArtigo(this)">
+        <i class="fas fa-trash"></i>
+      </button>
+    </td>
+  `;
+  
+  tbody.appendChild(row);
+}
+
+function removerArtigo(button) {
+  button.closest('tr').remove();
+  calcularTotal();
+}
+
+function calcularLinha(element) {
+  const row = element.closest('tr');
+  const quantidade = parseFloat(row.querySelector('input[name="quantidade[]"]').value) || 0;
+  const preco = parseFloat(row.querySelector('input[name="preco_unitario[]"]').value) || 0;
+  const desconto = parseFloat(row.querySelector('input[name="desconto[]"]').value) || 0;
+  const ivaTaxa = parseFloat(row.querySelector('select[name="iva_taxa[]"]').value) || 0;
+  
+  const subtotal = quantidade * preco;
+  const valorDesconto = subtotal * (desconto / 100);
+  const baseIva = subtotal - valorDesconto;
+  const valorIva = baseIva * (ivaTaxa / 100);
+  const total = baseIva + valorIva;
+  
+  row.querySelector('td:last-child input').value = total.toFixed(2) + ' MT';
+  
+  calcularTotal();
+}
+
+function calcularTotal() {
+  let subtotal = 0;
+  let descontoTotal = 0;
+  let ivaTotal = 0;
+  
+  document.querySelectorAll('#artigosTableBody tr').forEach(row => {
+    const quantidade = parseFloat(row.querySelector('input[name="quantidade[]"]').value) || 0;
+    const preco = parseFloat(row.querySelector('input[name="preco_unitario[]"]').value) || 0;
+    const desconto = parseFloat(row.querySelector('input[name="desconto[]"]').value) || 0;
+    const ivaTaxa = parseFloat(row.querySelector('select[name="iva_taxa[]"]').value) || 0;
+    
+    const subtotalLinha = quantidade * preco;
+    const valorDesconto = subtotalLinha * (desconto / 100);
+    const baseIva = subtotalLinha - valorDesconto;
+    const valorIva = baseIva * (ivaTaxa / 100);
+    
+    subtotal += subtotalLinha;
+    descontoTotal += valorDesconto;
+    ivaTotal += valorIva;
+  });
+  
+  const total = subtotal - descontoTotal + ivaTotal;
+  
+  document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' MT';
+  document.getElementById('desconto_total').textContent = descontoTotal.toFixed(2) + ' MT';
+  document.getElementById('iva_total').textContent = ivaTotal.toFixed(2) + ' MT';
+  document.getElementById('total').textContent = total.toFixed(2) + ' MT';
+}
+
+// Definir data atual
+document.getElementById('data_compra').value = new Date().toISOString().split('T')[0];
+
+// Adicionar primeira linha automaticamente
+adicionarArtigo();
+</script>

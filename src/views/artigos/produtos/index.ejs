@@ -1,0 +1,198 @@
+
+
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Lista de Produtos & Serviços</h3>
+            <div class="card-tools">
+              <a href="/artigos/produtos/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Novo Produto
+              </a>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Filtros -->
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Pesquisar produtos..." id="searchInput">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <select class="form-control" id="categoriaFilter">
+                  <option value="">Todas as Categorias</option>
+                  <option value="1">Produtos</option>
+                  <option value="2">Serviços</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select class="form-control" id="statusFilter">
+                  <option value="">Todos os Status</option>
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-secondary btn-block" onclick="limparFiltros()">
+                  <i class="fas fa-eraser"></i> Limpar
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabela de Produtos -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped" id="produtosTable">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dados de exemplo -->
+                  <tr>
+                    <td>PRD001</td>
+                    <td>Produto Exemplo 1</td>
+                    <td>Produtos</td>
+                    <td>MZN25.00</td>
+                    <td>150</td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(1)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>SRV001</td>
+                    <td>Serviço Exemplo 1</td>
+                    <td>Serviços</td>
+                    <td>MZN50.00</td>
+                    <td>-</td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(2)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginação -->
+            <div class="row mt-3">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info">
+                  Mostrando 1 a 2 de 2 registos
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-7">
+                <div class="dataTables_paginate paging_simple_numbers">
+                  <ul class="pagination">
+                    <li class="paginate_button page-item previous disabled">
+                      <a href="#" class="page-link">Anterior</a>
+                    </li>
+                    <li class="paginate_button page-item active">
+                      <a href="#" class="page-link">1</a>
+                    </li>
+                    <li class="paginate_button page-item next disabled">
+                      <a href="#" class="page-link">Próximo</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+  
+  .btn-group .btn {
+    margin-right: 2px;
+  }
+  
+  .badge {
+    font-size: 0.75em;
+  }
+  
+  .card-tools .btn {
+    margin-left: 5px;
+  }
+</style>
+
+<script>
+// Função para pesquisar produtos
+function pesquisarProdutos() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const categoria = document.getElementById('categoriaFilter').value;
+  const status = document.getElementById('statusFilter').value;
+  
+  // Aqui seria implementada a lógica de pesquisa
+  console.log('Pesquisando:', { searchTerm, categoria, status });
+}
+
+// Função para limpar filtros
+function limparFiltros() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('categoriaFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  pesquisarProdutos();
+}
+
+// Função para confirmar eliminação
+function confirmarEliminacao(id) {
+  if (confirm('Tem certeza que deseja eliminar este produto?')) {
+    // Aqui seria implementada a lógica de eliminação
+    console.log('Eliminando produto:', id);
+  }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Pesquisa em tempo real
+  document.getElementById('searchInput').addEventListener('input', pesquisarProdutos);
+  document.getElementById('categoriaFilter').addEventListener('change', pesquisarProdutos);
+  document.getElementById('statusFilter').addEventListener('change', pesquisarProdutos);
+});
+</script>

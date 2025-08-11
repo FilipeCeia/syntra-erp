@@ -1,0 +1,321 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-plus mr-2"></i>Nova Categoria
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="#">Artigos</a></li>
+          <li class="breadcrumb-item"><a href="/artigos/categorias">Categorias</a></li>
+          <li class="breadcrumb-item active">Nova Categoria</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form id="categoriaForm" onsubmit="return submitForm(event)">
+      <div class="row">
+        <!-- Informações Básicas -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-info-circle mr-2"></i>Informações Básicas
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="nome">Nome da Categoria <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nome" name="nome" required>
+                    <small class="form-text text-muted">Nome único para identificar a categoria</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="codigo">Código</label>
+                    <input type="text" class="form-control" id="codigo" name="codigo">
+                    <small class="form-text text-muted">Código interno (opcional)</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Descrição detalhada da categoria..."></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="categoria_pai">Categoria Pai</label>
+                    <select class="form-control" id="categoria_pai" name="categoria_pai">
+                      <option value="">Selecione uma categoria pai (opcional)</option>
+                      <option value="1">Eletrónicos</option>
+                      <option value="2">Vestuário</option>
+                      <option value="3">Casa e Jardim</option>
+                    </select>
+                    <small class="form-text text-muted">Para criar subcategorias</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="cor">Cor da Categoria</label>
+                    <div class="input-group">
+                      <input type="color" class="form-control" id="cor" name="cor" value="#007bff" style="height: 38px;">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onclick="gerarCorAleatoria()">
+                          <i class="fas fa-random"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <small class="form-text text-muted">Cor para identificação visual</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configurações SEO -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-search mr-2"></i>Configurações SEO
+              </h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="slug">URL Amigável (Slug)</label>
+                <input type="text" class="form-control" id="slug" name="slug">
+                <small class="form-text text-muted">Será gerado automaticamente baseado no nome</small>
+              </div>
+
+              <div class="form-group">
+                <label for="meta_title">Meta Título</label>
+                <input type="text" class="form-control" id="meta_title" name="meta_title" maxlength="60">
+                <small class="form-text text-muted">Máximo 60 caracteres</small>
+              </div>
+
+              <div class="form-group">
+                <label for="meta_description">Meta Descrição</label>
+                <textarea class="form-control" id="meta_description" name="meta_description" rows="2" maxlength="160"></textarea>
+                <small class="form-text text-muted">Máximo 160 caracteres</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+          <!-- Status e Visibilidade -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-cog mr-2"></i>Status e Configurações
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status">
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="visivel_loja" name="visivel_loja" checked>
+                  <label class="custom-control-label" for="visivel_loja">Visível na Loja Online</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="destaque" name="destaque">
+                  <label class="custom-control-label" for="destaque">Categoria em Destaque</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ordem">Ordem de Exibição</label>
+                <input type="number" class="form-control" id="ordem" name="ordem" value="0" min="0">
+                <small class="form-text text-muted">Ordem para listagem (0 = primeiro)</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Imagem da Categoria -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-image mr-2"></i>Imagem da Categoria
+              </h3>
+            </div>
+            <div class="card-body text-center">
+              <div class="image-preview mb-3" id="imagePreview">
+                <img src="/images/placeholder-category.png" alt="Preview" class="img-fluid" style="max-height: 200px; border: 2px dashed #dee2e6; padding: 20px;">
+              </div>
+              <div class="form-group">
+                <input type="file" class="form-control-file" id="imagem" name="imagem" accept="image/*" onchange="previewImage(this)">
+                <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF (máx. 2MB)</small>
+              </div>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="removerImagem()">
+                <i class="fas fa-trash"></i> Remover Imagem
+              </button>
+            </div>
+          </div>
+
+          <!-- Ações -->
+          <div class="card">
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-save mr-2"></i>Guardar Categoria
+                </button>
+                <a href="/artigos/categorias" class="btn btn-secondary btn-block">
+                  <i class="fas fa-times mr-2"></i>Cancelar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .card-header {
+    background-color: #f8f9fa;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+  }
+  
+  .text-danger {
+    color: #dc3545 !important;
+  }
+  
+  .image-preview img {
+    border-radius: 8px;
+  }
+  
+  .btn-block {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .custom-control-label {
+    font-weight: 500;
+  }
+</style>
+
+<script>
+// Função para gerar slug automaticamente
+function gerarSlug(texto) {
+  return texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+}
+
+// Função para gerar cor aleatória
+function gerarCorAleatoria() {
+  const cores = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'];
+  const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
+  document.getElementById('cor').value = corAleatoria;
+}
+
+// Função para preview da imagem
+function previewImage(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.querySelector('#imagePreview img').src = e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Função para remover imagem
+function removerImagem() {
+  document.getElementById('imagem').value = '';
+  document.querySelector('#imagePreview img').src = '/images/placeholder-category.png';
+}
+
+// Função para submeter o formulário
+function submitForm(event) {
+  event.preventDefault();
+  
+  // Validação básica
+  const nome = document.getElementById('nome').value.trim();
+  if (!nome) {
+    alert('Por favor, insira o nome da categoria.');
+    return false;
+  }
+  
+  // Aqui seria implementada a lógica de envio
+  console.log('Guardando categoria:', {
+    nome: nome,
+    codigo: document.getElementById('codigo').value,
+    descricao: document.getElementById('descricao').value,
+    categoria_pai: document.getElementById('categoria_pai').value,
+    cor: document.getElementById('cor').value,
+    status: document.getElementById('status').value
+  });
+  
+  alert('Categoria guardada com sucesso!');
+  return false;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Gerar slug automaticamente
+  document.getElementById('nome').addEventListener('input', function() {
+    const slug = gerarSlug(this.value);
+    document.getElementById('slug').value = slug;
+    
+    // Auto-preencher meta título se estiver vazio
+    if (!document.getElementById('meta_title').value) {
+      document.getElementById('meta_title').value = this.value;
+    }
+  });
+  
+  // Contador de caracteres para meta descrição
+  document.getElementById('meta_description').addEventListener('input', function() {
+    const maxLength = 160;
+    const currentLength = this.value.length;
+    const remaining = maxLength - currentLength;
+    
+    let small = this.nextElementSibling;
+    small.textContent = `${remaining} caracteres restantes`;
+    
+    if (remaining < 0) {
+      small.classList.add('text-danger');
+    } else {
+      small.classList.remove('text-danger');
+    }
+  });
+});
+</script>

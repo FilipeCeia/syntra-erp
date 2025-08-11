@@ -1,0 +1,213 @@
+<!-- Criar Nova Loja -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Nova Loja</h1>
+      <p class="mb-0 text-muted">Criar uma nova loja no sistema</p>
+    </div>
+    <div>
+      <a href="/lojas" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  </div>
+
+  <!-- Formulário -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Informações da Loja</h6>
+        </div>
+        <div class="card-body">
+          <form action="/lojas" method="POST" id="formNovaLoja">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Código da Loja <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" name="codigo" required placeholder="Ex: LJ001">
+                  <div class="form-text">Código único para identificar a loja</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Nome da Loja <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" name="nome" required placeholder="Ex: Loja Centro">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Endereço Completo <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="endereco" required placeholder="Av. Julius Nyerere, 123, Maputo">
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Telefone</label>
+                  <input type="tel" class="form-control" name="telefone" placeholder="+258 21 123 456">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" placeholder="loja@syntra.co.mz">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Gerente da Loja</label>
+                  <select class="form-select" name="gerente_id">
+                    <option value="">Selecionar gerente...</option>
+                    <% gerentes.forEach(gerente => { %>
+                      <option value="<%= gerente.id %>"><%= gerente.nome %></option>
+                    <% }); %>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Meta Mensal (MT)</label>
+                  <input type="number" class="form-control" name="meta_mes" step="0.01" placeholder="150000.00">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Data de Abertura</label>
+                  <input type="date" class="form-control" name="data_abertura">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" name="status">
+                    <option value="1">Ativa</option>
+                    <option value="0">Inativa</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Observações</label>
+              <textarea class="form-control" name="observacoes" rows="3" placeholder="Informações adicionais sobre a loja..."></textarea>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/lojas" class="btn btn-secondary me-md-2">Cancelar</a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Criar Loja
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar com Informações -->
+    <div class="col-lg-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Dicas</h6>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <h6><i class="fas fa-info-circle"></i> Informações Importantes</h6>
+            <ul class="mb-0">
+              <li>O código da loja deve ser único</li>
+              <li>Certifique-se de que o endereço está completo</li>
+              <li>O gerente pode ser alterado posteriormente</li>
+              <li>A meta mensal ajuda no acompanhamento de performance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Próximos Passos</h6>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item d-flex align-items-center">
+              <i class="fas fa-users text-primary me-3"></i>
+              <div>
+                <h6 class="mb-1">Adicionar Funcionários</h6>
+                <small class="text-muted">Após criar a loja, adicione funcionários</small>
+              </div>
+            </div>
+            <div class="list-group-item d-flex align-items-center">
+              <i class="fas fa-boxes text-success me-3"></i>
+              <div>
+                <h6 class="mb-1">Configurar Estoque</h6>
+                <small class="text-muted">Configure produtos e estoque inicial</small>
+              </div>
+            </div>
+            <div class="list-group-item d-flex align-items-center">
+              <i class="fas fa-cash-register text-warning me-3"></i>
+              <div>
+                <h6 class="mb-1">Sistema de Vendas</h6>
+                <small class="text-muted">Configure sistema de vendas e PDV</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('formNovaLoja').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Validação básica
+  const codigo = document.querySelector('input[name="codigo"]').value;
+  const nome = document.querySelector('input[name="nome"]').value;
+  const endereco = document.querySelector('input[name="endereco"]').value;
+  
+  if (!codigo || !nome || !endereco) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
+  }
+  
+  // Simular criação
+  alert('Loja criada com sucesso!');
+  window.location.href = '/lojas';
+});
+
+// Auto-gerar código baseado no nome
+document.querySelector('input[name="nome"]').addEventListener('input', function(e) {
+  const nome = e.target.value;
+  const codigoInput = document.querySelector('input[name="codigo"]');
+  
+  if (nome && !codigoInput.value) {
+    // Gerar código simples baseado no nome
+    const codigo = 'LJ' + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+    codigoInput.value = codigo;
+  }
+});
+
+// Auto-gerar email baseado no nome
+document.querySelector('input[name="nome"]').addEventListener('blur', function(e) {
+  const nome = e.target.value;
+  const emailInput = document.querySelector('input[name="email"]');
+  
+  if (nome && !emailInput.value) {
+    // Gerar email simples baseado no nome
+    const emailBase = nome.toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/[^a-z0-9]/g, '')
+      .substring(0, 10);
+    emailInput.value = emailBase + '@syntra.co.mz';
+  }
+});
+</script>

@@ -1,0 +1,242 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-tags mr-2"></i>Categorias
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="#">Artigos</a></li>
+          <li class="breadcrumb-item active">Categorias</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Lista de Categorias</h3>
+            <div class="card-tools">
+              <a href="/artigos/categorias/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Nova Categoria
+              </a>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Filtros -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Pesquisar categorias..." id="searchInput">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <select class="form-control" id="statusFilter">
+                  <option value="">Todos os Status</option>
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-secondary btn-block" onclick="limparFiltros()">
+                  <i class="fas fa-eraser"></i> Limpar
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabela de Categorias -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped" id="categoriasTable">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Produtos</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dados de exemplo -->
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="category-color" style="background-color: #007bff; width: 20px; height: 20px; border-radius: 3px; margin-right: 10px;"></div>
+                        <strong>Eletrónicos</strong>
+                      </div>
+                    </td>
+                    <td>Produtos eletrónicos e tecnológicos</td>
+                    <td><span class="badge badge-info">25 produtos</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td>15/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(1)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="category-color" style="background-color: #28a745; width: 20px; height: 20px; border-radius: 3px; margin-right: 10px;"></div>
+                        <strong>Vestuário</strong>
+                      </div>
+                    </td>
+                    <td>Roupas e acessórios</td>
+                    <td><span class="badge badge-info">42 produtos</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td>10/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(2)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="category-color" style="background-color: #ffc107; width: 20px; height: 20px; border-radius: 3px; margin-right: 10px;"></div>
+                        <strong>Casa e Jardim</strong>
+                      </div>
+                    </td>
+                    <td>Produtos para casa e jardim</td>
+                    <td><span class="badge badge-info">18 produtos</span></td>
+                    <td><span class="badge badge-warning">Inativo</span></td>
+                    <td>05/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(3)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginação -->
+            <div class="row mt-3">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info">
+                  Mostrando 1 a 3 de 3 registos
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-7">
+                <div class="dataTables_paginate paging_simple_numbers">
+                  <ul class="pagination">
+                    <li class="paginate_button page-item previous disabled">
+                      <a href="#" class="page-link">Anterior</a>
+                    </li>
+                    <li class="paginate_button page-item active">
+                      <a href="#" class="page-link">1</a>
+                    </li>
+                    <li class="paginate_button page-item next disabled">
+                      <a href="#" class="page-link">Próximo</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+  
+  .btn-group .btn {
+    margin-right: 2px;
+  }
+  
+  .badge {
+    font-size: 0.75em;
+  }
+  
+  .card-tools .btn {
+    margin-left: 5px;
+  }
+  
+  .category-color {
+    display: inline-block;
+    border: 1px solid #dee2e6;
+  }
+</style>
+
+<script>
+// Função para pesquisar categorias
+function pesquisarCategorias() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  
+  // Aqui seria implementada a lógica de pesquisa
+  console.log('Pesquisando:', { searchTerm, status });
+}
+
+// Função para limpar filtros
+function limparFiltros() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('statusFilter').value = '';
+  pesquisarCategorias();
+}
+
+// Função para confirmar eliminação
+function confirmarEliminacao(id) {
+  if (confirm('Tem certeza que deseja eliminar esta categoria?\n\nAtenção: Esta ação pode afetar os produtos associados.')) {
+    // Aqui seria implementada a lógica de eliminação
+    console.log('Eliminando categoria:', id);
+  }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Pesquisa em tempo real
+  document.getElementById('searchInput').addEventListener('input', pesquisarCategorias);
+  document.getElementById('statusFilter').addEventListener('change', pesquisarCategorias);
+});
+</script>

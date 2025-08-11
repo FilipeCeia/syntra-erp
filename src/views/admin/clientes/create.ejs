@@ -1,0 +1,158 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-plus-circle mr-2"></i>Novo Cliente/Empresa
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/admin-clientes/dashboard">Gestão de Clientes</a></li>
+          <li class="breadcrumb-item"><a href="/admin-clientes">Clientes</a></li>
+          <li class="breadcrumb-item active">Novo</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Dados do Cliente/Empresa</h3>
+          </div>
+
+          <form action="/admin-clientes" method="POST">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Tipo de Cliente</label>
+                    <select class="form-control" id="tipo" name="tipo" required>
+                      <option value="1">Particular</option>
+                      <option value="2">Empresa</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="client_id">Empresa/Tenant</label>
+                    <select class="form-control" id="client_id" name="client_id" required>
+                      <option value="1">Empresa Principal</option>
+                      <!-- Aqui viriam outras empresas/tenants do sistema -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="nome">Nome/Razão Social</label>
+                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome completo ou razão social" required>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="nuit">NUIT</label>
+                    <input type="text" class="form-control" id="nuit" name="nuit" placeholder="Número de NUIT (opcional)">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Número de telefone" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Endereço de email (opcional)">
+              </div>
+
+              <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <textarea class="form-control" id="endereco" name="endereco" rows="3" placeholder="Endereço completo (opcional)"></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="limite_credito">Limite de Crédito (MZN)</label>
+                    <input type="number" class="form-control" id="limite_credito" name="limite_credito" step="0.01" value="0.00">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="status">
+                      <option value="1" selected>Ativo</option>
+                      <option value="0">Inativo</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-1"></i> Salvar
+              </button>
+              <a href="/admin-clientes" class="btn btn-secondary">
+                <i class="fas fa-times mr-1"></i> Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">Informações Adicionais</h3>
+          </div>
+          <div class="card-body">
+            <p><i class="fas fa-info-circle mr-1"></i> <strong>Tipo de Cliente:</strong> Selecione se é um cliente particular ou uma empresa.</p>
+            <p><i class="fas fa-info-circle mr-1"></i> <strong>Empresa/Tenant:</strong> Selecione a qual empresa/tenant este cliente pertencerá.</p>
+            <p><i class="fas fa-info-circle mr-1"></i> <strong>NUIT:</strong> Número Único de Identificação Tributária.</p>
+            <p><i class="fas fa-info-circle mr-1"></i> <strong>Limite de Crédito:</strong> Valor máximo que o cliente pode ter em dívida.</p>
+          </div>
+        </div>
+
+        <div class="card card-warning">
+          <div class="card-header">
+            <h3 class="card-title">Ações Rápidas</h3>
+          </div>
+          <div class="card-body">
+            <a href="/admin-clientes" class="btn btn-block btn-outline-primary mb-2">
+              <i class="fas fa-list mr-1"></i> Listar Clientes
+            </a>
+            <a href="/admin-clientes/dashboard" class="btn btn-block btn-outline-info mb-2">
+              <i class="fas fa-tachometer-alt mr-1"></i> Dashboard de Clientes
+            </a>
+            <a href="/dashboard" class="btn btn-block btn-outline-secondary">
+              <i class="fas fa-home mr-1"></i> Voltar ao Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(document).ready(function() {
+    // Máscara para o NUIT
+    $('#nuit').inputmask('999999999');
+    
+    // Máscara para o telefone
+    $('#telefone').inputmask('+258 99-999-9999');
+  });
+</script>

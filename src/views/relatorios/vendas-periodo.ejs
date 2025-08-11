@@ -1,0 +1,172 @@
+
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="GET">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Data Início</label>
+                <input type="date" class="form-control" name="data_inicio" value="<%= filtros.data_inicio %>">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Data Fim</label>
+                <input type="date" class="form-control" name="data_fim" value="<%= filtros.data_fim %>">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Loja</label>
+                <select class="form-control" name="loja_id">
+                  <option value="">Todas as Lojas</option>
+                  <option value="1" <%= filtros.loja_id === '1' ? 'selected' : '' %>>Loja Centro</option>
+                  <option value="2" <%= filtros.loja_id === '2' ? 'selected' : '' %>>Loja Matola</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3><%= formatCurrency(vendasData.resumo.total_vendas) %></h3>
+            <p>Total de Vendas</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3><%= vendasData.resumo.total_transacoes %></h3>
+            <p>Total de Transações</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3><%= formatCurrency(vendasData.resumo.ticket_medio) %></h3>
+            <p>Ticket Médio</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3><%= vendasData.resumo.crescimento %>%</h3>
+            <p>Crescimento</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-arrow-up"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de Vendas Diárias -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Vendas Diárias - <%= vendasData.periodo %></h3>
+      </div>
+      <div class="card-body">
+        <canvas id="vendasChart" style="height: 400px;"></canvas>
+      </div>
+    </div>
+
+    <!-- Vendas por Categoria -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Vendas por Categoria</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Categoria</th>
+                <th class="text-right">Vendas</th>
+                <th class="text-center">Participação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% vendasData.vendas_por_categoria.forEach(function(categoria) { %>
+                <tr>
+                  <td><%= categoria.categoria %></td>
+                  <td class="text-right"><%= formatCurrency(categoria.vendas) %></td>
+                  <td class="text-center">
+                    <span class="badge badge-primary"><%= categoria.participacao %>%</span>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+// Gráfico de vendas diárias
+const ctx = document.getElementById('vendasChart').getContext('2d');
+const vendasChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [<% vendasData.vendas_diarias.forEach(function(venda, index) { %>'<%= venda.data %>'<%= index < vendasData.vendas_diarias.length - 1 ? ',' : '' %><% }); %>],
+    datasets: [{
+      label: 'Vendas (MT)',
+      data: [<% vendasData.vendas_diarias.forEach(function(venda, index) { %><%= venda.vendas %><%= index < vendasData.vendas_diarias.length - 1 ? ',' : '' %><% }); %>],
+      borderColor: 'rgb(75, 192, 192)',
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      tension: 0.1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+</script>

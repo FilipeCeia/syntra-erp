@@ -1,0 +1,263 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-plus"></i> Nova Despesa
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/compras/despesas" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  </div>
+
+  <form id="despesaForm" method="POST" action="/compras/despesas">
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Dados da Despesa -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-receipt"></i> Dados da Despesa
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="numero">Número da Despesa</label>
+                  <input type="text" class="form-control" id="numero" name="numero" value="DSP-2024-005" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="data_despesa">Data da Despesa *</label>
+                  <input type="date" class="form-control" id="data_despesa" name="data_despesa" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="descricao">Descrição *</label>
+                  <input type="text" class="form-control" id="descricao" name="descricao" required placeholder="Ex: Aluguel do escritório - Janeiro">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="categoria">Categoria *</label>
+                  <select class="form-control" id="categoria" name="categoria" required>
+                    <option value="">Selecione uma categoria...</option>
+                    <option value="Aluguel">Aluguel</option>
+                    <option value="Energia">Energia</option>
+                    <option value="Água">Água</option>
+                    <option value="Internet">Internet</option>
+                    <option value="Telefone">Telefone</option>
+                    <option value="Material Escritório">Material de Escritório</option>
+                    <option value="Combustível">Combustível</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Segurança">Segurança</option>
+                    <option value="Limpeza">Limpeza</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Consultoria">Consultoria</option>
+                    <option value="Outros">Outros</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="data_vencimento">Data de Vencimento</label>
+                  <input type="date" class="form-control" id="data_vencimento" name="data_vencimento">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dados do Fornecedor -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-truck"></i> Dados do Fornecedor
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor_id">Fornecedor *</label>
+                  <div class="input-group">
+                    <select class="form-control" id="fornecedor_id" name="fornecedor_id" required onchange="carregarDadosFornecedor()">
+                      <option value="">Selecione um fornecedor...</option>
+                      <option value="1" 
+                              data-nome="Imobiliária Central"
+                              data-nuit="400111222"
+                              data-endereco="Av. 25 de Setembro, 1000, Maputo"
+                              data-telefone="+258 21 111 222"
+                              data-email="geral@imobcentral.co.mz">
+                        Imobiliária Central - 400111222
+                      </option>
+                      <option value="2" 
+                              data-nome="EDM - Electricidade de Moçambique"
+                              data-nuit="400222333"
+                              data-endereco="Av. Agostinho Neto, 100, Maputo"
+                              data-telefone="+258 21 222 333"
+                              data-email="atendimento@edm.co.mz">
+                        EDM - Electricidade de Moçambique - 400222333
+                      </option>
+                      <option value="3" 
+                              data-nome="Vodacom Moçambique"
+                              data-nuit="400333444"
+                              data-endereco="Av. Julius Nyerere, 2000, Maputo"
+                              data-telefone="+258 21 333 444"
+                              data-email="empresas@vodacom.co.mz">
+                        Vodacom Moçambique - 400333444
+                      </option>
+                    </select>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary" onclick="novoFornecedor()">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor_nuit">NUIT</label>
+                  <input type="text" class="form-control" id="fornecedor_nuit" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="fornecedor_endereco">Endereço</label>
+                  <input type="text" class="form-control" id="fornecedor_endereco" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Valores -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-calculator"></i> Valores
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="valor_base">Valor Base *</label>
+              <input type="number" class="form-control" id="valor_base" name="valor_base" step="0.01" min="0" required onchange="calcularTotal()">
+            </div>
+            <div class="form-group">
+              <label for="desconto">Desconto (%)</label>
+              <input type="number" class="form-control" id="desconto" name="desconto" step="0.01" min="0" max="100" value="0" onchange="calcularTotal()">
+            </div>
+            <div class="form-group">
+              <label for="iva_taxa">Taxa de IVA</label>
+              <select class="form-control" id="iva_taxa" name="iva_taxa" onchange="calcularTotal()">
+                <option value="0">Isento de IVA</option>
+                <option value="17" selected>17%</option>
+              </select>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Valor Base:</span>
+              <span id="display_valor_base">0,00 MT</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Desconto:</span>
+              <span id="display_desconto">0,00 MT</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>IVA:</span>
+              <span id="display_iva">0,00 MT</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <strong>Total:</strong>
+              <strong id="display_total">0,00 MT</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forma de Pagamento -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-credit-card"></i> Pagamento
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="forma_pagamento">Forma de Pagamento *</label>
+              <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
+                <option value="1">À Vista</option>
+                <option value="2">A Prazo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea class="form-control" id="observacoes" name="observacoes" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fas fa-save"></i> Salvar Despesa
+            </button>
+            <button type="button" class="btn btn-success btn-block" onclick="salvarEPagar()">
+              <i class="fas fa-credit-card"></i> Salvar e Pagar
+            </button>
+            <a href="/compras/despesas" class="btn btn-secondary btn-block">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+function carregarDadosFornecedor() {
+  const select = document.getElementById('fornecedor_id');
+  const option = select.options[select.selectedIndex];
+  
+  if (option.value) {
+    document.getElementById('fornecedor_nuit').value = option.dataset.nuit || '';
+    document.getElementById('fornecedor_endereco').value = option.dataset.endereco || '';
+  } else {
+    document.getElementById('fornecedor_nuit').value = '';
+    document.getElementById('fornecedor_endereco').value = '';
+  }
+}
+
+function calcularTotal() {
+  const valorBase = parseFloat(document.getElementById('valor_base').value) || 0;
+  const descontoPercent = parseFloat(document.getElementById('desconto').value) || 0;
+  const ivaTaxa = parseFloat(document.getElementById('iva_taxa').value) || 0;
+  
+  const valorDesconto = valorBase * (descontoPercent / 100);
+  const baseIva = valorBase - valorDesconto;
+  const valorIva = baseIva * (ivaTaxa / 100);
+  const total = baseIva + valorIva;
+  
+  document.getElementById('display_valor_base').textContent = valorBase.toFixed(2) + ' MT';
+  document.getElementById('display_desconto').textContent = valorDesconto.toFixed(2) + ' MT';
+  document.getElementById('display_iva').textContent = valorIva.toFixed(2) + ' MT';
+  document.getElementById('display_total').textContent = total.toFixed(2) + ' MT';
+}
+</script>

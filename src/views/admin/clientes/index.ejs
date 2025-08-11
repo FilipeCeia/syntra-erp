@@ -1,0 +1,188 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-building mr-2"></i>Clientes/Empresas
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/admin-clientes/dashboard">Gestão de Clientes</a></li>
+          <li class="breadcrumb-item active">Listar</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Lista de Clientes/Empresas</h3>
+            <div class="card-tools">
+              <a href="/admin-clientes/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Novo Cliente/Empresa
+              </a>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Filtros -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <form method="GET" action="/admin-clientes">
+                  <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por nome, código ou telefone..." value="<%= search %>">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-6 text-right">
+                <div class="btn-group">
+                  <a href="/admin-clientes" class="btn btn-default <%= !search ? 'active' : '' %>">Todos</a>
+                  <a href="/admin-clientes?status=1" class="btn btn-success <%= search && search.includes('status=1') ? 'active' : '' %>">Ativos</a>
+                  <a href="/admin-clientes?status=0" class="btn btn-warning <%= search && search.includes('status=0') ? 'active' : '' %>">Inativos</a>
+                  <a href="/admin-clientes?tipo=2" class="btn btn-info <%= search && search.includes('tipo=2') ? 'active' : '' %>">Empresas</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela de Clientes -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>NUIT</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (clientes && clientes.length > 0) { %>
+                    <% clientes.forEach(cliente => { %>
+                      <tr>
+                        <td><%= cliente.codigo %></td>
+                        <td><%= cliente.nome %></td>
+                        <td>
+                          <span class="badge badge-<%= cliente.tipo === 1 ? 'primary' : 'info' %>">
+                            <%= cliente.tipo === 1 ? 'Particular' : 'Empresa' %>
+                          </span>
+                        </td>
+                        <td><%= cliente.nuit || '-' %></td>
+                        <td><%= cliente.telefone %></td>
+                        <td><%= cliente.email || '-' %></td>
+                        <td>
+                          <span class="badge badge-<%= cliente.status === 1 ? 'success' : 'warning' %>">
+                            <%= cliente.status === 1 ? 'Ativo' : 'Inativo' %>
+                          </span>
+                        </td>
+                        <td>
+                          <div class="btn-group">
+                            <a href="/admin-clientes/<%= cliente.id %>" class="btn btn-sm btn-info">
+                              <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/admin-clientes/<%= cliente.id %>/edit" class="btn btn-sm btn-warning">
+                              <i class="fas fa-edit"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmarExclusao('<%= cliente.id %>', '<%= cliente.nome %>')">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="8" class="text-center">Nenhum cliente encontrado</td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginação -->
+            <% if (totalPages > 1) { %>
+              <div class="mt-3">
+                <nav aria-label="Navegação de página">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                      <a class="page-link" href="/admin-clientes?page=<%= currentPage - 1 %><%= search ? '&search=' + search : '' %>">
+                        <i class="fas fa-chevron-left"></i>
+                      </a>
+                    </li>
+                    
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="/admin-clientes?page=<%= i %><%= search ? '&search=' + search : '' %>">
+                          <%= i %>
+                        </a>
+                      </li>
+                    <% } %>
+                    
+                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                      <a class="page-link" href="/admin-clientes?page=<%= currentPage + 1 %><%= search ? '&search=' + search : '' %>">
+                        <i class="fas fa-chevron-right"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+                <p class="text-center text-muted">
+                  Mostrando <%= clientes.length %> de <%= totalRecords %> registros
+                </p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="modal-confirmar-exclusao" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir o cliente <strong id="nome-cliente"></strong>?</p>
+        <p class="text-danger">Esta ação não pode ser desfeita!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <form id="form-excluir" method="POST" action="">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">Excluir</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function confirmarExclusao(id, nome) {
+    document.getElementById('nome-cliente').textContent = nome;
+    document.getElementById('form-excluir').action = `/admin-clientes/${id}`;
+    $('#modal-confirmar-exclusao').modal('show');
+  }
+</script>

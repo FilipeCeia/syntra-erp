@@ -1,0 +1,1117 @@
+<%- contentFor('title') %>
+Importação/Exportação - SYNTRA ERP
+<% end %>
+
+<%- contentFor('styles') %>
+<style>
+  .import-export-section {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+  }
+  .upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .upload-area:hover {
+    border-color: #007bff;
+    background-color: #e3f2fd;
+  }
+  .upload-area.dragover {
+    border-color: #28a745;
+    background-color: #d4edda;
+  }
+  .upload-icon {
+    font-size: 3rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+  }
+  .upload-text {
+    color: #495057;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  .upload-subtext {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  .file-info {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: none;
+  }
+  .file-name {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+  }
+  .file-details {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .progress-container {
+    margin-top: 15px;
+    display: none;
+  }
+  .progress {
+    height: 25px;
+    border-radius: 12px;
+  }
+  .progress-bar {
+    border-radius: 12px;
+    transition: width 0.3s ease;
+  }
+  .validation-results {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+    display: none;
+  }
+  .validation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f8f9fa;
+  }
+  .validation-item:last-child {
+    border-bottom: none;
+  }
+  .validation-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  .validation-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  .export-options {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .export-format {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .export-format:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+  }
+  .export-format.selected {
+    border-color: #007bff;
+    background-color: #e3f2fd;
+  }
+  .format-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  .format-title {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+  }
+  .format-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .template-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .template-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+  .template-icon {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 15px;
+  }
+  .template-title {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+  }
+  .template-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+  }
+  .history-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .history-title {
+    font-weight: 600;
+    color: #495057;
+  }
+  .history-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .history-details {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+  }
+  .filter-section {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .stats-card {
+    background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+  }
+  .stats-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+  .error-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .error-item {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  .error-line {
+    font-weight: 600;
+    color: #721c24;
+    margin-bottom: 5px;
+  }
+  .error-message {
+    font-size: 0.875rem;
+    color: #721c24;
+  }
+</style>
+<% end %>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Importação/Exportação</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas">Pessoas</a></li>
+          <li class="breadcrumb-item active">Importação/Exportação</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <button type="button" class="btn btn-outline-info me-2" onclick="abrirHistorico()">
+        <i class="fas fa-history"></i> Histórico
+      </button>
+      <button type="button" class="btn btn-outline-secondary" onclick="abrirConfiguracoes()">
+        <i class="fas fa-cog"></i> Configurações
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Coluna Principal -->
+    <div class="col-lg-8">
+      <!-- Importação -->
+      <div class="import-export-section">
+        <h5 class="section-title">
+          <i class="fas fa-upload"></i> Importação de Dados
+        </h5>
+        
+        <!-- Seleção do Tipo de Dados -->
+        <div class="mb-4">
+          <label class="form-label"><strong>Tipo de dados a importar:</strong></label>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipoImportacao" id="importarFornecedores" value="fornecedores" checked>
+                <label class="form-check-label" for="importarFornecedores">
+                  <i class="fas fa-truck"></i> Fornecedores
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipoImportacao" id="importarClientes" value="clientes">
+                <label class="form-check-label" for="importarClientes">
+                  <i class="fas fa-users"></i> Clientes
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipoImportacao" id="importarUtilizadores" value="utilizadores">
+                <label class="form-check-label" for="importarUtilizadores">
+                  <i class="fas fa-user-tie"></i> Utilizadores
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Área de Upload -->
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          <div class="upload-text">Clique aqui ou arraste o arquivo para fazer upload</div>
+          <div class="upload-subtext">Formatos suportados: Excel (.xlsx, .xls), CSV (.csv) - Máximo 10MB</div>
+          <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="processarArquivo(this)">
+        </div>
+        
+        <!-- Informações do Arquivo -->
+        <div class="file-info" id="fileInfo">
+          <div class="file-name" id="fileName"></div>
+          <div class="file-details" id="fileDetails"></div>
+          <button type="button" class="btn btn-outline-danger btn-sm mt-2" onclick="removerArquivo()">
+            <i class="fas fa-trash"></i> Remover arquivo
+          </button>
+        </div>
+        
+        <!-- Barra de Progresso -->
+        <div class="progress-container" id="progressContainer">
+          <div class="d-flex justify-content-between mb-2">
+            <span id="progressText">Processando...</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <!-- Resultados da Validação -->
+        <div class="validation-results" id="validationResults">
+          <h6><i class="fas fa-check-circle"></i> Resultados da Validação</h6>
+          <div id="validationContent"></div>
+        </div>
+        
+        <!-- Botões de Ação -->
+        <div class="mt-4">
+          <button type="button" class="btn btn-primary" id="btnValidar" onclick="validarArquivo()" disabled>
+            <i class="fas fa-check"></i> Validar Dados
+          </button>
+          <button type="button" class="btn btn-success" id="btnImportar" onclick="importarDados()" disabled>
+            <i class="fas fa-upload"></i> Importar Dados
+          </button>
+          <button type="button" class="btn btn-outline-secondary" onclick="limparFormulario()">
+            <i class="fas fa-broom"></i> Limpar
+          </button>
+        </div>
+      </div>
+      
+      <!-- Exportação -->
+      <div class="import-export-section">
+        <h5 class="section-title">
+          <i class="fas fa-download"></i> Exportação de Dados
+        </h5>
+        
+        <!-- Seleção do Tipo de Dados -->
+        <div class="mb-4">
+          <label class="form-label"><strong>Tipo de dados a exportar:</strong></label>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipoExportacao" id="exportarFornecedores" value="fornecedores" checked>
+                <label class="form-check-label" for="exportarFornecedores">
+                  <i class="fas fa-truck"></i> Fornecedores
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipoExportacao" id="exportarClientes" value="clientes">
+                <label class="form-check-label" for="exportarClientes">
+                  <i class="fas fa-users"></i> Clientes
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipoExportacao" id="exportarUtilizadores" value="utilizadores">
+                <label class="form-check-label" for="exportarUtilizadores">
+                  <i class="fas fa-user-tie"></i> Utilizadores
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Filtros de Exportação -->
+        <div class="filter-section">
+          <h6><i class="fas fa-filter"></i> Filtros de Exportação</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="filtroStatus" class="form-label">Status:</label>
+              <select class="form-select" id="filtroStatus">
+                <option value="">Todos</option>
+                <option value="ativo">Ativo</option>
+                <option value="inativo">Inativo</option>
+                <option value="bloqueado">Bloqueado</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="filtroPeriodo" class="form-label">Período de criação:</label>
+              <select class="form-select" id="filtroPeriodo">
+                <option value="">Todos os períodos</option>
+                <option value="hoje">Hoje</option>
+                <option value="semana">Esta semana</option>
+                <option value="mes">Este mês</option>
+                <option value="ano">Este ano</option>
+                <option value="personalizado">Período personalizado</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="row mt-3" id="periodoPersonalizado" style="display: none;">
+            <div class="col-md-6">
+              <label for="dataInicio" class="form-label">Data início:</label>
+              <input type="date" class="form-control" id="dataInicio">
+            </div>
+            <div class="col-md-6">
+              <label for="dataFim" class="form-label">Data fim:</label>
+              <input type="date" class="form-control" id="dataFim">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Formatos de Exportação -->
+        <div class="mb-4">
+          <label class="form-label"><strong>Formato de exportação:</strong></label>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="export-format selected" data-format="excel" onclick="selecionarFormato('excel')">
+                <div class="format-icon text-success">
+                  <i class="fas fa-file-excel"></i>
+                </div>
+                <div class="format-title">Excel</div>
+                <div class="format-description">Arquivo .xlsx com formatação</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="export-format" data-format="csv" onclick="selecionarFormato('csv')">
+                <div class="format-icon text-info">
+                  <i class="fas fa-file-csv"></i>
+                </div>
+                <div class="format-title">CSV</div>
+                <div class="format-description">Arquivo de texto separado por vírgulas</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="export-format" data-format="pdf" onclick="selecionarFormato('pdf')">
+                <div class="format-icon text-danger">
+                  <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="format-title">PDF</div>
+                <div class="format-description">Relatório em formato PDF</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Botões de Exportação -->
+        <div class="mt-4">
+          <button type="button" class="btn btn-success" onclick="exportarDados()">
+            <i class="fas fa-download"></i> Exportar Dados
+          </button>
+          <button type="button" class="btn btn-outline-info" onclick="visualizarPrevia()">
+            <i class="fas fa-eye"></i> Visualizar Prévia
+          </button>
+          <button type="button" class="btn btn-outline-secondary" onclick="agendarExportacao()">
+            <i class="fas fa-clock"></i> Agendar Exportação
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Coluna Lateral -->
+    <div class="col-lg-4">
+      <!-- Templates -->
+      <div class="import-export-section">
+        <h5 class="section-title">
+          <i class="fas fa-file-download"></i> Templates de Importação
+        </h5>
+        
+        <div class="template-card">
+          <div class="template-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <div class="template-title">Template Fornecedores</div>
+          <div class="template-description">
+            Arquivo Excel com campos obrigatórios e opcionais para importação de fornecedores
+          </div>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="baixarTemplate('fornecedores')">
+            <i class="fas fa-download"></i> Baixar Template
+          </button>
+        </div>
+        
+        <div class="template-card">
+          <div class="template-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="template-title">Template Clientes</div>
+          <div class="template-description">
+            Arquivo Excel com campos obrigatórios e opcionais para importação de clientes
+          </div>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="baixarTemplate('clientes')">
+            <i class="fas fa-download"></i> Baixar Template
+          </button>
+        </div>
+        
+        <div class="template-card">
+          <div class="template-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="template-title">Template Utilizadores</div>
+          <div class="template-description">
+            Arquivo Excel com campos obrigatórios e opcionais para importação de utilizadores
+          </div>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="baixarTemplate('utilizadores')">
+            <i class="fas fa-download"></i> Baixar Template
+          </button>
+        </div>
+      </div>
+      
+      <!-- Estatísticas -->
+      <div class="import-export-section">
+        <h5 class="section-title">
+          <i class="fas fa-chart-bar"></i> Estatísticas
+        </h5>
+        
+        <div class="stats-card">
+          <span class="stats-number">1,247</span>
+          <span class="stats-label">Total de importações</span>
+        </div>
+        
+        <div class="stats-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%)">
+          <span class="stats-number">98.5%</span>
+          <span class="stats-label">Taxa de sucesso</span>
+        </div>
+        
+        <div class="stats-card" style="background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%)">
+          <span class="stats-number">15</span>
+          <span class="stats-label">Importações hoje</span>
+        </div>
+      </div>
+      
+      <!-- Histórico Recente -->
+      <div class="import-export-section">
+        <h5 class="section-title">
+          <i class="fas fa-history"></i> Histórico Recente
+        </h5>
+        
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-title">
+              <i class="fas fa-upload text-success"></i> Importação Fornecedores
+            </div>
+            <div class="history-date">Hoje às 14:30</div>
+          </div>
+          <div class="history-details">
+            125 registros importados com sucesso
+            <span class="badge bg-success status-badge ms-2">Sucesso</span>
+          </div>
+        </div>
+        
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-title">
+              <i class="fas fa-download text-info"></i> Exportação Clientes
+            </div>
+            <div class="history-date">Hoje às 10:15</div>
+          </div>
+          <div class="history-details">
+            Exportação para Excel - 1,456 registros
+            <span class="badge bg-success status-badge ms-2">Concluído</span>
+          </div>
+        </div>
+        
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-title">
+              <i class="fas fa-upload text-warning"></i> Importação Utilizadores
+            </div>
+            <div class="history-date">Ontem às 16:45</div>
+          </div>
+          <div class="history-details">
+            45 registros, 3 com erros de validação
+            <span class="badge bg-warning status-badge ms-2">Com avisos</span>
+          </div>
+        </div>
+        
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="abrirHistorico()">
+            <i class="fas fa-list"></i> Ver histórico completo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Histórico -->
+<div class="modal fade" id="modalHistorico" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-history"></i> Histórico de Importações/Exportações
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-striped" id="tabelaHistorico">
+            <thead>
+              <tr>
+                <th>Data/Hora</th>
+                <th>Tipo</th>
+                <th>Operação</th>
+                <th>Registros</th>
+                <th>Status</th>
+                <th>Utilizador</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>16/12/2024 14:30</td>
+                <td><i class="fas fa-truck"></i> Fornecedores</td>
+                <td><span class="badge bg-success">Importação</span></td>
+                <td>125</td>
+                <td><span class="badge bg-success">Sucesso</span></td>
+                <td>João Silva</td>
+                <td>
+                  <button class="btn btn-outline-info btn-sm" onclick="verDetalhes(1)">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="baixarRelatorio(1)">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>16/12/2024 10:15</td>
+                <td><i class="fas fa-users"></i> Clientes</td>
+                <td><span class="badge bg-info">Exportação</span></td>
+                <td>1,456</td>
+                <td><span class="badge bg-success">Concluído</span></td>
+                <td>Maria Santos</td>
+                <td>
+                  <button class="btn btn-outline-info btn-sm" onclick="verDetalhes(2)">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="baixarArquivo(2)">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>15/12/2024 16:45</td>
+                <td><i class="fas fa-user-tie"></i> Utilizadores</td>
+                <td><span class="badge bg-success">Importação</span></td>
+                <td>45</td>
+                <td><span class="badge bg-warning">Com avisos</span></td>
+                <td>Admin Sistema</td>
+                <td>
+                  <button class="btn btn-outline-info btn-sm" onclick="verDetalhes(3)">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-warning btn-sm" onclick="verErros(3)">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-outline-primary" onclick="exportarHistorico()">
+          <i class="fas fa-download"></i> Exportar Histórico
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Erros -->
+<div class="modal fade" id="modalErros" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-exclamation-triangle text-warning"></i> Relatório de Erros
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="error-list" id="listaErros">
+          <!-- Erros serão carregados dinamicamente -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-outline-primary" onclick="baixarRelatorioErros()">
+          <i class="fas fa-download"></i> Baixar Relatório
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+// Inicialização
+$(document).ready(function() {
+  // Configurar drag and drop
+  configurarDragDrop();
+  
+  // Configurar eventos
+  configurarEventos();
+  
+  // Inicializar DataTable para histórico
+  $('#tabelaHistorico').DataTable({
+    language: {
+      url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json'
+    },
+    order: [[0, 'desc']],
+    pageLength: 10
+  });
+});
+
+// Configurar drag and drop
+function configurarDragDrop() {
+  const uploadArea = document.getElementById('uploadArea');
+  
+  uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+  
+  uploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+  });
+  
+  uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      document.getElementById('fileInput').files = files;
+      processarArquivo(document.getElementById('fileInput'));
+    }
+  });
+}
+
+// Configurar eventos
+function configurarEventos() {
+  // Evento para mostrar/ocultar período personalizado
+  $('#filtroPeriodo').on('change', function() {
+    if ($(this).val() === 'personalizado') {
+      $('#periodoPersonalizado').show();
+    } else {
+      $('#periodoPersonalizado').hide();
+    }
+  });
+}
+
+// Processar arquivo selecionado
+function processarArquivo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  // Validar tipo de arquivo
+  const allowedTypes = ['.xlsx', '.xls', '.csv'];
+  const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+  
+  if (!allowedTypes.includes(fileExtension)) {
+    alert('Tipo de arquivo não suportado. Use apenas Excel (.xlsx, .xls) ou CSV (.csv)');
+    return;
+  }
+  
+  // Validar tamanho (10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    alert('Arquivo muito grande. O tamanho máximo é 10MB.');
+    return;
+  }
+  
+  // Mostrar informações do arquivo
+  $('#fileName').text(file.name);
+  $('#fileDetails').text(`Tamanho: ${formatarTamanho(file.size)} | Tipo: ${file.type || 'Desconhecido'}`);
+  $('#fileInfo').show();
+  
+  // Habilitar botão de validação
+  $('#btnValidar').prop('disabled', false);
+  
+  // Ocultar área de upload
+  $('#uploadArea').hide();
+}
+
+// Remover arquivo
+function removerArquivo() {
+  $('#fileInput').val('');
+  $('#fileInfo').hide();
+  $('#uploadArea').show();
+  $('#btnValidar').prop('disabled', true);
+  $('#btnImportar').prop('disabled', true);
+  $('#validationResults').hide();
+  $('#progressContainer').hide();
+}
+
+// Validar arquivo
+function validarArquivo() {
+  const btn = $('#btnValidar');
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Validando...').prop('disabled', true);
+  
+  // Mostrar barra de progresso
+  $('#progressContainer').show();
+  $('#progressText').text('Validando dados...');
+  
+  // Simular progresso
+  let progress = 0;
+  const interval = setInterval(function() {
+    progress += Math.random() * 20;
+    if (progress > 100) progress = 100;
+    
+    $('#progressBar').css('width', progress + '%');
+    $('#progressPercent').text(Math.round(progress) + '%');
+    
+    if (progress >= 100) {
+      clearInterval(interval);
+      
+      setTimeout(function() {
+        // Simular resultados da validação
+        mostrarResultadosValidacao();
+        
+        btn.html(originalText).prop('disabled', false);
+        $('#btnImportar').prop('disabled', false);
+        $('#progressContainer').hide();
+      }, 1000);
+    }
+  }, 200);
+}
+
+// Mostrar resultados da validação
+function mostrarResultadosValidacao() {
+  const tipoImportacao = $('input[name="tipoImportacao"]:checked').val();
+  
+  let validationContent = `
+    <div class="validation-item">
+      <span><i class="fas fa-check text-success"></i> Registros válidos:</span>
+      <span class="fw-bold text-success">147</span>
+    </div>
+    <div class="validation-item">
+      <span><i class="fas fa-exclamation-triangle text-warning"></i> Registros com avisos:</span>
+      <span class="fw-bold text-warning">3</span>
+    </div>
+    <div class="validation-item">
+      <span><i class="fas fa-times text-danger"></i> Registros com erros:</span>
+      <span class="fw-bold text-danger">0</span>
+    </div>
+    <div class="validation-item">
+      <span><i class="fas fa-info text-info"></i> Total de registros:</span>
+      <span class="fw-bold">150</span>
+    </div>
+  `;
+  
+  $('#validationContent').html(validationContent);
+  $('#validationResults').removeClass('validation-error').addClass('validation-success').show();
+}
+
+// Importar dados
+function importarDados() {
+  if (!confirm('Tem certeza que deseja importar os dados? Esta ação não pode ser desfeita.')) {
+    return;
+  }
+  
+  const btn = $('#btnImportar');
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Importando...').prop('disabled', true);
+  
+  // Mostrar barra de progresso
+  $('#progressContainer').show();
+  $('#progressText').text('Importando dados...');
+  
+  // Simular progresso
+  let progress = 0;
+  const interval = setInterval(function() {
+    progress += Math.random() * 15;
+    if (progress > 100) progress = 100;
+    
+    $('#progressBar').css('width', progress + '%');
+    $('#progressPercent').text(Math.round(progress) + '%');
+    
+    if (progress >= 100) {
+      clearInterval(interval);
+      
+      setTimeout(function() {
+        btn.html(originalText).prop('disabled', false);
+        $('#progressContainer').hide();
+        
+        // Mostrar notificação de sucesso
+        mostrarNotificacao('Dados importados com sucesso! 147 registros foram adicionados.', 'success');
+        
+        // Limpar formulário
+        limparFormulario();
+      }, 1000);
+    }
+  }, 300);
+}
+
+// Limpar formulário
+function limparFormulario() {
+  removerArquivo();
+  $('#validationResults').hide();
+  $('#progressContainer').hide();
+}
+
+// Selecionar formato de exportação
+function selecionarFormato(formato) {
+  $('.export-format').removeClass('selected');
+  $(`.export-format[data-format="${formato}"]`).addClass('selected');
+}
+
+// Exportar dados
+function exportarDados() {
+  const tipoExportacao = $('input[name="tipoExportacao"]:checked').val();
+  const formato = $('.export-format.selected').data('format');
+  const filtroStatus = $('#filtroStatus').val();
+  const filtroPeriodo = $('#filtroPeriodo').val();
+  
+  const btn = $(event.target);
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Exportando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular download
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = `${tipoExportacao}_${new Date().toISOString().split('T')[0]}.${formato === 'excel' ? 'xlsx' : formato}`;
+    link.click();
+    
+    btn.html(originalText).prop('disabled', false);
+    
+    // Mostrar notificação
+    mostrarNotificacao(`Exportação de ${tipoExportacao} concluída com sucesso!`, 'success');
+  }, 2000);
+}
+
+// Visualizar prévia
+function visualizarPrevia() {
+  const tipoExportacao = $('input[name="tipoExportacao"]:checked').val();
+  
+  // Simular abertura de prévia
+  mostrarNotificacao(`Abrindo prévia dos dados de ${tipoExportacao}...`, 'info');
+  
+  setTimeout(function() {
+    // Aqui seria aberta uma modal ou nova janela com a prévia
+    alert(`Prévia dos dados de ${tipoExportacao} (funcionalidade em desenvolvimento)`);
+  }, 1000);
+}
+
+// Agendar exportação
+function agendarExportacao() {
+  // Simular agendamento
+  alert('Funcionalidade de agendamento em desenvolvimento');
+}
+
+// Baixar template
+function baixarTemplate(tipo) {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Baixando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular download
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = `template_${tipo}.xlsx`;
+    link.click();
+    
+    btn.html(originalText).prop('disabled', false);
+    
+    // Mostrar notificação
+    mostrarNotificacao(`Template de ${tipo} baixado com sucesso!`, 'success');
+  }, 1500);
+}
+
+// Abrir histórico
+function abrirHistorico() {
+  $('#modalHistorico').modal('show');
+}
+
+// Abrir configurações
+function abrirConfiguracoes() {
+  alert('Configurações em desenvolvimento');
+}
+
+// Ver detalhes
+function verDetalhes(id) {
+  alert(`Detalhes da operação ${id} (funcionalidade em desenvolvimento)`);
+}
+
+// Baixar relatório
+function baixarRelatorio(id) {
+  const link = document.createElement('a');
+  link.href = '#';
+  link.download = `relatorio_operacao_${id}.pdf`;
+  link.click();
+  
+  mostrarNotificacao('Relatório baixado com sucesso!', 'success');
+}
+
+// Baixar arquivo
+function baixarArquivo(id) {
+  const link = document.createElement('a');
+  link.href = '#';
+  link.download = `exportacao_${id}.xlsx`;
+  link.click();
+  
+  mostrarNotificacao('Arquivo baixado com sucesso!', 'success');
+}
+
+// Ver erros
+function verErros(id) {
+  // Simular carregamento de erros
+  const erros = [
+    { linha: 15, campo: 'NUIT', erro: 'NUIT inválido: deve ter 9 dígitos' },
+    { linha: 23, campo: 'Email', erro: 'Formato de email inválido' },
+    { linha: 45, campo: 'Telefone', erro: 'Número de telefone deve ter 9 dígitos' }
+  ];
+  
+  let errosHtml = '';
+  erros.forEach(erro => {
+    errosHtml += `
+      <div class="error-item">
+        <div class="error-line">Linha ${erro.linha} - Campo: ${erro.campo}</div>
+        <div class="error-message">${erro.erro}</div>
+      </div>
+    `;
+  });
+  
+  $('#listaErros').html(errosHtml);
+  $('#modalErros').modal('show');
+}
+
+// Baixar relatório de erros
+function baixarRelatorioErros() {
+  const link = document.createElement('a');
+  link.href = '#';
+  link.download = 'relatorio_erros.pdf';
+  link.click();
+  
+  mostrarNotificacao('Relatório de erros baixado com sucesso!', 'success');
+}
+
+// Exportar histórico
+function exportarHistorico() {
+  const link = document.createElement('a');
+  link.href = '#';
+  link.download = 'historico_importacao_exportacao.xlsx';
+  link.click();
+  
+  mostrarNotificacao('Histórico exportado com sucesso!', 'success');
+}
+
+// Formatar tamanho do arquivo
+function formatarTamanho(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Mostrar notificação
+function mostrarNotificacao(mensagem, tipo = 'info') {
+  // Criar elemento de notificação
+  const notificacao = $(`
+    <div class="alert alert-${tipo} alert-dismissible fade show position-fixed" 
+         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+      ${mensagem}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `);
+  
+  // Adicionar ao body
+  $('body').append(notificacao);
+  
+  // Remover automaticamente após 5 segundos
+  setTimeout(function() {
+    notificacao.alert('close');
+  }, 5000);
+}
+</script>
+<% end %>

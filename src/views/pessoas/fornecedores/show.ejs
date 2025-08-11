@@ -1,0 +1,545 @@
+<%
+// Título da página
+const pageTitle = 'Detalhes do Fornecedor - SYNTRA ERP';
+%>
+<style>
+  .info-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .info-item {
+    margin-bottom: 10px;
+  }
+  .info-label {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+  .info-value {
+    color: #495057;
+    margin-top: 2px;
+  }
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .audit-info {
+    background-color: #e9ecef;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 0.875rem;
+  }
+  .timeline-item {
+    border-left: 3px solid #dee2e6;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    position: relative;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 5px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #6c757d;
+  }
+  .timeline-item.recent::before {
+    background-color: #28a745;
+  }
+  .stat-card {
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+  }
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+</style>
+</style>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Detalhes do Fornecedor</h1>
+      <p class="mb-0 text-muted">
+        <span class="badge bg-primary status-badge me-2">FOR123456</span>
+        <span class="badge bg-success status-badge">Activo</span>
+        <span class="badge bg-info status-badge ms-2">Preferencial</span>
+      </p>
+    </div>
+    <div>
+      <a href="/pessoas/fornecedores" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <a href="/pessoas/fornecedores/123/edit" class="btn btn-outline-primary me-2">
+        <i class="fas fa-edit"></i> Editar
+      </a>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="fas fa-download"></i> Exportar
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="exportarPDF()"><i class="fas fa-file-pdf"></i> PDF</a></li>
+          <li><a class="dropdown-item" href="#" onclick="exportarExcel()"><i class="fas fa-file-excel"></i> Excel</a></li>
+          <li><a class="dropdown-item" href="#" onclick="imprimirFicha()"><i class="fas fa-print"></i> Imprimir</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Coluna Principal -->
+    <div class="col-lg-8">
+      <!-- Dados Básicos -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-user-tie"></i> Dados Básicos</h5>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">Nome/Razão Social</div>
+              <div class="info-value">Fornecedor Exemplo Lda</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">NUIT</div>
+              <div class="info-value">
+                123456789
+                <span class="badge bg-success ms-2">Válido</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Contacto Telefónico</div>
+              <div class="info-value">
+                <a href="tel:+258841234567">+258 84 123 4567</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">Código</div>
+              <div class="info-value">FOR123456</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Número de Alvará</div>
+              <div class="info-value">ALV2024001</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value">
+                <a href="mailto:fornecedor@exemplo.co.mz">fornecedor@exemplo.co.mz</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-map-marker-alt"></i> Endereço</h5>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <div class="info-item">
+              <div class="info-label">Endereço Completo</div>
+              <div class="info-value">Av. Julius Nyerere, 123, Maputo</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="info-item">
+              <div class="info-label">Cidade</div>
+              <div class="info-value">Maputo</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Província</div>
+              <div class="info-value">Maputo Cidade</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contacto e Condições -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-handshake"></i> Contacto e Condições Comerciais</h5>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">Pessoa de Contacto</div>
+              <div class="info-value">João Silva</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Telefone da Pessoa de Contacto</div>
+              <div class="info-value">
+                <a href="tel:+258829876543">+258 82 987 6543</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">Condições de Pagamento</div>
+              <div class="info-value">30 Dias</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Prazo de Pagamento</div>
+              <div class="info-value">30 dias</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="info-item mt-3">
+          <div class="info-label">Observações</div>
+          <div class="info-value">Fornecedor de confiança com histórico de entregas pontuais.</div>
+        </div>
+      </div>
+
+      <!-- Histórico de Compras -->
+      <div class="info-section">
+        <h5 class="section-title">
+          <i class="fas fa-shopping-cart"></i> Histórico de Compras
+          <button class="btn btn-sm btn-outline-primary float-end" onclick="verHistoricoCompleto()">
+            Ver Completo
+          </button>
+        </h5>
+        
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Documento</th>
+                <th>Valor</th>
+                <th>Estado</th>
+                <th>Acções</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>20/01/2024</td>
+                <td>FC2024001</td>
+                <td class="text-end">MT 25,500.00</td>
+                <td><span class="badge bg-success">Pago</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-info" onclick="verDocumento('FC2024001')">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>15/01/2024</td>
+                <td>FC2024002</td>
+                <td class="text-end">MT 18,750.00</td>
+                <td><span class="badge bg-warning">Pendente</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-info" onclick="verDocumento('FC2024002')">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>10/01/2024</td>
+                <td>FC2024003</td>
+                <td class="text-end">MT 32,100.00</td>
+                <td><span class="badge bg-success">Pago</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline-info" onclick="verDocumento('FC2024003')">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Histórico de Alterações -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-history"></i> Histórico de Alterações</h5>
+        
+        <div class="timeline">
+          <div class="timeline-item recent">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>Email actualizado</strong><br>
+                <small class="text-muted">De: antigo@exemplo.co.mz → Para: fornecedor@exemplo.co.mz</small>
+              </div>
+              <small class="text-muted">15/01/2024 14:30<br>admin@syntra.co.mz</small>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>Telefone actualizado</strong><br>
+                <small class="text-muted">De: +258 84 111 2222 → Para: +258 84 123 4567</small>
+              </div>
+              <small class="text-muted">10/01/2024 09:15<br>admin@syntra.co.mz</small>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>Fornecedor criado</strong><br>
+                <small class="text-muted">Registo inicial do fornecedor</small>
+              </div>
+              <small class="text-muted">05/01/2024 10:30<br>admin@syntra.co.mz</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna Lateral -->
+    <div class="col-lg-4">
+      <!-- Estatísticas -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+        
+        <div class="row mb-3">
+          <div class="col-6">
+            <div class="stat-card bg-primary text-white">
+              <div class="stat-value">12</div>
+              <div class="stat-label">Total Compras</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card bg-success text-white">
+              <div class="stat-value">MT 125K</div>
+              <div class="stat-label">Valor Total</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-6">
+            <div class="stat-card bg-info text-white">
+              <div class="stat-value">MT 18K</div>
+              <div class="stat-label">Média Mensal</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card bg-warning text-white">
+              <div class="stat-value">2</div>
+              <div class="stat-label">Pendentes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configurações -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-cogs"></i> Configurações</h5>
+        
+        <div class="info-item">
+          <div class="info-label">Regime Tributário</div>
+          <div class="info-value">
+            <span class="badge bg-secondary">Geral</span>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">Estado</div>
+          <div class="info-value">
+            <span class="badge bg-success">Activo</span>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">Características</div>
+          <div class="info-value">
+            <span class="badge bg-info me-1">Preferencial</span>
+            <span class="badge bg-success">Aceita Devoluções</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informações Financeiras -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-money-bill-wave"></i> Informações Financeiras</h5>
+        
+        <div class="info-item">
+          <div class="info-label">Limite de Crédito</div>
+          <div class="info-value text-primary fw-bold">MT 50,000.00</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">Saldo Actual</div>
+          <div class="info-value text-success fw-bold">MT 15,250.00</div>
+          <small class="text-muted">Última actualização: 20/01/2024</small>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">Desconto Padrão</div>
+          <div class="info-value">5.00%</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">Crédito Disponível</div>
+          <div class="info-value text-info fw-bold">MT 34,750.00</div>
+        </div>
+      </div>
+
+      <!-- Informações de Auditoria -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-shield-alt"></i> Informações de Auditoria</h5>
+        
+        <div class="audit-info">
+          <div class="mb-2">
+            <strong>Criado em:</strong><br>
+            <small>05/01/2024 às 10:30</small><br>
+            <small class="text-muted">por admin@syntra.co.mz</small>
+          </div>
+          
+          <div class="mb-2">
+            <strong>Última actualização:</strong><br>
+            <small>15/01/2024 às 14:30</small><br>
+            <small class="text-muted">por admin@syntra.co.mz</small>
+          </div>
+          
+          <div class="mb-2">
+            <strong>Total de alterações:</strong>
+            <span class="badge bg-info ms-2">5</span>
+          </div>
+          
+          <div>
+            <strong>Última actividade:</strong><br>
+            <small>20/01/2024 às 16:45</small><br>
+            <small class="text-muted">Compra FC2024001</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acções Rápidas -->
+      <div class="info-section">
+        <h5 class="section-title"><i class="fas fa-bolt"></i> Acções Rápidas</h5>
+        
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-primary" onclick="novaCompra()">
+            <i class="fas fa-plus"></i> Nova Compra
+          </button>
+          
+          <button class="btn btn-outline-success" onclick="registarPagamento()">
+            <i class="fas fa-money-bill"></i> Registar Pagamento
+          </button>
+          
+          <button class="btn btn-outline-info" onclick="enviarEmail()">
+            <i class="fas fa-envelope"></i> Enviar Email
+          </button>
+          
+          <button class="btn btn-outline-warning" onclick="bloquearFornecedor()">
+            <i class="fas fa-ban"></i> Bloquear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+<script>
+function exportarPDF() {
+  window.open('/pessoas/fornecedores/123/export/pdf', '_blank');
+}
+
+function exportarExcel() {
+  window.open('/pessoas/fornecedores/123/export/excel', '_blank');
+}
+
+function imprimirFicha() {
+  window.print();
+}
+
+function verHistoricoCompleto() {
+  window.location.href = '/pessoas/fornecedores/123/historico';
+}
+
+function verDocumento(numero) {
+  window.open('/compras/documentos/' + numero, '_blank');
+}
+
+function novaCompra() {
+  window.location.href = '/compras/nova?fornecedor=123';
+}
+
+function registarPagamento() {
+  window.location.href = '/financeiro/pagamentos/novo?fornecedor=123';
+}
+
+function enviarEmail() {
+  const email = 'fornecedor@exemplo.co.mz';
+  const assunto = 'Contacto - SYNTRA ERP';
+  const corpo = 'Caro fornecedor,\n\n';
+  
+  window.location.href = `mailto:${email}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+}
+
+function bloquearFornecedor() {
+  if (confirm('Tem certeza que deseja bloquear este fornecedor?')) {
+    $.ajax({
+      url: '/pessoas/fornecedores/123/bloquear',
+      type: 'POST',
+      success: function(response) {
+        if (response.success) {
+          alert('Fornecedor bloqueado com sucesso!');
+          location.reload();
+        } else {
+          alert('Erro ao bloquear fornecedor: ' + response.message);
+        }
+      },
+      error: function() {
+        alert('Erro ao bloquear fornecedor.');
+      }
+    });
+  }
+}
+
+// Inicialização
+$(document).ready(function() {
+  // Adicionar tooltips
+  $('[data-bs-toggle="tooltip"]').tooltip();
+  
+  // Actualizar estatísticas a cada 30 segundos
+  setInterval(function() {
+    actualizarEstatisticas();
+  }, 30000);
+});
+
+function actualizarEstatisticas() {
+  $.ajax({
+    url: '/pessoas/fornecedores/123/estatisticas',
+    type: 'GET',
+    success: function(data) {
+      // Actualizar valores das estatísticas
+      $('.stat-card').each(function(index) {
+        const novoValor = data.estatisticas[index];
+        if (novoValor) {
+          $(this).find('.stat-value').text(novoValor);
+        }
+      });
+    },
+    error: function() {
+      console.log('Erro ao actualizar estatísticas');
+    }
+  });
+}
+</script>
+</script>

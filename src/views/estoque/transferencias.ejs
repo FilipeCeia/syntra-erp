@@ -1,0 +1,173 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-exchange-alt"></i> Transferências entre Lojas
+    </h1>
+    <a href="/estoque/transferencias/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Nova Transferência
+    </a>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Transferências Hoje
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Concluídas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">156</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Em Trânsito
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-truck fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Transferências -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-list"></i> Lista de Transferências
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Data</th>
+                  <th>Origem</th>
+                  <th>Destino</th>
+                  <th>Produtos</th>
+                  <th>Status</th>
+                  <th>Responsável</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>TR001</td>
+                  <td>15/01/2024</td>
+                  <td>Loja Central</td>
+                  <td>Loja Norte</td>
+                  <td>3 itens</td>
+                  <td><span class="badge badge-success">Concluída</span></td>
+                  <td>João Silva</td>
+                  <td>
+                    <a href="/estoque/transferencias/1" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-secondary" title="Imprimir">
+                      <i class="fas fa-print"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>TR002</td>
+                  <td>14/01/2024</td>
+                  <td>Loja Norte</td>
+                  <td>Loja Sul</td>
+                  <td>5 itens</td>
+                  <td><span class="badge badge-warning">Pendente</span></td>
+                  <td>Maria Santos</td>
+                  <td>
+                    <a href="/estoque/transferencias/2" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-success" title="Confirmar">
+                      <i class="fas fa-check"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-danger" title="Cancelar">
+                      <i class="fas fa-times"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>TR003</td>
+                  <td>13/01/2024</td>
+                  <td>Loja Central</td>
+                  <td>Loja Sul</td>
+                  <td>2 itens</td>
+                  <td><span class="badge badge-info">Em Trânsito</span></td>
+                  <td>Pedro Costa</td>
+                  <td>
+                    <a href="/estoque/transferencias/3" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-success" title="Receber">
+                      <i class="fas fa-check-double"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,366 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-percentage mr-2"></i>Gestão de IVA
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="#">Artigos</a></li>
+          <li class="breadcrumb-item active">IVA</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Taxas de IVA Configuradas</h3>
+            <div class="card-tools">
+              <a href="/artigos/iva/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Nova Taxa de IVA
+              </a>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Filtros -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Pesquisar taxas..." id="searchInput">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <select class="form-control" id="statusFilter">
+                  <option value="">Todos os Status</option>
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-secondary btn-block" onclick="limparFiltros()">
+                  <i class="fas fa-eraser"></i> Limpar
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabela de Taxas de IVA -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped" id="ivaTable">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Taxa (%)</th>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Produtos</th>
+                    <th>Criado em</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dados de exemplo -->
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="tax-indicator" style="background-color: #dc3545; width: 8px; height: 30px; margin-right: 10px; border-radius: 2px;"></div>
+                        <strong>IVA Normal</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge badge-danger" style="font-size: 1em;">23%</span>
+                    </td>
+                    <td><code>NOR</code></td>
+                    <td><span class="badge badge-primary">Standard</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td><span class="badge badge-info">156 produtos</span></td>
+                    <td>01/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(1)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="tax-indicator" style="background-color: #ffc107; width: 8px; height: 30px; margin-right: 10px; border-radius: 2px;"></div>
+                        <strong>IVA Intermédio</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge badge-warning" style="font-size: 1em;">13%</span>
+                    </td>
+                    <td><code>INT</code></td>
+                    <td><span class="badge badge-primary">Standard</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td><span class="badge badge-info">42 produtos</span></td>
+                    <td>01/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(2)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="tax-indicator" style="background-color: #28a745; width: 8px; height: 30px; margin-right: 10px; border-radius: 2px;"></div>
+                        <strong>IVA Reduzido</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge badge-success" style="font-size: 1em;">6%</span>
+                    </td>
+                    <td><code>RED</code></td>
+                    <td><span class="badge badge-primary">Standard</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td><span class="badge badge-info">89 produtos</span></td>
+                    <td>01/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(3)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="tax-indicator" style="background-color: #6c757d; width: 8px; height: 30px; margin-right: 10px; border-radius: 2px;"></div>
+                        <strong>Isento de IVA</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge badge-secondary" style="font-size: 1em;">0%</span>
+                    </td>
+                    <td><code>ISE</code></td>
+                    <td><span class="badge badge-secondary">Especial</span></td>
+                    <td><span class="badge badge-success">Ativo</span></td>
+                    <td><span class="badge badge-info">12 produtos</span></td>
+                    <td>01/01/2024</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-info" title="Ver">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" title="Eliminar" onclick="confirmarEliminacao(4)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="row mt-4">
+              <div class="col-md-3">
+                <div class="info-box">
+                  <span class="info-box-icon bg-info"><i class="fas fa-percentage"></i></span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Total de Taxas</span>
+                    <span class="info-box-number">4</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="info-box">
+                  <span class="info-box-icon bg-success"><i class="fas fa-check"></i></span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Taxas Ativas</span>
+                    <span class="info-box-number">4</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="info-box">
+                  <span class="info-box-icon bg-warning"><i class="fas fa-box"></i></span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Produtos Afetados</span>
+                    <span class="info-box-number">299</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="info-box">
+                  <span class="info-box-icon bg-danger"><i class="fas fa-calculator"></i></span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Taxa Média</span>
+                    <span class="info-box-number">10.5%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paginação -->
+            <div class="row mt-3">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info">
+                  Mostrando 1 a 4 de 4 registos
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-7">
+                <div class="dataTables_paginate paging_simple_numbers">
+                  <ul class="pagination">
+                    <li class="paginate_button page-item previous disabled">
+                      <a href="#" class="page-link">Anterior</a>
+                    </li>
+                    <li class="paginate_button page-item active">
+                      <a href="#" class="page-link">1</a>
+                    </li>
+                    <li class="paginate_button page-item next disabled">
+                      <a href="#" class="page-link">Próximo</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+  
+  .btn-group .btn {
+    margin-right: 2px;
+  }
+  
+  .badge {
+    font-size: 0.75em;
+  }
+  
+  .card-tools .btn {
+    margin-left: 5px;
+  }
+  
+  .tax-indicator {
+    display: inline-block;
+  }
+  
+  .info-box {
+    display: block;
+    min-height: 90px;
+    background: #fff;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    border-radius: 2px;
+    margin-bottom: 15px;
+  }
+  
+  .info-box-icon {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 2px;
+    display: block;
+    float: left;
+    height: 90px;
+    width: 90px;
+    text-align: center;
+    font-size: 45px;
+    line-height: 90px;
+    background: rgba(0,0,0,0.2);
+  }
+  
+  .info-box-content {
+    padding: 5px 10px;
+    margin-left: 90px;
+  }
+  
+  .info-box-text {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  
+  .info-box-number {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+  }
+</style>
+
+<script>
+// Função para pesquisar taxas de IVA
+function pesquisarIVA() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  
+  // Aqui seria implementada a lógica de pesquisa
+  console.log('Pesquisando:', { searchTerm, status });
+}
+
+// Função para limpar filtros
+function limparFiltros() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('statusFilter').value = '';
+  pesquisarIVA();
+}
+
+// Função para confirmar eliminação
+function confirmarEliminacao(id) {
+  if (confirm('Tem certeza que deseja eliminar esta taxa de IVA?\n\nAtenção: Esta ação pode afetar os produtos que utilizam esta taxa.')) {
+    // Aqui seria implementada a lógica de eliminação
+    console.log('Eliminando taxa de IVA:', id);
+  }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Pesquisa em tempo real
+  document.getElementById('searchInput').addEventListener('input', pesquisarIVA);
+  document.getElementById('statusFilter').addEventListener('change', pesquisarIVA);
+});
+</script>

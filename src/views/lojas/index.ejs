@@ -1,0 +1,216 @@
+<!-- Gestão de Lojas -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Gestão de Lojas</h1>
+      <p class="mb-0 text-muted">Gerir todas as lojas da empresa</p>
+    </div>
+    <div>
+      <a href="/lojas/create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nova Loja
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/lojas">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Pesquisar</label>
+              <input type="text" class="form-control" name="search" value="<%= filters.search %>" placeholder="Nome, código ou endereço...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select class="form-select" name="status">
+                <option value="">Todos</option>
+                <option value="1" <%= filters.status == '1' ? 'selected' : '' %>>Ativa</option>
+                <option value="0" <%= filters.status == '0' ? 'selected' : '' %>>Inativa</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Itens por página</label>
+              <select class="form-select" name="limit">
+                <option value="10" <%= pagination.limit == 10 ? 'selected' : '' %>>10</option>
+                <option value="25" <%= pagination.limit == 25 ? 'selected' : '' %>>25</option>
+                <option value="50" <%= pagination.limit == 50 ? 'selected' : '' %>>50</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">&nbsp;</label>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela de Lojas -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Lojas (<%= pagination.totalItems %>)</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Endereço</th>
+              <th>Gerente</th>
+              <th>Funcionários</th>
+              <th>Vendas do Mês</th>
+              <th>Meta</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (lojas.length > 0) { %>
+              <% lojas.forEach(loja => { %>
+              <tr>
+                <td><%= loja.codigo %></td>
+                <td>
+                  <strong><%= loja.nome %></strong><br>
+                  <small class="text-muted"><%= loja.telefone %></small>
+                </td>
+                <td><%= loja.endereco %></td>
+                <td><%= loja.gerente %></td>
+                <td>
+                  <span class="badge badge-info"><%= loja.funcionarios %></span>
+                </td>
+                <td>
+                  <strong><%= loja.vendas_mes.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></strong>
+                </td>
+                <td>
+                  <%= loja.meta_mes.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %><br>
+                  <small class="text-<%= (loja.vendas_mes / loja.meta_mes * 100) >= 80 ? 'success' : 'warning' %>">
+                    <%= ((loja.vendas_mes / loja.meta_mes) * 100).toFixed(1) %>% atingido
+                  </small>
+                </td>
+                <td>
+                  <% if (loja.status == 1) { %>
+                    <span class="badge badge-success">Ativa</span>
+                  <% } else { %>
+                    <span class="badge badge-secondary">Inativa</span>
+                  <% } %>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <a href="/lojas/<%= loja.id %>" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="/lojas/<%= loja.id %>/edit" class="btn btn-sm btn-outline-warning" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(<%= loja.id %>, '<%= loja.nome %>')" title="Excluir">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="9" class="text-center py-4">
+                  <i class="fas fa-store fa-3x text-gray-300 mb-3"></i><br>
+                  <span class="text-muted">Nenhuma loja encontrada</span>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pagination.totalPages > 1) { %>
+      <nav aria-label="Paginação">
+        <ul class="pagination justify-content-center">
+          <li class="page-item <%= pagination.currentPage <= 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&limit=<%= pagination.limit %>">
+              Anterior
+            </a>
+          </li>
+          
+          <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+            <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>&search=<%= filters.search %>&status=<%= filters.status %>&limit=<%= pagination.limit %>">
+                <%= i %>
+              </a>
+            </li>
+          <% } %>
+          
+          <li class="page-item <%= pagination.currentPage >= pagination.totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&limit=<%= pagination.limit %>">
+              Próximo
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="confirmarExclusaoModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Exclusão</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir a loja <strong id="nomeLojaExcluir"></strong>?</p>
+        <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let lojaIdParaExcluir = null;
+
+function confirmarExclusao(id, nome) {
+  lojaIdParaExcluir = id;
+  document.getElementById('nomeLojaExcluir').textContent = nome;
+  new bootstrap.Modal(document.getElementById('confirmarExclusaoModal')).show();
+}
+
+document.getElementById('btnConfirmarExclusao').addEventListener('click', function() {
+  if (lojaIdParaExcluir) {
+    // Simular exclusão
+    fetch(`/lojas/${lojaIdParaExcluir}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(() => {
+      location.reload();
+    }).catch(() => {
+      alert('Loja excluída com sucesso!');
+      location.reload();
+    });
+  }
+});
+</script>

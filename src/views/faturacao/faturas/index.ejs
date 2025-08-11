@@ -1,0 +1,355 @@
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros e Estatísticas -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Filtros e Estatísticas</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <!-- Estatísticas -->
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="info-box bg-info">
+                      <span class="info-box-icon"><i class="fas fa-file-invoice"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Total Faturas</span>
+                        <span class="info-box-number">245</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-box bg-success">
+                      <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Pagas</span>
+                        <span class="info-box-number">198</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-box bg-warning">
+                      <span class="info-box-icon"><i class="fas fa-clock"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Pendentes</span>
+                        <span class="info-box-number">32</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-box bg-danger">
+                      <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Vencidas</span>
+                        <span class="info-box-number">15</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Filtros -->
+              <div class="col-md-4">
+                <form action="" method="GET">
+                  <div class="form-group">
+                    <label>Status:</label>
+                    <select class="form-control select2" style="width: 100%;">
+                      <option selected="selected">Todos</option>
+                      <option>Pagas</option>
+                      <option>Pendentes</option>
+                      <option>Vencidas</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Período:</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="far fa-calendar-alt"></i>
+                        </span>
+                      </div>
+                      <input type="text" class="form-control float-right" id="reservation">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Filtrar</button>
+                  <button type="reset" class="btn btn-default">Limpar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de Faturas -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Lista de Faturas</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-nova-fatura">
+                <i class="fas fa-plus"></i> Nova Fatura
+              </button>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Nº Fatura</th>
+                  <th>Cliente/Empresa</th>
+                  <th>Data Emissão</th>
+                  <th>Data Vencimento</th>
+                  <th>Valor Total</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>FAT-2023-001</td>
+                  <td>Empresa ABC Ltda</td>
+                  <td>01/01/2023</td>
+                  <td>31/01/2023</td>
+                  <td>5.000,00 MZN</td>
+                  <td><span class="badge bg-success">Paga</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>FAT-2023-002</td>
+                  <td>Comércio XYZ</td>
+                  <td>15/01/2023</td>
+                  <td>14/02/2023</td>
+                  <td>3.500,00 MZN</td>
+                  <td><span class="badge bg-success">Paga</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>FAT-2023-003</td>
+                  <td>Loja 123</td>
+                  <td>10/02/2023</td>
+                  <td>12/03/2023</td>
+                  <td>1.500,00 MZN</td>
+                  <td><span class="badge bg-warning">Pendente</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>FAT-2023-004</td>
+                  <td>Restaurante Delícia</td>
+                  <td>20/02/2023</td>
+                  <td>22/03/2023</td>
+                  <td>7.500,00 MZN</td>
+                  <td><span class="badge bg-success">Paga</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>FAT-2023-005</td>
+                  <td>Farmácia Saúde</td>
+                  <td>05/03/2023</td>
+                  <td>04/04/2023</td>
+                  <td>3.500,00 MZN</td>
+                  <td><span class="badge bg-danger">Vencida</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+              <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Modal Nova Fatura -->
+<div class="modal fade" id="modal-nova-fatura">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h4 class="modal-title">Nova Fatura</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cliente">Cliente/Empresa</label>
+                <select class="form-control select2" id="cliente" style="width: 100%;">
+                  <option selected disabled>Selecione um cliente</option>
+                  <option>Empresa ABC Ltda</option>
+                  <option>Comércio XYZ</option>
+                  <option>Loja 123</option>
+                  <option>Restaurante Delícia</option>
+                  <option>Farmácia Saúde</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="data_emissao">Data de Emissão</label>
+                <div class="input-group date" id="data_emissao" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" data-target="#data_emissao">
+                  <div class="input-group-append" data-target="#data_emissao" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="data_vencimento">Data de Vencimento</label>
+                <div class="input-group date" id="data_vencimento" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" data-target="#data_vencimento">
+                  <div class="input-group-append" data-target="#data_vencimento" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="referencia">Referência</label>
+                <input type="text" class="form-control" id="referencia" placeholder="Referência ou Nº de Assinatura">
+              </div>
+              <div class="form-group">
+                <label for="forma_pagamento">Forma de Pagamento</label>
+                <select class="form-control" id="forma_pagamento">
+                  <option>Transferência Bancária</option>
+                  <option>Cartão de Crédito</option>
+                  <option>M-Pesa</option>
+                  <option>Dinheiro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status">
+                  <option>Pendente</option>
+                  <option>Paga</option>
+                  <option>Vencida</option>
+                  <option>Cancelada</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <h5 class="mt-4 mb-2">Itens da Fatura</h5>
+          <div class="table-responsive">
+            <table class="table table-bordered" id="items-table">
+              <thead>
+                <tr>
+                  <th>Descrição</th>
+                  <th width="100">Quantidade</th>
+                  <th width="150">Preço Unit.</th>
+                  <th width="150">Total</th>
+                  <th width="50">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" class="form-control" placeholder="Descrição do item">
+                  </td>
+                  <td>
+                    <input type="number" class="form-control" value="1" min="1">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" placeholder="0,00">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" placeholder="0,00" readonly>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">
+                    <button type="button" class="btn btn-primary btn-sm">
+                      <i class="fas fa-plus"></i> Adicionar Item
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+                  <td>
+                    <input type="text" class="form-control" value="0,00" readonly>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-right"><strong>IVA (17%):</strong></td>
+                  <td>
+                    <input type="text" class="form-control" value="0,00" readonly>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                  <td>
+                    <input type="text" class="form-control" value="0,00" readonly>
+                  </td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          
+          <div class="form-group">
+            <label for="observacoes">Observações</label>
+            <textarea class="form-control" id="observacoes" rows="3" placeholder="Observações adicionais"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,645 @@
+<%
+// Título da página
+const pageTitle = 'Editar Fornecedor - SYNTRA ERP';
+%>
+<style>
+  .required-field::after {
+    content: ' *';
+    color: #dc3545;
+  }
+  .form-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .nuit-validation {
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+  .nuit-valid { color: #28a745; }
+  .nuit-invalid { color: #dc3545; }
+  .audit-info {
+    background-color: #e9ecef;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.875rem;
+  }
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+</style>
+</style>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Editar Fornecedor</h1>
+      <p class="mb-0 text-muted">
+        <span class="badge bg-primary status-badge me-2">FOR123456</span>
+        Actualização de dados do fornecedor
+      </p>
+    </div>
+    <div>
+      <a href="/pessoas/fornecedores" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <a href="/pessoas/fornecedores/123/show" class="btn btn-outline-info me-2">
+        <i class="fas fa-eye"></i> Visualizar
+      </a>
+      <button type="button" class="btn btn-outline-warning" onclick="resetarFormulario()">
+        <i class="fas fa-undo"></i> Resetar
+      </button>
+    </div>
+  </div>
+
+  <form id="fornecedorForm" action="/pessoas/fornecedores/123" method="POST">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="id" value="123">
+    
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Dados Básicos -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-user-tie"></i> Dados Básicos</h5>
+          
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="nome" class="form-label required-field">Nome/Razão Social</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="Fornecedor Exemplo Lda" required maxlength="255">
+                <div class="invalid-feedback">Por favor, informe o nome ou razão social.</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="codigo" class="form-label">Código</label>
+                <input type="text" class="form-control" id="codigo" name="codigo" value="FOR123456" readonly>
+                <div class="form-text">Código não pode ser alterado</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nuit" class="form-label required-field">NUIT</label>
+                <input type="text" class="form-control" id="nuit" name="nuit" value="123456789" required maxlength="9" pattern="[0-9]{9}">
+                <div id="nuitValidation" class="nuit-validation"></div>
+                <div class="invalid-feedback">NUIT deve ter 9 dígitos numéricos.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="alvara" class="form-label">Número de Alvará</label>
+                <input type="text" class="form-control" id="alvara" name="alvara" value="ALV2024001" maxlength="50">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="telefone" class="form-label required-field">Contacto Telefónico</label>
+                <input type="tel" class="form-control" id="telefone" name="telefone" value="+258 84 123 4567" required maxlength="20">
+                <div class="invalid-feedback">Por favor, informe o contacto telefónico.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label required-field">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="fornecedor@exemplo.co.mz" required maxlength="255">
+                <div class="invalid-feedback">Por favor, informe um email válido.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-map-marker-alt"></i> Endereço</h5>
+          
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço Completo</label>
+                <textarea class="form-control" id="endereco" name="endereco" rows="3" maxlength="500">Av. Julius Nyerere, 123, Maputo</textarea>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="cidade" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" value="Maputo" maxlength="100">
+              </div>
+              <div class="mb-3">
+                <label for="provincia" class="form-label">Província</label>
+                <select class="form-select" id="provincia" name="provincia">
+                  <option value="">Selecione...</option>
+                  <option value="Maputo Cidade" selected>Maputo Cidade</option>
+                  <option value="Maputo Província">Maputo Província</option>
+                  <option value="Gaza">Gaza</option>
+                  <option value="Inhambane">Inhambane</option>
+                  <option value="Sofala">Sofala</option>
+                  <option value="Manica">Manica</option>
+                  <option value="Tete">Tete</option>
+                  <option value="Zambézia">Zambézia</option>
+                  <option value="Nampula">Nampula</option>
+                  <option value="Cabo Delgado">Cabo Delgado</option>
+                  <option value="Niassa">Niassa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacto e Condições -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-handshake"></i> Contacto e Condições Comerciais</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="pessoa_contacto" class="form-label">Pessoa de Contacto</label>
+                <input type="text" class="form-control" id="pessoa_contacto" name="pessoa_contacto" value="João Silva" maxlength="255">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="telefone_contacto" class="form-label">Telefone da Pessoa de Contacto</label>
+                <input type="tel" class="form-control" id="telefone_contacto" name="telefone_contacto" value="+258 82 987 6543" maxlength="20">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="condicoes_pagamento" class="form-label">Condições de Pagamento</label>
+                <select class="form-select" id="condicoes_pagamento" name="condicoes_pagamento">
+                  <option value="">Selecione...</option>
+                  <option value="a_vista">À Vista</option>
+                  <option value="30_dias" selected>30 Dias</option>
+                  <option value="60_dias">60 Dias</option>
+                  <option value="90_dias">90 Dias</option>
+                  <option value="personalizado">Personalizado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="prazo_pagamento" class="form-label">Prazo de Pagamento (dias)</label>
+                <input type="number" class="form-control" id="prazo_pagamento" name="prazo_pagamento" value="30" min="0" max="365">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" maxlength="1000">Fornecedor de confiança com histórico de entregas pontuais.</textarea>
+            <div class="form-text">Informações adicionais sobre o fornecedor</div>
+          </div>
+        </div>
+
+        <!-- Histórico de Alterações -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-history"></i> Histórico de Alterações</h5>
+          
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Utilizador</th>
+                  <th>Campo</th>
+                  <th>Valor Anterior</th>
+                  <th>Valor Novo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>15/01/2024 14:30</td>
+                  <td>admin@syntra.co.mz</td>
+                  <td>Email</td>
+                  <td>antigo@exemplo.co.mz</td>
+                  <td>fornecedor@exemplo.co.mz</td>
+                </tr>
+                <tr>
+                  <td>10/01/2024 09:15</td>
+                  <td>admin@syntra.co.mz</td>
+                  <td>Telefone</td>
+                  <td>+258 84 111 2222</td>
+                  <td>+258 84 123 4567</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Configurações -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-cogs"></i> Configurações</h5>
+          
+          <div class="mb-3">
+            <label for="regime_tributario" class="form-label">Regime Tributário</label>
+            <select class="form-select" id="regime_tributario" name="regime_tributario">
+              <option value="geral" selected>Geral</option>
+              <option value="simplificado">Simplificado</option>
+              <option value="isento">Isento</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="status" class="form-label">Estado</label>
+            <select class="form-select" id="status" name="status">
+              <option value="activo" selected>Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="fornecedor_preferencial" name="fornecedor_preferencial" checked>
+              <label class="form-check-label" for="fornecedor_preferencial">
+                Fornecedor Preferencial
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="aceita_devolucoes" name="aceita_devolucoes" checked>
+              <label class="form-check-label" for="aceita_devolucoes">
+                Aceita Devoluções
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-info-circle"></i> Informações Financeiras</h5>
+          
+          <div class="mb-3">
+            <label for="limite_credito" class="form-label">Limite de Crédito (MT)</label>
+            <input type="number" class="form-control" id="limite_credito" name="limite_credito" value="50000.00" min="0" step="0.01">
+            <div class="form-text">Valor máximo para compras a crédito</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="desconto_padrao" class="form-label">Desconto Padrão (%)</label>
+            <input type="number" class="form-control" id="desconto_padrao" name="desconto_padrao" value="5.00" min="0" max="100" step="0.01">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Saldo Actual</label>
+            <div class="form-control-plaintext">
+              <span class="text-success fw-bold">MT 15,250.00</span>
+              <small class="text-muted d-block">Última actualização: 20/01/2024</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações de Auditoria -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-shield-alt"></i> Informações de Auditoria</h5>
+          
+          <div class="audit-info">
+            <div class="mb-2">
+              <strong>Criado em:</strong><br>
+              <small>05/01/2024 às 10:30 por admin@syntra.co.mz</small>
+            </div>
+            <div class="mb-2">
+              <strong>Última actualização:</strong><br>
+              <small>15/01/2024 às 14:30 por admin@syntra.co.mz</small>
+            </div>
+            <div>
+              <strong>Total de alterações:</strong> <span class="badge bg-info">5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estatísticas Rápidas -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+          
+          <div class="row text-center">
+            <div class="col-6">
+              <div class="border rounded p-2">
+                <h6 class="text-primary mb-1">12</h6>
+                <small class="text-muted">Compras</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="border rounded p-2">
+                <h6 class="text-success mb-1">MT 125K</h6>
+                <small class="text-muted">Total</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-outline-secondary me-2" onclick="window.history.back()">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="button" class="btn btn-outline-primary me-2" onclick="salvarRascunho()">
+              <i class="fas fa-save"></i> Salvar Rascunho
+            </button>
+            <button type="button" class="btn btn-outline-danger me-2" onclick="confirmarExclusao()">
+              <i class="fas fa-trash"></i> Excluir
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-check"></i> Actualizar Fornecedor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+<script>
+// Armazenar valores originais para reset
+let valoresOriginais = {};
+
+$(document).ready(function() {
+  // Armazenar valores originais
+  armazenarValoresOriginais();
+  
+  // Validação de NUIT em tempo real
+  $('#nuit').on('input', function() {
+    validarNUIT(this.value);
+  });
+  
+  // Validar NUIT inicial
+  validarNUIT($('#nuit').val());
+  
+  // Máscara para telefone
+  $('#telefone, #telefone_contacto').on('input', function() {
+    let value = this.value.replace(/\D/g, '');
+    if (value.length >= 9) {
+      value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{3})/, '+258 $1 $2 $3 $4');
+    }
+    this.value = value;
+  });
+  
+  // Validação do formulário
+  $('#fornecedorForm').on('submit', function(e) {
+    e.preventDefault();
+    if (validarFormulario()) {
+      actualizarFornecedor();
+    }
+  });
+  
+  // Condições de pagamento personalizado
+  $('#condicoes_pagamento').on('change', function() {
+    if (this.value === 'personalizado') {
+      $('#prazo_pagamento').prop('required', true).focus();
+    } else {
+      $('#prazo_pagamento').prop('required', false);
+      // Definir prazo baseado na seleção
+      const prazos = {
+        'a_vista': 0,
+        '30_dias': 30,
+        '60_dias': 60,
+        '90_dias': 90
+      };
+      if (prazos[this.value] !== undefined) {
+        $('#prazo_pagamento').val(prazos[this.value]);
+      }
+    }
+  });
+  
+  // Detectar alterações no formulário
+  $('#fornecedorForm input, #fornecedorForm select, #fornecedorForm textarea').on('change', function() {
+    marcarCampoAlterado(this);
+  });
+});
+
+function armazenarValoresOriginais() {
+  $('#fornecedorForm input, #fornecedorForm select, #fornecedorForm textarea').each(function() {
+    if (this.type === 'checkbox') {
+      valoresOriginais[this.name] = this.checked;
+    } else {
+      valoresOriginais[this.name] = this.value;
+    }
+  });
+}
+
+function marcarCampoAlterado(campo) {
+  const valorOriginal = valoresOriginais[campo.name];
+  const valorAtual = campo.type === 'checkbox' ? campo.checked : campo.value;
+  
+  if (valorOriginal !== valorAtual) {
+    $(campo).addClass('border-warning');
+  } else {
+    $(campo).removeClass('border-warning');
+  }
+}
+
+function validarNUIT(nuit) {
+  const nuitValidation = $('#nuitValidation');
+  
+  if (!nuit) {
+    nuitValidation.text('').removeClass('nuit-valid nuit-invalid');
+    return false;
+  }
+  
+  // Verificar se tem 9 dígitos
+  if (!/^\d{9}$/.test(nuit)) {
+    nuitValidation.text('NUIT deve ter exatamente 9 dígitos').removeClass('nuit-valid').addClass('nuit-invalid');
+    return false;
+  }
+  
+  // Algoritmo de validação do NUIT moçambicano
+  const digits = nuit.split('').map(Number);
+  const checkDigit = digits[8];
+  
+  let sum = 0;
+  for (let i = 0; i < 8; i++) {
+    sum += digits[i] * (9 - i);
+  }
+  
+  const remainder = sum % 11;
+  const expectedCheckDigit = remainder < 2 ? remainder : 11 - remainder;
+  
+  if (checkDigit === expectedCheckDigit) {
+    nuitValidation.text('✓ NUIT válido').removeClass('nuit-invalid').addClass('nuit-valid');
+    return true;
+  } else {
+    nuitValidation.text('✗ NUIT inválido').removeClass('nuit-valid').addClass('nuit-invalid');
+    return false;
+  }
+}
+
+function validarFormulario() {
+  let isValid = true;
+  
+  // Validar campos obrigatórios
+  const camposObrigatorios = ['nome', 'nuit', 'telefone', 'email'];
+  
+  camposObrigatorios.forEach(campo => {
+    const elemento = document.getElementById(campo);
+    if (!elemento.value.trim()) {
+      elemento.classList.add('is-invalid');
+      isValid = false;
+    } else {
+      elemento.classList.remove('is-invalid');
+    }
+  });
+  
+  // Validar NUIT
+  if (!validarNUIT($('#nuit').val())) {
+    $('#nuit').addClass('is-invalid');
+    isValid = false;
+  } else {
+    $('#nuit').removeClass('is-invalid');
+  }
+  
+  // Validar email
+  const email = $('#email').val();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (email && !emailRegex.test(email)) {
+    $('#email').addClass('is-invalid');
+    isValid = false;
+  } else {
+    $('#email').removeClass('is-invalid');
+  }
+  
+  if (!isValid) {
+    alert('Por favor, corrija os campos destacados em vermelho.');
+  }
+  
+  return isValid;
+}
+
+function actualizarFornecedor() {
+  const formData = new FormData(document.getElementById('fornecedorForm'));
+  
+  // Mostrar loading
+  const submitBtn = $('button[type="submit"]');
+  const originalText = submitBtn.html();
+  submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Actualizando...').prop('disabled', true);
+  
+  $.ajax({
+    url: '/pessoas/fornecedores/123',
+    type: 'PUT',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(response) {
+      if (response.success) {
+        alert('Fornecedor actualizado com sucesso!');
+        // Actualizar valores originais
+        armazenarValoresOriginais();
+        // Remover marcações de alteração
+        $('.border-warning').removeClass('border-warning');
+      } else {
+        alert('Erro ao actualizar fornecedor: ' + response.message);
+      }
+    },
+    error: function(xhr) {
+      const response = xhr.responseJSON;
+      alert('Erro ao actualizar fornecedor: ' + (response?.message || 'Erro interno do servidor'));
+    },
+    complete: function() {
+      submitBtn.html(originalText).prop('disabled', false);
+    }
+  });
+}
+
+function salvarRascunho() {
+  const formData = new FormData(document.getElementById('fornecedorForm'));
+  formData.append('rascunho', 'true');
+  
+  $.ajax({
+    url: '/pessoas/fornecedores/123/rascunho',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(response) {
+      if (response.success) {
+        alert('Rascunho salvo com sucesso!');
+      } else {
+        alert('Erro ao salvar rascunho: ' + response.message);
+      }
+    },
+    error: function() {
+      alert('Erro ao salvar rascunho.');
+    }
+  });
+}
+
+function resetarFormulario() {
+  if (confirm('Tem certeza que deseja resetar todos os campos para os valores originais?')) {
+    // Restaurar valores originais
+    Object.keys(valoresOriginais).forEach(name => {
+      const elemento = document.querySelector(`[name="${name}"]`);
+      if (elemento) {
+        if (elemento.type === 'checkbox') {
+          elemento.checked = valoresOriginais[name];
+        } else {
+          elemento.value = valoresOriginais[name];
+        }
+      }
+    });
+    
+    // Remover validações e marcações
+    $('.is-invalid').removeClass('is-invalid');
+    $('.border-warning').removeClass('border-warning');
+    $('#nuitValidation').text('').removeClass('nuit-valid nuit-invalid');
+    
+    // Revalidar NUIT
+    validarNUIT($('#nuit').val());
+  }
+}
+
+function confirmarExclusao() {
+  if (confirm('ATENÇÃO: Esta acção irá excluir permanentemente este fornecedor e todo o seu histórico. Tem certeza que deseja continuar?')) {
+    if (confirm('Esta acção não pode ser desfeita. Confirma a exclusão?')) {
+      excluirFornecedor();
+    }
+  }
+}
+
+function excluirFornecedor() {
+  $.ajax({
+    url: '/pessoas/fornecedores/123',
+    type: 'DELETE',
+    success: function(response) {
+      if (response.success) {
+        alert('Fornecedor excluído com sucesso!');
+        window.location.href = '/pessoas/fornecedores';
+      } else {
+        alert('Erro ao excluir fornecedor: ' + response.message);
+      }
+    },
+    error: function(xhr) {
+      const response = xhr.responseJSON;
+      alert('Erro ao excluir fornecedor: ' + (response?.message || 'Erro interno do servidor'));
+    }
+  });
+}
+</script>
+</script>

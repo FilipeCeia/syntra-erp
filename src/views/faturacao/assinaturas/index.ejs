@@ -1,0 +1,291 @@
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros e Estatísticas -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Filtros e Estatísticas</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <!-- Estatísticas -->
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="info-box bg-info">
+                      <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Total Assinaturas</span>
+                        <span class="info-box-number">125</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-box bg-success">
+                      <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Ativas</span>
+                        <span class="info-box-number">98</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-box bg-warning">
+                      <span class="info-box-icon"><i class="fas fa-exclamation-circle"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">A Vencer</span>
+                        <span class="info-box-number">12</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-box bg-danger">
+                      <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Inativas</span>
+                        <span class="info-box-number">15</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Filtros -->
+              <div class="col-md-4">
+                <form action="" method="GET">
+                  <div class="form-group">
+                    <label>Status:</label>
+                    <select class="form-control select2" style="width: 100%;">
+                      <option selected="selected">Todos</option>
+                      <option>Ativas</option>
+                      <option>A Vencer</option>
+                      <option>Inativas</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Plano:</label>
+                    <select class="form-control select2" style="width: 100%;">
+                      <option selected="selected">Todos</option>
+                      <option>Básico</option>
+                      <option>Profissional</option>
+                      <option>Empresarial</option>
+                      <option>Premium</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Filtrar</button>
+                  <button type="reset" class="btn btn-default">Limpar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de Assinaturas -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Lista de Assinaturas</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-nova-assinatura">
+                <i class="fas fa-plus"></i> Nova Assinatura
+              </button>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente/Empresa</th>
+                  <th>Plano</th>
+                  <th>Data Início</th>
+                  <th>Data Renovação</th>
+                  <th>Valor Mensal</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Empresa ABC Ltda</td>
+                  <td>Empresarial</td>
+                  <td>01/01/2023</td>
+                  <td>01/01/2024</td>
+                  <td>5.000,00 MZN</td>
+                  <td><span class="badge bg-success">Ativa</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Comércio XYZ</td>
+                  <td>Profissional</td>
+                  <td>15/03/2023</td>
+                  <td>15/03/2024</td>
+                  <td>3.500,00 MZN</td>
+                  <td><span class="badge bg-success">Ativa</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Loja 123</td>
+                  <td>Básico</td>
+                  <td>10/05/2023</td>
+                  <td>10/11/2023</td>
+                  <td>1.500,00 MZN</td>
+                  <td><span class="badge bg-warning">A Vencer (5 dias)</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Restaurante Delícia</td>
+                  <td>Premium</td>
+                  <td>20/02/2023</td>
+                  <td>20/02/2024</td>
+                  <td>7.500,00 MZN</td>
+                  <td><span class="badge bg-success">Ativa</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Farmácia Saúde</td>
+                  <td>Profissional</td>
+                  <td>05/04/2023</td>
+                  <td>05/10/2023</td>
+                  <td>3.500,00 MZN</td>
+                  <td><span class="badge bg-danger">Inativa</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+              <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Modal Nova Assinatura -->
+<div class="modal fade" id="modal-nova-assinatura">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h4 class="modal-title">Nova Assinatura</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cliente">Cliente/Empresa</label>
+                <select class="form-control select2" id="cliente" style="width: 100%;">
+                  <option selected disabled>Selecione um cliente</option>
+                  <option>Empresa ABC Ltda</option>
+                  <option>Comércio XYZ</option>
+                  <option>Loja 123</option>
+                  <option>Restaurante Delícia</option>
+                  <option>Farmácia Saúde</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="plano">Plano</label>
+                <select class="form-control select2" id="plano" style="width: 100%;">
+                  <option selected disabled>Selecione um plano</option>
+                  <option>Básico</option>
+                  <option>Profissional</option>
+                  <option>Empresarial</option>
+                  <option>Premium</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="data_inicio">Data de Início</label>
+                <div class="input-group date" id="data_inicio" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" data-target="#data_inicio">
+                  <div class="input-group-append" data-target="#data_inicio" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="duracao">Duração</label>
+                <select class="form-control" id="duracao">
+                  <option>1 mês</option>
+                  <option>3 meses</option>
+                  <option>6 meses</option>
+                  <option selected>12 meses</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="valor_mensal">Valor Mensal (MZN)</label>
+                <input type="text" class="form-control" id="valor_mensal" placeholder="0,00">
+              </div>
+              <div class="form-group">
+                <label for="forma_pagamento">Forma de Pagamento</label>
+                <select class="form-control" id="forma_pagamento">
+                  <option>Transferência Bancária</option>
+                  <option>Cartão de Crédito</option>
+                  <option>M-Pesa</option>
+                  <option>Dinheiro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="observacoes">Observações</label>
+            <textarea class="form-control" id="observacoes" rows="3" placeholder="Observações adicionais"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

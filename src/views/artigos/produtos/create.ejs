@@ -1,0 +1,282 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-plus mr-2"></i>Novo Produto
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="#">Artigos</a></li>
+          <li class="breadcrumb-item"><a href="/artigos/produtos">Produtos & Serviços</a></li>
+          <li class="breadcrumb-item active">Novo</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form id="produtoForm">
+      <div class="row">
+        <!-- Informações Básicas -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Informações Básicas</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="codigo">Código *</label>
+                    <input type="text" class="form-control" id="codigo" name="codigo" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="tipo">Tipo *</label>
+                    <select class="form-control" id="tipo" name="tipo" required>
+                      <option value="">Selecione...</option>
+                      <option value="produto">Produto</option>
+                      <option value="servico">Serviço</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="nome">Nome *</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="categoria">Categoria</label>
+                    <select class="form-control" id="categoria" name="categoria_id">
+                      <option value="">Selecione...</option>
+                      <option value="1">Categoria Exemplo 1</option>
+                      <option value="2">Categoria Exemplo 2</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="unidade">Unidade</label>
+                    <select class="form-control" id="unidade" name="unidade">
+                      <option value="">Selecione...</option>
+                      <option value="un">Unidade</option>
+                      <option value="kg">Quilograma</option>
+                      <option value="l">Litro</option>
+                      <option value="m">Metro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Preços -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Preços</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="preco_custo">Preço de Custo</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">€</span>
+                      </div>
+                      <input type="number" class="form-control" id="preco_custo" name="preco_custo" step="0.01" min="0">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="preco_venda">Preço de Venda *</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">€</span>
+                      </div>
+                      <input type="number" class="form-control" id="preco_venda" name="preco_venda" step="0.01" min="0" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="iva">Taxa IVA</label>
+                    <select class="form-control" id="iva" name="iva_id">
+                      <option value="">Selecione...</option>
+                      <option value="1">23% - Normal</option>
+                      <option value="2">13% - Intermédio</option>
+                      <option value="3">6% - Reduzido</option>
+                      <option value="4">0% - Isento</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Stock (apenas para produtos) -->
+          <div class="card" id="stockCard" style="display: none;">
+            <div class="card-header">
+              <h3 class="card-title">Gestão de Stock</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="stock_atual">Stock Atual</label>
+                    <input type="number" class="form-control" id="stock_atual" name="stock_atual" min="0">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="stock_minimo">Stock Mínimo</label>
+                    <input type="number" class="form-control" id="stock_minimo" name="stock_minimo" min="0">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="stock_maximo">Stock Máximo</label>
+                    <input type="number" class="form-control" id="stock_maximo" name="stock_maximo" min="0">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" id="controlar_stock" name="controlar_stock">
+                <label for="controlar_stock" class="custom-control-label">Controlar Stock</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-md-4">
+          <!-- Status -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Status</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status">
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+              
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" id="destaque" name="destaque">
+                <label for="destaque" class="custom-control-label">Produto em Destaque</label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Códigos -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Códigos</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="codigo_barras">Código de Barras</label>
+                <input type="text" class="form-control" id="codigo_barras" name="codigo_barras">
+              </div>
+              
+              <div class="form-group">
+                <label for="referencia">Referência</label>
+                <input type="text" class="form-control" id="referencia" name="referencia">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Ações -->
+          <div class="card">
+            <div class="card-body">
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-save"></i> Guardar Produto
+              </button>
+              <a href="/artigos/produtos" class="btn btn-secondary btn-block">
+                <i class="fas fa-times"></i> Cancelar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .card {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+  }
+  
+  .required {
+    color: #dc3545;
+  }
+</style>
+
+<script>
+// Mostrar/ocultar campos de stock baseado no tipo
+document.getElementById('tipo').addEventListener('change', function() {
+  const stockCard = document.getElementById('stockCard');
+  if (this.value === 'produto') {
+    stockCard.style.display = 'block';
+  } else {
+    stockCard.style.display = 'none';
+  }
+});
+
+// Submissão do formulário
+document.getElementById('produtoForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Validação básica
+  const codigo = document.getElementById('codigo').value;
+  const nome = document.getElementById('nome').value;
+  const tipo = document.getElementById('tipo').value;
+  const precoVenda = document.getElementById('preco_venda').value;
+  
+  if (!codigo || !nome || !tipo || !precoVenda) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
+  }
+  
+  // Aqui seria implementada a lógica de envio
+  console.log('Dados do produto:', new FormData(this));
+  alert('Produto criado com sucesso! (Simulação)');
+});
+
+// Gerar código automaticamente
+document.getElementById('nome').addEventListener('blur', function() {
+  const codigo = document.getElementById('codigo');
+  if (!codigo.value && this.value) {
+    // Gerar código baseado no nome
+    const codigoGerado = this.value.substring(0, 3).toUpperCase() + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    codigo.value = codigoGerado;
+  }
+});
+</script>

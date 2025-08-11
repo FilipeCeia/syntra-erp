@@ -1,0 +1,415 @@
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-plus mr-2"></i>Nova Taxa de IVA
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="#">Artigos</a></li>
+          <li class="breadcrumb-item"><a href="/artigos/iva">IVA</a></li>
+          <li class="breadcrumb-item active">Nova Taxa</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form id="ivaForm" onsubmit="return submitForm(event)">
+      <div class="row">
+        <!-- Informações Básicas -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-info-circle mr-2"></i>Informações da Taxa
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="nome">Nome da Taxa <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nome" name="nome" required placeholder="Ex: IVA Normal">
+                    <small class="form-text text-muted">Nome descritivo para identificar a taxa</small>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="codigo">Código <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="codigo" name="codigo" required placeholder="Ex: NOR" maxlength="10" style="text-transform: uppercase;">
+                    <small class="form-text text-muted">Código único (máx. 10 caracteres)</small>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="taxa">Taxa (%) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" id="taxa" name="taxa" required min="0" max="100" step="0.01" placeholder="23.00">
+                      <div class="input-group-append">
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Descrição detalhada da taxa de IVA..."></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="tipo">Tipo de Taxa</label>
+                    <select class="form-control" id="tipo" name="tipo">
+                      <option value="standard">Standard</option>
+                      <option value="reduzida">Reduzida</option>
+                      <option value="especial">Especial</option>
+                      <option value="isenta">Isenta</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="cor_indicador">Cor do Indicador</label>
+                    <div class="input-group">
+                      <input type="color" class="form-control" id="cor_indicador" name="cor_indicador" value="#007bff" style="height: 38px;">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onclick="gerarCorPorTaxa()">
+                          <i class="fas fa-magic"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <small class="form-text text-muted">Cor para identificação visual</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configurações Avançadas -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-cogs mr-2"></i>Configurações Avançadas
+              </h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="data_inicio">Data de Início</label>
+                    <input type="date" class="form-control" id="data_inicio" name="data_inicio">
+                    <small class="form-text text-muted">Data a partir da qual a taxa é válida</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="data_fim">Data de Fim</label>
+                    <input type="date" class="form-control" id="data_fim" name="data_fim">
+                    <small class="form-text text-muted">Data até a qual a taxa é válida (opcional)</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pais">País de Aplicação</label>
+                    <select class="form-control" id="pais" name="pais">
+                      <option value="PT">Portugal</option>
+                      <option value="ES">Espanha</option>
+                      <option value="FR">França</option>
+                      <option value="DE">Alemanha</option>
+                      <option value="IT">Itália</option>
+                      <option value="UK">Reino Unido</option>
+                      <option value="OTHER">Outro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="ordem">Ordem de Exibição</label>
+                    <input type="number" class="form-control" id="ordem" name="ordem" value="0" min="0">
+                    <small class="form-text text-muted">Ordem para listagem (0 = primeiro)</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="observacoes">Observações Legais</label>
+                <textarea class="form-control" id="observacoes" name="observacoes" rows="2" placeholder="Observações sobre a aplicação legal desta taxa..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+          <!-- Status e Configurações -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-toggle-on mr-2"></i>Status e Aplicação
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status">
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                  <option value="pendente">Pendente</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="taxa_padrao" name="taxa_padrao">
+                  <label class="custom-control-label" for="taxa_padrao">Taxa Padrão</label>
+                </div>
+                <small class="form-text text-muted">Usar como taxa padrão para novos produtos</small>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="aplicar_vendas" name="aplicar_vendas" checked>
+                  <label class="custom-control-label" for="aplicar_vendas">Aplicar em Vendas</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="aplicar_compras" name="aplicar_compras" checked>
+                  <label class="custom-control-label" for="aplicar_compras">Aplicar em Compras</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="incluir_relatorios" name="incluir_relatorios" checked>
+                  <label class="custom-control-label" for="incluir_relatorios">Incluir em Relatórios</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview da Taxa -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-eye mr-2"></i>Pré-visualização
+              </h3>
+            </div>
+            <div class="card-body text-center">
+              <div class="tax-preview mb-3" id="taxPreview">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                  <div class="tax-indicator" id="previewIndicator" style="background-color: #007bff; width: 12px; height: 40px; margin-right: 15px; border-radius: 3px;"></div>
+                  <div>
+                    <h4 class="mb-0" id="previewNome">Nome da Taxa</h4>
+                    <small class="text-muted" id="previewCodigo">CÓDIGO</small>
+                  </div>
+                </div>
+                <div class="tax-rate">
+                  <span class="badge badge-primary" style="font-size: 1.5em;" id="previewTaxa">0%</span>
+                </div>
+                <div class="mt-2">
+                  <small class="text-muted" id="previewTipo">Tipo: Standard</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ações -->
+          <div class="card">
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-save mr-2"></i>Guardar Taxa
+                </button>
+                <a href="/artigos/iva" class="btn btn-secondary btn-block">
+                  <i class="fas fa-times mr-2"></i>Cancelar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .card-header {
+    background-color: #f8f9fa;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+  }
+  
+  .text-danger {
+    color: #dc3545 !important;
+  }
+  
+  .btn-block {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .custom-control-label {
+    font-weight: 500;
+  }
+  
+  .tax-preview {
+    border: 2px dashed #dee2e6;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+  }
+  
+  .tax-indicator {
+    display: inline-block;
+  }
+  
+  #codigo {
+    text-transform: uppercase;
+  }
+</style>
+
+<script>
+// Função para gerar cor baseada na taxa
+function gerarCorPorTaxa() {
+  const taxa = parseFloat(document.getElementById('taxa').value) || 0;
+  let cor = '#6c757d'; // Cor padrão
+  
+  if (taxa === 0) {
+    cor = '#6c757d'; // Cinza para isento
+  } else if (taxa <= 6) {
+    cor = '#28a745'; // Verde para reduzido
+  } else if (taxa <= 13) {
+    cor = '#ffc107'; // Amarelo para intermédio
+  } else {
+    cor = '#dc3545'; // Vermelho para normal
+  }
+  
+  document.getElementById('cor_indicador').value = cor;
+  atualizarPreview();
+}
+
+// Função para atualizar preview
+function atualizarPreview() {
+  const nome = document.getElementById('nome').value || 'Nome da Taxa';
+  const codigo = document.getElementById('codigo').value || 'CÓDIGO';
+  const taxa = document.getElementById('taxa').value || '0';
+  const tipo = document.getElementById('tipo').value || 'standard';
+  const cor = document.getElementById('cor_indicador').value;
+  
+  document.getElementById('previewNome').textContent = nome;
+  document.getElementById('previewCodigo').textContent = codigo.toUpperCase();
+  document.getElementById('previewTaxa').textContent = taxa + '%';
+  document.getElementById('previewTipo').textContent = 'Tipo: ' + tipo.charAt(0).toUpperCase() + tipo.slice(1);
+  document.getElementById('previewIndicator').style.backgroundColor = cor;
+  
+  // Atualizar cor do badge baseado na taxa
+  const badgeElement = document.getElementById('previewTaxa');
+  const taxaNum = parseFloat(taxa);
+  
+  badgeElement.className = 'badge';
+  if (taxaNum === 0) {
+    badgeElement.classList.add('badge-secondary');
+  } else if (taxaNum <= 6) {
+    badgeElement.classList.add('badge-success');
+  } else if (taxaNum <= 13) {
+    badgeElement.classList.add('badge-warning');
+  } else {
+    badgeElement.classList.add('badge-danger');
+  }
+  
+  badgeElement.style.fontSize = '1.5em';
+}
+
+// Função para submeter o formulário
+function submitForm(event) {
+  event.preventDefault();
+  
+  // Validação básica
+  const nome = document.getElementById('nome').value.trim();
+  const codigo = document.getElementById('codigo').value.trim();
+  const taxa = document.getElementById('taxa').value;
+  
+  if (!nome) {
+    alert('Por favor, insira o nome da taxa.');
+    return false;
+  }
+  
+  if (!codigo) {
+    alert('Por favor, insira o código da taxa.');
+    return false;
+  }
+  
+  if (!taxa || taxa < 0 || taxa > 100) {
+    alert('Por favor, insira uma taxa válida entre 0 e 100%.');
+    return false;
+  }
+  
+  // Aqui seria implementada a lógica de envio
+  console.log('Guardando taxa de IVA:', {
+    nome: nome,
+    codigo: codigo.toUpperCase(),
+    taxa: parseFloat(taxa),
+    tipo: document.getElementById('tipo').value,
+    status: document.getElementById('status').value
+  });
+  
+  alert('Taxa de IVA guardada com sucesso!');
+  return false;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Atualizar preview em tempo real
+  ['nome', 'codigo', 'taxa', 'tipo', 'cor_indicador'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', atualizarPreview);
+    document.getElementById(id).addEventListener('change', atualizarPreview);
+  });
+  
+  // Gerar cor automaticamente quando a taxa muda
+  document.getElementById('taxa').addEventListener('input', function() {
+    if (this.value) {
+      gerarCorPorTaxa();
+    }
+  });
+  
+  // Converter código para maiúsculas
+  document.getElementById('codigo').addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+    atualizarPreview();
+  });
+  
+  // Validação de datas
+  document.getElementById('data_inicio').addEventListener('change', function() {
+    const dataFim = document.getElementById('data_fim');
+    if (this.value) {
+      dataFim.min = this.value;
+    }
+  });
+  
+  // Inicializar preview
+  atualizarPreview();
+});
+</script>

@@ -1,0 +1,98 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box">
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/vendas">Vendas</a></li>
+            <li class="breadcrumb-item active">Factura-Recibo</li>
+          </ol>
+        </div>
+        <h4 class="page-title">Factura-Recibo</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4">
+              <a href="/vendas/facturas/create" class="btn btn-danger mb-2">
+                <i class="mdi mdi-plus-circle me-2"></i> Nova Factura-Recibo
+              </a>
+            </div>
+            <div class="col-sm-8">
+              <div class="text-sm-end">
+                <button type="button" class="btn btn-success mb-2 me-1">
+                  <i class="mdi mdi-cog-outline"></i>
+                </button>
+                <button type="button" class="btn btn-light mb-2 me-1">Exportar</button>
+                <button type="button" class="btn btn-light mb-2">Imprimir</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
+              <thead class="table-light">
+                <tr>
+                  <th class="all" style="width: 20px;">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="customCheck1">
+                      <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                    </div>
+                  </th>
+                  <th class="all">Número</th>
+                  <th>Cliente</th>
+                  <th>NUIT</th>
+                  <th>Data Emissão</th>
+                  <th>Valor Total</th>
+                  <th>IVA</th>
+                  <th>Status</th>
+                  <th>Forma Pagamento</th>
+                  <th style="width: 85px;">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% facturasRecibo.forEach(function(factura) { %>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="customCheck<%= factura.id %>">
+                      <label class="form-check-label" for="customCheck<%= factura.id %>">&nbsp;</label>
+                    </div>
+                  </td>
+                  <td>
+                    <a href="/vendas/facturas/<%= factura.id %>" class="text-body fw-bold"><%= factura.numero %></a>
+                  </td>
+                  <td><%= factura.cliente.nome %></td>
+                  <td><%= factura.cliente.nuit %></td>
+                  <td><%= factura.data_emissao.toLocaleDateString('pt-PT') %></td>
+                  <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_total) %></td>
+                  <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_iva) %></td>
+                  <td>
+                    <% if (factura.status === 'Paga') { %>
+                      <span class="badge bg-success">Paga</span>
+                    <% } else { %>
+                      <span class="badge bg-warning">Pendente</span>
+                    <% } %>
+                  </td>
+                  <td><%= factura.forma_pagamento %></td>
+                  <td class="table-action">
+                    <a href="/vendas/facturas/<%= factura.id %>" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                    <a href="/vendas/facturas/<%= factura.id %>/edit" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                    <a href="/vendas/facturas/<%= factura.id %>/print" class="action-icon"> <i class="mdi mdi-printer"></i></a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

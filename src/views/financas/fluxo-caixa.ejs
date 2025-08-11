@@ -1,0 +1,211 @@
+
+
+
+<!-- Resumo do Fluxo -->
+<div class="row">
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-primary">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(fluxoCaixa.saldoInicial) %></h3>
+        <p>Saldo Inicial</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-wallet"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(fluxoCaixa.entradas.reduce((sum, entrada) => sum + entrada.valor, 0)) %></h3>
+        <p>Total Entradas</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-arrow-down"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(Math.abs(fluxoCaixa.saidas.reduce((sum, saida) => sum + saida.valor, 0))) %></h3>
+        <p>Total Saídas</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-arrow-up"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(fluxoCaixa.saldoFinal) %></h3>
+        <p>Saldo Final</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-calculator"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Entradas e Saídas -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="card card-success">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-arrow-down mr-1"></i>
+          Entradas
+        </h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% fluxoCaixa.entradas.forEach(function(entrada) { %>
+            <tr>
+              <td><%= entrada.data.toLocaleDateString('pt-MZ') %></td>
+              <td><%= entrada.descricao %></td>
+              <td class="text-success">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(entrada.valor) %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+          <tfoot>
+            <tr class="bg-success">
+              <th colspan="2">Total</th>
+              <th><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(fluxoCaixa.entradas.reduce((sum, entrada) => sum + entrada.valor, 0)) %></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card card-danger">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-arrow-up mr-1"></i>
+          Saídas
+        </h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% fluxoCaixa.saidas.forEach(function(saida) { %>
+            <tr>
+              <td><%= saida.data.toLocaleDateString('pt-MZ') %></td>
+              <td><%= saida.descricao %></td>
+              <td class="text-danger">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(Math.abs(saida.valor)) %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+          <tfoot>
+            <tr class="bg-danger">
+              <th colspan="2">Total</th>
+              <th><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(Math.abs(fluxoCaixa.saidas.reduce((sum, saida) => sum + saida.valor, 0))) %></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Gráfico de Fluxo -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-chart-line mr-1"></i>
+          Evolução do Fluxo de Caixa
+        </h3>
+        <div class="card-tools">
+          <a href="/financas/fluxo-caixa/projecao" class="btn btn-info btn-sm">
+            <i class="fas fa-crystal-ball"></i> Projeção
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <canvas id="fluxoChart" style="height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Gráfico de Fluxo de Caixa
+const ctx = document.getElementById('fluxoChart').getContext('2d');
+const fluxoChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+    datasets: [{
+      label: 'Entradas',
+      data: [25000, 30000, 28000, 35000, 32000, 38000],
+      borderColor: 'rgb(40, 167, 69)',
+      backgroundColor: 'rgba(40, 167, 69, 0.1)',
+      tension: 0.1
+    }, {
+      label: 'Saídas',
+      data: [20000, 25000, 22000, 28000, 26000, 30000],
+      borderColor: 'rgb(220, 53, 69)',
+      backgroundColor: 'rgba(220, 53, 69, 0.1)',
+      tension: 0.1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return new Intl.NumberFormat('pt-MZ', { 
+              style: 'currency', 
+              currency: 'MZN',
+              minimumFractionDigits: 0
+            }).format(value);
+          }
+        }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + 
+              new Intl.NumberFormat('pt-MZ', { 
+                style: 'currency', 
+                currency: 'MZN' 
+              }).format(context.parsed.y);
+          }
+        }
+      }
+    }
+  }
+});
+</script>

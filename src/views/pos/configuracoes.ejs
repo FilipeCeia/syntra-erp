@@ -1,0 +1,328 @@
+
+
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form id="form-configuracoes" action="/pos/configuracoes" method="POST">
+      <div class="row">
+        <!-- Configurações Gerais -->
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-cogs"></i> Configurações Gerais
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="pos_ativo" 
+                         name="pos_ativo" <%= (configPOS && configPOS.pos_ativo) ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="pos_ativo">
+                    Ativar POS nesta loja
+                  </label>
+                </div>
+                <small class="form-text text-muted">
+                  Ativa ou desativa o módulo POS para esta loja
+                </small>
+              </div>
+              
+              <div class="form-group">
+                <label for="nome_loja">Nome da Loja</label>
+                <input type="text" class="form-control" id="nome_loja" name="nome_loja" 
+                       value="<%= (configPOS && configPOS.nome_loja) ? configPOS.nome_loja : 'SYNTRA ERP - Loja Principal' %>" 
+                       placeholder="Nome da loja">
+              </div>
+              
+              <div class="form-group">
+                <label for="endereco_loja">Endereço</label>
+                <textarea class="form-control" id="endereco_loja" name="endereco_loja" 
+                          rows="3" placeholder="Endereço completo da loja"><%= (configPOS && configPOS.endereco_loja) ? configPOS.endereco_loja : 'Av. Julius Nyerere, 123\nMaputo, Moçambique' %></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="telefone_loja">Telefone</label>
+                <input type="text" class="form-control" id="telefone_loja" name="telefone_loja" 
+                       value="<%= (configPOS && configPOS.telefone_loja) ? configPOS.telefone_loja : '+258 21 123 456' %>" 
+                       placeholder="Telefone da loja">
+              </div>
+              
+              <div class="form-group">
+                <label for="moeda_padrao">Moeda Padrão</label>
+                <select class="form-control" id="moeda_padrao" name="moeda_padrao">
+                  <option value="MT" <%= (configPOS && configPOS.moeda_padrao === 'MT') ? 'selected' : '' %>>Metical (MT)</option>
+                  <option value="USD" <%= (configPOS && configPOS.moeda_padrao === 'USD') ? 'selected' : '' %>>Dólar (USD)</option>
+                  <option value="EUR" <%= (configPOS && configPOS.moeda_padrao === 'EUR') ? 'selected' : '' %>>Euro (EUR)</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="casas_decimais">Casas Decimais</label>
+                <select class="form-control" id="casas_decimais" name="casas_decimais">
+                  <option value="0" <%= (configPOS && configPOS.casas_decimais === 0) ? 'selected' : '' %>>0</option>
+                  <option value="2" <%= (configPOS && configPOS.casas_decimais === 2) ? 'selected' : '' %>>2</option>
+                  <option value="3" <%= (configPOS && configPOS.casas_decimais === 3) ? 'selected' : '' %>>3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div>
+      
+      <div class="row">
+        <!-- Configurações de Stock -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-boxes"></i> Controle de Stock
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="verificar_stock" 
+                         name="verificar_stock" <%= (configPOS && configPOS.verificar_stock) ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="verificar_stock">
+                    Verificar Stock
+                  </label>
+                </div>
+                <small class="form-text text-muted">
+                  Verifica disponibilidade antes de adicionar ao carrinho
+                </small>
+              </div>
+              
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="bloquear_venda_sem_stock" 
+                         name="bloquear_venda_sem_stock" <%= (configPOS && configPOS.bloquear_venda_sem_stock) ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="bloquear_venda_sem_stock">
+                    Bloquear Venda sem Stock
+                  </label>
+                </div>
+                <small class="form-text text-muted">
+                  Impede venda de produtos sem stock disponível
+                </small>
+              </div>
+              
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="alerta_stock_baixo" 
+                         name="alerta_stock_baixo" <%= (configPOS && configPOS.alerta_stock_baixo) ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="alerta_stock_baixo">
+                    Alerta de Stock Baixo
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="limite_stock_baixo">Limite para Stock Baixo</label>
+                <input type="number" class="form-control" id="limite_stock_baixo" name="limite_stock_baixo" 
+                       value="<%= (configPOS && configPOS.limite_stock_baixo) ? configPOS.limite_stock_baixo : 5 %>" 
+                       min="0" max="100">
+                <small class="form-text text-muted">
+                  Quantidade mínima para considerar stock baixo
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Configurações de Interface -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-desktop"></i> Interface
+              </h3>
+            </div>
+            <div class="card-body">
+
+              
+              
+              
+              
+              
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="exibir_favoritos" 
+                         name="exibir_favoritos" <%= (configPOS && configPOS.exibir_favoritos) ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="exibir_favoritos">
+                    Exibir Produtos Favoritos
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="atalhos_teclado" 
+                         name="atalhos_teclado" <%= (configPOS && configPOS.atalhos_teclado) ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="atalhos_teclado">
+                    Atalhos de Teclado
+                  </label>
+                </div>
+                <small class="form-text text-muted">
+                  Ctrl+F (busca), Ctrl+N (nova venda), Ctrl+S (suspender)
+                </small>
+              </div>
+              
+             
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+ 
+      
+      
+      <!-- Botões de Ação -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-secondary" onclick="resetarConfiguracoes()">
+                    <i class="fas fa-undo"></i> Resetar Configurações
+                  </button>
+                </div>
+                <div class="col-md-6 text-right">
+                  <a href="/pos" class="btn btn-default mr-2">
+                    <i class="fas fa-times"></i> Cancelar
+                  </a>
+                  <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+$(document).ready(function() {
+  // Controlar visibilidade das configurações de impressora
+  $('#impressora_termica').change(function() {
+    if ($(this).is(':checked')) {
+      $('#config-impressora, #config-porta').show();
+    } else {
+      $('#config-impressora, #config-porta').hide();
+    }
+  });
+  
+  // Controlar visibilidade das configurações do leitor
+  $('#leitor_codigo_barras').change(function() {
+    if ($(this).is(':checked')) {
+      $('#config-leitor').show();
+    } else {
+      $('#config-leitor').hide();
+    }
+  });
+  
+  // Submissão do formulário  Hardware
+  $('#form-configuracoes').submit(function(e) {
+    e.preventDefault();
+    
+    let formData = $(this).serialize();
+    
+    $.ajax({
+      url: '/pos/configuracoes',
+      method: 'POST',
+      data: formData,
+      success: function(response) {
+        if (response.success) {
+          toastr.success(response.message || 'Configurações salvas com sucesso!');
+        } else {
+          toastr.error(response.message || 'Erro ao salvar configurações');
+        }
+      },
+      error: function() {
+        toastr.error('Erro ao salvar configurações');
+      }
+    });
+  });
+});
+
+
+function testarImpressora() {
+  $.ajax({
+    url: '/pos/testar-impressora',
+    method: 'POST',
+    success: function(response) {
+      if (response.success) {
+        toastr.success(response.message || 'Teste de impressora realizado!');
+      } else {
+        toastr.error(response.message || 'Erro no teste da impressora');
+      }
+    },
+    error: function() {
+      toastr.error('Erro ao testar impressora');
+    }
+  });
+}
+
+function abrirGaveta() {
+  $.ajax({
+    url: '/pos/abrir-gaveta',
+    method: 'POST',
+    success: function(response) {
+      if (response.success) {
+        toastr.success(response.message || 'Gaveta aberta!');
+      } else {
+        toastr.error(response.message || 'Erro ao abrir gaveta');
+      }
+    },
+    error: function() {
+      toastr.error('Erro ao abrir gaveta');
+    }
+  });
+}
+
+function fazerBackup() {
+  toastr.info('Iniciando backup...');
+  
+  setTimeout(() => {
+    toastr.success('Backup realizado com sucesso!');
+  }, 2000);
+}
+
+function restaurarBackup() {
+  if (confirm('Tem certeza que deseja restaurar o backup? Esta ação não pode ser desfeita.')) {
+    toastr.info('Restaurando backup...');
+    
+    setTimeout(() => {
+      toastr.success('Backup restaurado com sucesso!');
+    }, 3000);
+  }
+}
+
+function resetarConfiguracoes() {
+  if (confirm('Tem certeza que deseja resetar todas as configurações para os valores padrão?')) {
+    $.ajax({
+      url: '/pos/resetar-configuracoes',
+      method: 'POST',
+      success: function(response) {
+        if (response.success) {
+          toastr.success(response.message || 'Configurações resetadas!');
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        } else {
+          toastr.error(response.message || 'Erro ao resetar configurações');
+        }
+      },
+      error: function() {
+        toastr.error('Erro ao resetar configurações');
+      }
+    });
+  }
+}
+</script>

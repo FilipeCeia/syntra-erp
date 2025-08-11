@@ -1,0 +1,311 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-clipboard-list"></i> Controlo de Inventário
+    </h1>
+    <div class="btn-group" role="group">
+      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#novoInventarioModal">
+        <i class="fas fa-plus"></i> Novo Inventário
+      </button>
+      <button class="btn btn-success btn-sm" onclick="exportarInventario()">
+        <i class="fas fa-file-excel"></i> Exportar
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Artigos Verificados
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                1.189 / 1.247
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Sem Discrepâncias
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                1.156
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-thumbs-up fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Com Discrepâncias
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                33
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                58
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Discrepâncias -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-exclamation-triangle"></i> Discrepâncias Encontradas
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Artigo</th>
+              <th>Loja</th>
+              <th>Estoque Sistema</th>
+              <th>Contagem Física</th>
+              <th>Diferença</th>
+              <th>Valor da Diferença</th>
+              <th>Data Verificação</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ART001</td>
+              <td>Arroz Carolino 5kg</td>
+              <td>Loja Central</td>
+              <td>25</td>
+              <td>22</td>
+              <td class="text-danger">-3</td>
+              <td class="text-danger">-450,00 MT</td>
+              <td>15/01/2024</td>
+              <td>
+                <button class="btn btn-sm btn-success" onclick="ajustarEstoque(1)" title="Ajustar">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-sm btn-warning" onclick="recontarArtigo(1)" title="Recontar">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>ART045</td>
+              <td>Óleo de Cozinha 1L</td>
+              <td>Loja Matola</td>
+              <td>18</td>
+              <td>20</td>
+              <td class="text-success">+2</td>
+              <td class="text-success">+180,00 MT</td>
+              <td>15/01/2024</td>
+              <td>
+                <button class="btn btn-sm btn-success" onclick="ajustarEstoque(2)" title="Ajustar">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-sm btn-warning" onclick="recontarArtigo(2)" title="Recontar">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>ART089</td>
+              <td>Sabão em Pó 2kg</td>
+              <td>Loja Beira</td>
+              <td>15</td>
+              <td>12</td>
+              <td class="text-danger">-3</td>
+              <td class="text-danger">-360,00 MT</td>
+              <td>14/01/2024</td>
+              <td>
+                <button class="btn btn-sm btn-success" onclick="ajustarEstoque(3)" title="Ajustar">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-sm btn-warning" onclick="recontarArtigo(3)" title="Recontar">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>ART156</td>
+              <td>Açúcar Cristal 1kg</td>
+              <td>Loja Nampula</td>
+              <td>30</td>
+              <td>35</td>
+              <td class="text-success">+5</td>
+              <td class="text-success">+300,00 MT</td>
+              <td>14/01/2024</td>
+              <td>
+                <button class="btn btn-sm btn-success" onclick="ajustarEstoque(4)" title="Ajustar">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-sm btn-warning" onclick="recontarArtigo(4)" title="Recontar">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Novo Inventário -->
+<div class="modal fade" id="novoInventarioModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Novo Inventário</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Loja *</label>
+                <select class="form-control" required>
+                  <option value="">Selecione uma loja</option>
+                  <option value="1">Loja Central</option>
+                  <option value="2">Loja Matola</option>
+                  <option value="3">Loja Beira</option>
+                  <option value="4">Loja Nampula</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Data do Inventário *</label>
+                <input type="date" class="form-control" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Categoria</label>
+                <select class="form-control">
+                  <option value="">Todas as categorias</option>
+                  <option value="1">Alimentação</option>
+                  <option value="2">Limpeza</option>
+                  <option value="3">Higiene</option>
+                  <option value="4">Bebidas</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Responsável *</label>
+                <select class="form-control" required>
+                  <option value="">Selecione o responsável</option>
+                  <option value="1">João Silva</option>
+                  <option value="2">Maria Santos</option>
+                  <option value="3">Carlos Mendes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Observações</label>
+            <textarea class="form-control" rows="3" placeholder="Observações sobre o inventário..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Iniciar Inventário</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function ajustarEstoque(id) {
+    Swal.fire({
+        title: 'Ajustar Estoque',
+        text: 'Tem certeza que deseja ajustar o estoque conforme a contagem física?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, ajustar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Aqui seria feita a requisição para ajustar o estoque
+            Swal.fire('Sucesso!', 'Estoque ajustado com sucesso.', 'success');
+        }
+    });
+}
+
+function recontarArtigo(id) {
+    Swal.fire({
+        title: 'Recontar Artigo',
+        text: 'Deseja marcar este artigo para recontagem?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, recontar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Aqui seria feita a requisição para marcar recontagem
+            Swal.fire('Sucesso!', 'Artigo marcado para recontagem.', 'success');
+        }
+    });
+}
+
+function exportarInventario() {
+    // Aqui seria feita a exportação
+    toastr.success('Relatório de inventário exportado com sucesso!');
+}
+</script>

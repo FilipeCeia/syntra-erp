@@ -1,0 +1,405 @@
+<!-- Gestão de Funcionários das Lojas -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Funcionários das Lojas</h1>
+      <p class="mb-0 text-muted">Gerir funcionários e suas atribuições às lojas</p>
+    </div>
+    <div>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoFuncionarioModal">
+        <i class="fas fa-plus"></i> Novo Funcionário
+      </button>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#transferirFuncionarioModal">
+        <i class="fas fa-exchange-alt"></i> Transferir
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/lojas/funcionarios/index">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Pesquisar</label>
+              <input type="text" class="form-control" name="search" value="<%= filters.search %>" placeholder="Nome, email ou cargo...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Loja</label>
+              <select class="form-select" name="loja_id">
+                <option value="">Todas as lojas</option>
+                <% lojas.forEach(loja => { %>
+                  <option value="<%= loja.id %>" <%= filters.loja_id == loja.id ? 'selected' : '' %>><%= loja.nome %></option>
+                <% }); %>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Itens por página</label>
+              <select class="form-select" name="limit">
+                <option value="10" <%= pagination.limit == 10 ? 'selected' : '' %>>10</option>
+                <option value="25" <%= pagination.limit == 25 ? 'selected' : '' %>>25</option>
+                <option value="50" <%= pagination.limit == 50 ? 'selected' : '' %>>50</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="mb-3">
+              <label class="form-label">&nbsp;</label>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Estatísticas Rápidas -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total Funcionários
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= pagination.totalItems %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-users fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Funcionários Ativos
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= funcionarios.filter(f => f.status === 'Ativo').length %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-user-check fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Gerentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= funcionarios.filter(f => f.cargo === 'Gerente').length %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Salário Médio
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% const salarioMedio = funcionarios.reduce((acc, f) => acc + f.salario, 0) / funcionarios.length || 0; %>
+                <%= salarioMedio.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Funcionários -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Funcionários (<%= pagination.totalItems %>)</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Cargo</th>
+              <th>Loja</th>
+              <th>Salário</th>
+              <th>Data Admissão</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (funcionarios.length > 0) { %>
+              <% funcionarios.forEach(funcionario => { %>
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-sm me-3">
+                      <div class="avatar-initial bg-primary rounded-circle">
+                        <%= funcionario.nome.charAt(0).toUpperCase() %>
+                      </div>
+                    </div>
+                    <strong><%= funcionario.nome %></strong>
+                  </div>
+                </td>
+                <td><%= funcionario.email %></td>
+                <td>
+                  <span class="badge badge-<%= funcionario.cargo === 'Gerente' ? 'primary' : funcionario.cargo === 'Vendedor' ? 'success' : 'info' %>">
+                    <%= funcionario.cargo %>
+                  </span>
+                </td>
+                <td><%= funcionario.loja %></td>
+                <td><%= funcionario.salario.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></td>
+                <td><%= funcionario.data_admissao.toLocaleDateString('pt-PT') %></td>
+                <td>
+                  <% if (funcionario.status === 'Ativo') { %>
+                    <span class="badge badge-success">Ativo</span>
+                  <% } else if (funcionario.status === 'Férias') { %>
+                    <span class="badge badge-warning">Férias</span>
+                  <% } else { %>
+                    <span class="badge badge-secondary">Inativo</span>
+                  <% } %>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes(<%= funcionario.id %>)" title="Ver detalhes">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" onclick="editarFuncionario(<%= funcionario.id %>)" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" onclick="transferirFuncionario(<%= funcionario.id %>, '<%= funcionario.nome %>')" title="Transferir">
+                      <i class="fas fa-exchange-alt"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" class="text-center py-4">
+                  <i class="fas fa-users fa-3x text-gray-300 mb-3"></i><br>
+                  <span class="text-muted">Nenhum funcionário encontrado</span>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pagination.totalPages > 1) { %>
+      <nav aria-label="Paginação">
+        <ul class="pagination justify-content-center">
+          <li class="page-item <%= pagination.currentPage <= 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&search=<%= filters.search %>&loja_id=<%= filters.loja_id %>&limit=<%= pagination.limit %>">
+              Anterior
+            </a>
+          </li>
+          
+          <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+            <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>&search=<%= filters.search %>&loja_id=<%= filters.loja_id %>&limit=<%= pagination.limit %>">
+                <%= i %>
+              </a>
+            </li>
+          <% } %>
+          
+          <li class="page-item <%= pagination.currentPage >= pagination.totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&search=<%= filters.search %>&loja_id=<%= filters.loja_id %>&limit=<%= pagination.limit %>">
+              Próximo
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Novo Funcionário -->
+<div class="modal fade" id="novoFuncionarioModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Novo Funcionário</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="novoFuncionarioForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Nome Completo</label>
+                <input type="text" class="form-control" name="nome" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Cargo</label>
+                <select class="form-select" name="cargo" required>
+                  <option value="">Selecionar cargo...</option>
+                  <option value="Gerente">Gerente</option>
+                  <option value="Vendedor">Vendedor</option>
+                  <option value="Caixa">Caixa</option>
+                  <option value="Estoquista">Estoquista</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Loja</label>
+                <select class="form-select" name="loja_id" required>
+                  <option value="">Selecionar loja...</option>
+                  <% lojas.forEach(loja => { %>
+                    <option value="<%= loja.id %>"><%= loja.nome %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Salário (MT)</label>
+                <input type="number" class="form-control" name="salario" step="0.01" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Data de Admissão</label>
+                <input type="date" class="form-control" name="data_admissao" required>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="criarFuncionario()">Criar Funcionário</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Transferir Funcionário -->
+<div class="modal fade" id="transferirFuncionarioModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Transferir Funcionário</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="transferirFuncionarioForm">
+          <div class="mb-3">
+            <label class="form-label">Funcionário</label>
+            <select class="form-select" name="funcionario_id" required>
+              <option value="">Selecionar funcionário...</option>
+              <% funcionarios.forEach(funcionario => { %>
+                <option value="<%= funcionario.id %>"><%= funcionario.nome %> - <%= funcionario.loja %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nova Loja</label>
+            <select class="form-select" name="nova_loja_id" required>
+              <option value="">Selecionar nova loja...</option>
+              <% lojas.forEach(loja => { %>
+                <option value="<%= loja.id %>"><%= loja.nome %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Data da Transferência</label>
+            <input type="date" class="form-control" name="data_transferencia" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Motivo da Transferência</label>
+            <textarea class="form-control" name="motivo" rows="3" placeholder="Descreva o motivo da transferência..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="confirmarTransferencia()">Transferir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function criarFuncionario() {
+  // Simular criação de funcionário
+  alert('Funcionário criado com sucesso!');
+  $('#novoFuncionarioModal').modal('hide');
+  location.reload();
+}
+
+function transferirFuncionario(id, nome) {
+  // Pré-selecionar funcionário no modal
+  document.querySelector('#transferirFuncionarioForm select[name="funcionario_id"]').value = id;
+  new bootstrap.Modal(document.getElementById('transferirFuncionarioModal')).show();
+}
+
+function confirmarTransferencia() {
+  // Simular transferência
+  alert('Funcionário transferido com sucesso!');
+  $('#transferirFuncionarioModal').modal('hide');
+  location.reload();
+}
+
+function verDetalhes(id) {
+  alert('Funcionalidade de detalhes em desenvolvimento');
+}
+
+function editarFuncionario(id) {
+  alert('Funcionalidade de edição em desenvolvimento');
+}
+
+// Auto-preencher data de admissão com hoje
+document.querySelector('input[name="data_admissao"]').value = new Date().toISOString().split('T')[0];
+document.querySelector('input[name="data_transferencia"]').value = new Date().toISOString().split('T')[0];
+</script>

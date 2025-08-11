@@ -1,0 +1,141 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-file-alt"></i> Detalhes da Encomenda #<%= encomenda.numero %>
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/estoque/encomendas" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button class="btn btn-primary btn-sm" onclick="window.print()">
+        <i class="fas fa-print"></i> Imprimir
+      </button>
+      <a href="/estoque/encomendas/<%= encomenda.id %>/edit" class="btn btn-warning btn-sm">
+        <i class="fas fa-edit"></i> Editar
+      </a>
+    </div>
+  </div>
+
+  <!-- Informações da Encomenda -->
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-info-circle"></i> Informações da Encomenda
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Número:</strong> <%= encomenda.numero %></p>
+              <p><strong>Data:</strong> <%= new Date(encomenda.data).toLocaleDateString('pt-PT') %></p>
+              <p><strong>Fornecedor:</strong> <%= encomenda.fornecedor %></p>
+              <p><strong>Loja Destino:</strong> <%= encomenda.lojaDestino %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Status:</strong> 
+                <span class="badge badge-<%= encomenda.status === 'Pendente' ? 'warning' : encomenda.status === 'Aprovada' ? 'success' : 'info' %>">
+                  <%= encomenda.status %>
+                </span>
+              </p>
+              <p><strong>Prioridade:</strong> 
+                <span class="badge badge-<%= encomenda.prioridade === 'Alta' ? 'danger' : encomenda.prioridade === 'Média' ? 'warning' : 'secondary' %>">
+                  <%= encomenda.prioridade %>
+                </span>
+              </p>
+              <p><strong>Data Prevista:</strong> <%= new Date(encomenda.dataPrevista).toLocaleDateString('pt-PT') %></p>
+              <p><strong>Responsável:</strong> <%= encomenda.responsavel %></p>
+            </div>
+          </div>
+          <% if (encomenda.observacoes) { %>
+          <div class="row mt-3">
+            <div class="col-12">
+              <p><strong>Observações:</strong></p>
+              <p class="text-muted"><%= encomenda.observacoes %></p>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-success">
+            <i class="fas fa-calculator"></i> Resumo Financeiro
+          </h6>
+        </div>
+        <div class="card-body">
+          <p><strong>Subtotal:</strong> <%= encomenda.subtotal.toLocaleString('pt-PT') %> MT</p>
+          <p><strong>IVA (17%):</strong> <%= encomenda.iva.toLocaleString('pt-PT') %> MT</p>
+          <hr>
+          <p class="h5"><strong>Total:</strong> <%= encomenda.total.toLocaleString('pt-PT') %> MT</p>
+        </div>
+      </div>
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-info">
+            <i class="fas fa-history"></i> Histórico
+          </h6>
+        </div>
+        <div class="card-body">
+          <% encomenda.historico.forEach(function(evento) { %>
+          <div class="mb-2">
+            <small class="text-muted"><%= new Date(evento.data).toLocaleDateString('pt-PT') %></small>
+            <p class="mb-1"><%= evento.descricao %></p>
+            <small class="text-info">Por: <%= evento.usuario %></small>
+            <hr class="my-2">
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Itens da Encomenda -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Itens da Encomenda
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Artigo</th>
+              <th>Quantidade</th>
+              <th>Unidade</th>
+              <th>Preço Unit.</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% encomenda.itens.forEach(function(item) { %>
+            <tr>
+              <td><%= item.codigo %></td>
+              <td><%= item.nome %></td>
+              <td class="text-center"><%= item.quantidade %></td>
+              <td><%= item.unidade %></td>
+              <td class="text-right"><%= item.precoUnitario.toLocaleString('pt-PT') %> MT</td>
+              <td class="text-right"><%= item.total.toLocaleString('pt-PT') %> MT</td>
+            </tr>
+            <% }); %>
+          </tbody>
+          <tfoot>
+            <tr class="font-weight-bold">
+              <td colspan="5" class="text-right">Total Geral:</td>
+              <td class="text-right"><%= encomenda.total.toLocaleString('pt-PT') %> MT</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

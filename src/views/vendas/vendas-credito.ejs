@@ -1,0 +1,201 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box">
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/vendas">Vendas</a></li>
+            <li class="breadcrumb-item active">Vendas a Crédito</li>
+          </ol>
+        </div>
+        <h4 class="page-title">Vendas a Crédito</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumo das Vendas a Crédito -->
+  <div class="row">
+    <div class="col-md-6 col-xl-3">
+      <div class="widget-rounded-circle card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-lg rounded-circle bg-soft-primary border-primary border">
+                <i class="fe-credit-card font-22 avatar-title text-primary"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h3 class="text-dark mt-1">
+                  <span data-plugin="counterup"><%= vendasCredito.length %></span>
+                </h3>
+                <p class="text-muted mb-1 text-truncate">Total Vendas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="widget-rounded-circle card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-lg rounded-circle bg-soft-success border-success border">
+                <i class="fe-dollar-sign font-22 avatar-title text-success"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h3 class="text-dark mt-1">
+                  <span data-plugin="counterup"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(vendasCredito.reduce((sum, v) => sum + v.valor_total, 0)) %></span>
+                </h3>
+                <p class="text-muted mb-1 text-truncate">Valor Total</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="widget-rounded-circle card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-lg rounded-circle bg-soft-warning border-warning border">
+                <i class="fe-clock font-22 avatar-title text-warning"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h3 class="text-dark mt-1">
+                  <span data-plugin="counterup"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(vendasCredito.reduce((sum, v) => sum + v.valor_pendente, 0)) %></span>
+                </h3>
+                <p class="text-muted mb-1 text-truncate">Valor Pendente</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="widget-rounded-circle card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-lg rounded-circle bg-soft-danger border-danger border">
+                <i class="fe-alert-triangle font-22 avatar-title text-danger"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h3 class="text-dark mt-1">
+                  <span data-plugin="counterup"><%= vendasCredito.filter(v => v.status === 'Atrasado').length %></span>
+                </h3>
+                <p class="text-muted mb-1 text-truncate">Vendas Atrasadas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4">
+              <a href="/vendas/create" class="btn btn-danger mb-2">
+                <i class="mdi mdi-plus-circle me-2"></i> Nova Venda a Crédito
+              </a>
+            </div>
+            <div class="col-sm-8">
+              <div class="text-sm-end">
+                <button type="button" class="btn btn-success mb-2 me-1">
+                  <i class="mdi mdi-cog-outline"></i>
+                </button>
+                <button type="button" class="btn btn-light mb-2 me-1">Exportar</button>
+                <button type="button" class="btn btn-light mb-2">Imprimir</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-centered w-100 dt-responsive nowrap" id="vendas-credito-datatable">
+              <thead class="table-light">
+                <tr>
+                  <th class="all" style="width: 20px;">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="customCheck1">
+                      <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                    </div>
+                  </th>
+                  <th class="all">Número</th>
+                  <th>Cliente</th>
+                  <th>NUIT</th>
+                  <th>Data Venda</th>
+                  <th>Data Vencimento</th>
+                  <th>Valor Total</th>
+                  <th>Valor Pago</th>
+                  <th>Valor Pendente</th>
+                  <th>Status</th>
+                  <th>Dias Atraso</th>
+                  <th style="width: 85px;">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% vendasCredito.forEach(function(venda) { %>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="customCheck<%= venda.id %>">
+                      <label class="form-check-label" for="customCheck<%= venda.id %>">&nbsp;</label>
+                    </div>
+                  </td>
+                  <td>
+                    <a href="/vendas/<%= venda.id %>" class="text-body fw-bold"><%= venda.numero %></a>
+                  </td>
+                  <td><%= venda.cliente.nome %></td>
+                  <td><%= venda.cliente.nuit %></td>
+                  <td><%= venda.data_venda.toLocaleDateString('pt-PT') %></td>
+                  <td><%= venda.data_vencimento.toLocaleDateString('pt-PT') %></td>
+                  <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_total) %></td>
+                  <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_pago) %></td>
+                  <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_pendente) %></td>
+                  <td>
+                    <% if (venda.status === 'Pendente') { %>
+                      <span class="badge bg-warning">Pendente</span>
+                    <% } else if (venda.status === 'Atrasado') { %>
+                      <span class="badge bg-danger">Atrasado</span>
+                    <% } else { %>
+                      <span class="badge bg-success">Pago</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (venda.dias_atraso > 0) { %>
+                      <span class="text-danger fw-bold"><%= venda.dias_atraso %> dias</span>
+                    <% } else { %>
+                      <span class="text-muted">-</span>
+                    <% } %>
+                  </td>
+                  <td class="table-action">
+                    <a href="/vendas/<%= venda.id %>" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                    <a href="/vendas/<%= venda.id %>/edit" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                    <a href="/vendas/<%= venda.id %>/print" class="action-icon"> <i class="mdi mdi-printer"></i></a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

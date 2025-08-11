@@ -1,0 +1,130 @@
+<!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Lista de Modalidades de Pagamento</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nova-modalidade">
+                  <i class="fas fa-plus"></i> Nova Modalidade
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Dinheiro</td>
+                    <td>Pagamento em dinheiro físico</td>
+                    <td><span class="badge bg-success">Ativo</span></td>
+                    <td>
+                      <button class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></button>
+                      <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Cartão de Crédito</td>
+                    <td>Pagamento com cartão de crédito</td>
+                    <td><span class="badge bg-success">Ativo</span></td>
+                    <td>
+                      <button class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></button>
+                      <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Transferência Bancária</td>
+                    <td>Pagamento por transferência bancária</td>
+                    <td><span class="badge bg-success">Ativo</span></td>
+                    <td>
+                      <button class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></button>
+                      <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Cheque</td>
+                    <td>Pagamento com cheque</td>
+                    <td><span class="badge bg-warning">Inativo</span></td>
+                    <td>
+                      <button class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></button>
+                      <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer clearfix">
+              <ul class="pagination pagination-sm m-0 float-right">
+                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Modal Nova Modalidade -->
+<div class="modal fade" id="modal-nova-modalidade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Nova Modalidade de Pagamento</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" class="form-control" id="nome" placeholder="Nome da modalidade">
+          </div>
+          <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control" id="descricao" rows="3" placeholder="Descrição da modalidade"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select class="form-control" id="status">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+
+<!-- /.modal -->

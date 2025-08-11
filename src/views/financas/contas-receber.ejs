@@ -1,0 +1,189 @@
+
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-arrow-down mr-1"></i>
+          Contas a Receber
+        </h3>
+        <div class="card-tools">
+          <a href="/financas/contas-receber/create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nova Conta a Receber
+          </a>
+        </div>
+      </div>
+      
+      <!-- Filtros -->
+      <div class="card-body">
+        <form method="GET" class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status" class="form-control">
+                <option value="todos" <%= filtros.status === 'todos' ? 'selected' : '' %>>Todos</option>
+                <option value="pendente" <%= filtros.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+                <option value="parcial" <%= filtros.status === 'parcial' ? 'selected' : '' %>>Parcial</option>
+                <option value="recebido" <%= filtros.status === 'recebido' ? 'selected' : '' %>>Recebido</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <button type="submit" class="btn btn-info form-control">
+                <i class="fas fa-search"></i> Filtrar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Cliente</th>
+              <th>Descrição</th>
+              <th>Valor Original</th>
+              <th>Valor Pendente</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% contasReceber.forEach(function(conta) { %>
+            <tr>
+              <td><%= conta.numero %></td>
+              <td>
+                <strong><%= conta.cliente.nome %></strong><br>
+                <small class="text-muted">NUIT: <%= conta.cliente.nuit %></small>
+              </td>
+              <td><%= conta.descricao %></td>
+              <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(conta.valor_original) %></td>
+              <td class="<%= conta.valor_pendente > 0 ? 'text-warning' : 'text-success' %>">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(conta.valor_pendente) %>
+              </td>
+              <td>
+                <%= conta.data_vencimento.toLocaleDateString('pt-MZ') %>
+                <% if (conta.data_vencimento < new Date() && conta.status !== 'Recebido') { %>
+                  <br><span class="badge badge-danger">Vencida</span>
+                <% } %>
+              </td>
+              <td>
+                <span class="badge <%= conta.status === 'Recebido' ? 'badge-success' : conta.status === 'Parcial' ? 'badge-warning' : 'badge-info' %>">
+                  <%= conta.status %>
+                </span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <a href="/financas/contas-receber/<%= conta.id %>" class="btn btn-info btn-sm" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="/financas/contas-receber/<%= conta.id %>/edit" class="btn btn-warning btn-sm" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <% if (conta.status !== 'Recebido') { %>
+                  <button type="button" class="btn btn-success btn-sm" onclick="processarRecebimento(<%= conta.id %>)" title="Receber">
+                    <i class="fas fa-money-bill"></i>
+                  </button>
+                  <% } %>
+                </div>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Paginação -->
+      <div class="card-footer clearfix">
+        <ul class="pagination pagination-sm m-0 float-right">
+          <% if (pagination.currentPage > 1) { %>
+          <li class="page-item">
+            <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&status=<%= filtros.status %>">&laquo;</a>
+          </li>
+          <% } %>
+          
+          <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+          <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>&status=<%= filtros.status %>"><%= i %></a>
+          </li>
+          <% } %>
+          
+          <% if (pagination.currentPage < pagination.totalPages) { %>
+          <li class="page-item">
+            <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&status=<%= filtros.status %>">&raquo;</a>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Recebimento -->
+<div class="modal fade" id="modalRecebimento" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Processar Recebimento</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form id="formRecebimento" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Valor a Receber</label>
+            <input type="number" name="valor" class="form-control" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Forma de Recebimento</label>
+            <select name="forma_recebimento" class="form-control" required>
+              <option value="">Selecione...</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="transferencia">Transferência Bancária</option>
+              <option value="cheque">Cheque</option>
+              <option value="mpesa">M-Pesa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Observações</label>
+            <textarea name="observacoes" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Processar Recebimento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function processarRecebimento(contaId) {
+  $('#formRecebimento').attr('action', `/financas/contas-receber/${contaId}/receber`);
+  $('#modalRecebimento').modal('show');
+}
+
+$('#formRecebimento').on('submit', function(e) {
+  e.preventDefault();
+  
+  $.ajax({
+    url: $(this).attr('action'),
+    method: 'POST',
+    data: $(this).serialize(),
+    success: function(response) {
+      toastr.success('Recebimento processado com sucesso!');
+      location.reload();
+    },
+    error: function() {
+      toastr.error('Erro ao processar recebimento');
+    }
+  });
+});
+</script>

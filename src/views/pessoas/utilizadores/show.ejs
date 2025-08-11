@@ -1,0 +1,1037 @@
+<%- contentFor('title') %>
+Detalhes do Utilizador - SYNTRA ERP
+<% end %>
+
+<%- contentFor('styles') %>
+<style>
+  .info-section {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+  }
+  .user-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 3rem;
+    margin: 0 auto 20px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+  }
+  .user-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .user-role {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 5px;
+  }
+  .user-code {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  .status-badge {
+    font-size: 0.875rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f9fa;
+  }
+  .info-item:last-child {
+    border-bottom: none;
+  }
+  .info-label {
+    font-weight: 600;
+    color: #495057;
+    min-width: 140px;
+  }
+  .info-value {
+    color: #6c757d;
+    text-align: right;
+  }
+  .permission-badge {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin: 2px;
+    display: inline-block;
+  }
+  .permission-badge.active {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  .loja-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .loja-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+  }
+  .loja-info h6 {
+    margin: 0;
+    color: #495057;
+  }
+  .loja-info small {
+    color: #6c757d;
+  }
+  .activity-item {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 0 6px 6px 0;
+  }
+  .activity-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+  }
+  .activity-action {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+  }
+  .activity-details {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .stats-card {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+  }
+  .stats-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+  .chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 20px;
+  }
+  .quick-actions {
+    position: sticky;
+    top: 20px;
+  }
+  .btn-action {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  .audit-info {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .audit-info .row {
+    margin-bottom: 8px;
+  }
+  .audit-info .row:last-child {
+    margin-bottom: 0;
+  }
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #dee2e6;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -23px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 2px #dee2e6;
+  }
+  .timeline-content {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+  }
+  .timeline-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+  }
+  .timeline-title {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+  }
+  .timeline-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .performance-meter {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .performance-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+    transition: width 0.3s ease;
+  }
+  .export-options {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  .export-btn {
+    margin: 5px;
+  }
+  .security-info {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .security-info h6 {
+    color: #856404;
+    margin-bottom: 10px;
+  }
+  .security-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .security-item:last-child {
+    margin-bottom: 0;
+  }
+</style>
+<% end %>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Detalhes do Utilizador</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas">Pessoas</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas/utilizadores">Utilizadores</a></li>
+          <li class="breadcrumb-item active">João Silva</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <a href="/pessoas/utilizadores" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <a href="/pessoas/utilizadores/1/edit" class="btn btn-primary me-2">
+        <i class="fas fa-edit"></i> Editar
+      </a>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="fas fa-download"></i> Exportar
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="exportarPDF()"><i class="fas fa-file-pdf"></i> PDF</a></li>
+          <li><a class="dropdown-item" href="#" onclick="exportarExcel()"><i class="fas fa-file-excel"></i> Excel</a></li>
+          <li><a class="dropdown-item" href="#" onclick="imprimirFicha()"><i class="fas fa-print"></i> Imprimir</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Coluna Principal -->
+    <div class="col-lg-8">
+      <!-- Cabeçalho do Utilizador -->
+      <div class="user-header">
+        <div class="user-avatar">JS</div>
+        <div class="user-name">João Silva</div>
+        <div class="user-role">Gerente de Vendas</div>
+        <div class="user-code">Código: USR001</div>
+        <div class="mt-3">
+          <span class="badge bg-success status-badge">Ativo</span>
+          <span class="badge bg-info status-badge ms-2">Online</span>
+        </div>
+      </div>
+
+      <!-- Dados Básicos -->
+      <div class="info-section">
+        <h5 class="section-title">
+          <i class="fas fa-user"></i> Dados Básicos
+        </h5>
+        
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
+          <span class="info-value">joao.silva@empresa.com</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-phone"></i> Telefone:</span>
+          <span class="info-value">(84) 99999-9999</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-calendar"></i> Data de Criação:</span>
+          <span class="info-value">01/11/2024</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-clock"></i> Último Login:</span>
+          <span class="info-value">Hoje às 08:15</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-shield-alt"></i> Perfil:</span>
+          <span class="info-value"><span class="badge bg-primary">Gerente</span></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-toggle-on"></i> Status:</span>
+          <span class="info-value"><span class="badge bg-success">Ativo</span></span>
+        </div>
+      </div>
+
+      <!-- Permissões -->
+      <div class="info-section">
+        <h5 class="section-title">
+          <i class="fas fa-key"></i> Permissões
+        </h5>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="mb-3"><i class="fas fa-shopping-cart"></i> Vendas</h6>
+            <span class="permission-badge active">Criar vendas</span>
+            <span class="permission-badge active">Editar vendas</span>
+            <span class="permission-badge active">Cancelar vendas</span>
+            <span class="permission-badge active">Aplicar descontos</span>
+            
+            <h6 class="mb-3 mt-4"><i class="fas fa-box"></i> Stock</h6>
+            <span class="permission-badge active">Consultar stock</span>
+            <span class="permission-badge active">Ajustar stock</span>
+            <span class="permission-badge">Transferir stock</span>
+          </div>
+          <div class="col-md-6">
+            <h6 class="mb-3"><i class="fas fa-chart-bar"></i> Relatórios</h6>
+            <span class="permission-badge active">Relatórios de vendas</span>
+            <span class="permission-badge active">Relatórios financeiros</span>
+            <span class="permission-badge active">Relatórios de stock</span>
+            
+            <h6 class="mb-3 mt-4"><i class="fas fa-cogs"></i> Configurações</h6>
+            <span class="permission-badge">Configurações do sistema</span>
+            <span class="permission-badge active">Gestão de utilizadores</span>
+            <span class="permission-badge">Backup e restauro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lojas Acessíveis -->
+      <div class="info-section">
+        <h5 class="section-title">
+          <i class="fas fa-store"></i> Lojas Acessíveis
+        </h5>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="loja-item">
+              <div class="loja-icon">
+                <i class="fas fa-store"></i>
+              </div>
+              <div class="loja-info">
+                <h6>Loja Principal</h6>
+                <small>Rua Principal, 123</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="loja-item">
+              <div class="loja-icon">
+                <i class="fas fa-store"></i>
+              </div>
+              <div class="loja-info">
+                <h6>Loja Secundária</h6>
+                <small>Avenida Central, 456</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estatísticas de Performance -->
+      <div class="info-section">
+        <h5 class="section-title">
+          <i class="fas fa-chart-line"></i> Estatísticas de Performance
+        </h5>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Vendas este mês</span>
+                <span class="fw-bold">127</span>
+              </div>
+              <div class="performance-meter">
+                <div class="performance-fill" style="width: 85%"></div>
+              </div>
+              <small class="text-muted">Meta: 150 vendas</small>
+            </div>
+            
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Taxa de conversão</span>
+                <span class="fw-bold">68%</span>
+              </div>
+              <div class="performance-meter">
+                <div class="performance-fill" style="width: 68%"></div>
+              </div>
+              <small class="text-muted">Média da empresa: 55%</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Satisfação do cliente</span>
+                <span class="fw-bold">4.8/5</span>
+              </div>
+              <div class="performance-meter">
+                <div class="performance-fill" style="width: 96%"></div>
+              </div>
+              <small class="text-muted">Baseado em 45 avaliações</small>
+            </div>
+            
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Taxa de presença</span>
+                <span class="fw-bold">98%</span>
+              </div>
+              <div class="performance-meter">
+                <div class="performance-fill" style="width: 98%"></div>
+              </div>
+              <small class="text-muted">Últimos 30 dias</small>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gráfico de Vendas -->
+        <div class="chart-container">
+          <canvas id="vendasChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Histórico de Atividades -->
+      <div class="info-section">
+        <h5 class="section-title">
+          <i class="fas fa-history"></i> Histórico de Atividades
+        </h5>
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-date">
+                <i class="fas fa-clock"></i> Hoje às 08:15
+              </div>
+              <div class="timeline-title">Login no sistema</div>
+              <div class="timeline-description">
+                Acesso via web | IP: 192.168.1.105 | Loja Principal
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-date">
+                <i class="fas fa-clock"></i> Ontem às 17:45
+              </div>
+              <div class="timeline-title">Venda processada</div>
+              <div class="timeline-description">
+                Venda #VND-2024-001234 | Valor: 2.500,00 MT | Cliente: Maria Santos
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-date">
+                <i class="fas fa-clock"></i> Ontem às 16:30
+              </div>
+              <div class="timeline-title">Relatório gerado</div>
+              <div class="timeline-description">
+                Relatório de vendas diário | Formato: PDF | Enviado por email
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-date">
+                <i class="fas fa-clock"></i> 15/12/2024 às 14:30
+              </div>
+              <div class="timeline-title">Perfil atualizado</div>
+              <div class="timeline-description">
+                Perfil alterado de "Vendedor" para "Gerente" | Por: Admin Sistema
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <div class="timeline-date">
+                <i class="fas fa-clock"></i> 10/12/2024 às 09:15
+              </div>
+              <div class="timeline-title">Senha alterada</div>
+              <div class="timeline-description">
+                Alteração de senha realizada pelo próprio utilizador
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="carregarMaisAtividades()">
+            <i class="fas fa-plus"></i> Carregar mais atividades
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna Lateral -->
+    <div class="col-lg-4">
+      <!-- Ações Rápidas -->
+      <div class="quick-actions">
+        <div class="info-section">
+          <h5 class="section-title">
+            <i class="fas fa-bolt"></i> Ações Rápidas
+          </h5>
+          
+          <a href="/pessoas/utilizadores/1/edit" class="btn btn-primary btn-action">
+            <i class="fas fa-edit"></i> Editar Utilizador
+          </a>
+          <button type="button" class="btn btn-outline-warning btn-action" onclick="resetarSenha()">
+            <i class="fas fa-key"></i> Resetar Senha
+          </button>
+          <button type="button" class="btn btn-outline-info btn-action" onclick="enviarCredenciais()">
+            <i class="fas fa-envelope"></i> Enviar Credenciais
+          </button>
+          <button type="button" class="btn btn-outline-secondary btn-action" onclick="bloquearSessoes()">
+            <i class="fas fa-sign-out-alt"></i> Bloquear Sessões
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-action" onclick="bloquearUtilizador()">
+            <i class="fas fa-lock"></i> Bloquear Utilizador
+          </button>
+        </div>
+
+        <!-- Estatísticas Rápidas -->
+        <div class="info-section">
+          <h5 class="section-title">
+            <i class="fas fa-chart-pie"></i> Estatísticas
+          </h5>
+          
+          <div class="stats-card">
+            <span class="stats-number">127</span>
+            <span class="stats-label">Vendas este mês</span>
+          </div>
+          
+          <div class="stats-card" style="background: linear-gradient(135deg, #007bff 0%, #6610f2 100%)">
+            <span class="stats-number">1,247</span>
+            <span class="stats-label">Total de logins</span>
+          </div>
+          
+          <div class="stats-card" style="background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%)">
+            <span class="stats-number">15</span>
+            <span class="stats-label">Dias desde último login</span>
+          </div>
+        </div>
+
+        <!-- Informações de Segurança -->
+        <div class="info-section">
+          <h5 class="section-title">
+            <i class="fas fa-shield-alt"></i> Segurança
+          </h5>
+          
+          <div class="security-info">
+            <h6><i class="fas fa-exclamation-triangle"></i> Alertas de Segurança</h6>
+            <div class="security-item">
+              <span>Última alteração de senha:</span>
+              <span>10/12/2024</span>
+            </div>
+            <div class="security-item">
+              <span>Tentativas de login falhadas:</span>
+              <span class="text-success">0</span>
+            </div>
+            <div class="security-item">
+              <span>Sessões ativas:</span>
+              <span>2</span>
+            </div>
+          </div>
+          
+          <div class="audit-info">
+            <div class="row">
+              <div class="col-6"><strong>2FA:</strong></div>
+              <div class="col-6"><span class="badge bg-danger">Inativo</span></div>
+            </div>
+            <div class="row">
+              <div class="col-6"><strong>Força da senha:</strong></div>
+              <div class="col-6"><span class="badge bg-success">Forte</span></div>
+            </div>
+            <div class="row">
+              <div class="col-6"><strong>Último IP:</strong></div>
+              <div class="col-6">192.168.1.105</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações de Auditoria -->
+        <div class="info-section">
+          <h5 class="section-title">
+            <i class="fas fa-info-circle"></i> Auditoria
+          </h5>
+          
+          <div class="audit-info">
+            <div class="row">
+              <div class="col-5"><strong>Criado em:</strong></div>
+              <div class="col-7">01/11/2024 às 10:30</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Criado por:</strong></div>
+              <div class="col-7">Admin Sistema</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Última alteração:</strong></div>
+              <div class="col-7">15/12/2024 às 14:30</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Alterado por:</strong></div>
+              <div class="col-7">Admin Sistema</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Versão:</strong></div>
+              <div class="col-7">v1.3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configurações -->
+        <div class="info-section">
+          <h5 class="section-title">
+            <i class="fas fa-cog"></i> Configurações
+          </h5>
+          
+          <div class="info-item">
+            <span class="info-label">Notificações:</span>
+            <span class="info-value"><span class="badge bg-success">Ativas</span></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Relatórios por email:</span>
+            <span class="info-value"><span class="badge bg-secondary">Inativo</span></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Idioma:</span>
+            <span class="info-value">Português</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fuso horário:</span>
+            <span class="info-value">Africa/Maputo</span>
+          </div>
+          
+          <div class="mt-3">
+            <label for="observacoes" class="form-label"><strong>Observações:</strong></label>
+            <p class="text-muted small">
+              Gerente responsável pela loja principal. Excelente desempenho em vendas e ótimo relacionamento com a equipe.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- contentFor('scripts') %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Inicialização
+$(document).ready(function() {
+  // Inicializar gráficos
+  inicializarGraficos();
+  
+  // Configurar atalhos de teclado
+  configurarAtalhos();
+  
+  // Atualizar estatísticas em tempo real
+  atualizarEstatisticas();
+});
+
+// Inicializar gráficos
+function inicializarGraficos() {
+  // Gráfico de vendas
+  const ctx = document.getElementById('vendasChart').getContext('2d');
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [{
+        label: 'Vendas Mensais',
+        data: [65, 78, 90, 81, 95, 105, 110, 125, 140, 135, 127, 0],
+        borderColor: '#007bff',
+        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4
+      }, {
+        label: 'Meta',
+        data: [80, 80, 85, 85, 90, 90, 95, 95, 100, 100, 105, 105],
+        borderColor: '#28a745',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderDash: [5, 5],
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+        title: {
+          display: true,
+          text: 'Performance de Vendas - 2024'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Número de Vendas'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Mês'
+          }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      }
+    }
+  });
+}
+
+// Configurar atalhos de teclado
+function configurarAtalhos() {
+  $(document).on('keydown', function(e) {
+    // Ctrl + E = Editar
+    if (e.ctrlKey && e.key === 'e') {
+      e.preventDefault();
+      window.location.href = '/pessoas/utilizadores/1/edit';
+    }
+    
+    // Ctrl + B = Voltar
+    if (e.ctrlKey && e.key === 'b') {
+      e.preventDefault();
+      window.location.href = '/pessoas/utilizadores';
+    }
+    
+    // Ctrl + P = Imprimir
+    if (e.ctrlKey && e.key === 'p') {
+      e.preventDefault();
+      imprimirFicha();
+    }
+    
+    // Ctrl + R = Resetar senha
+    if (e.ctrlKey && e.key === 'r') {
+      e.preventDefault();
+      resetarSenha();
+    }
+  });
+}
+
+// Atualizar estatísticas em tempo real
+function atualizarEstatisticas() {
+  // Simular atualização de estatísticas a cada 30 segundos
+  setInterval(function() {
+    // Aqui seria feita uma chamada AJAX para buscar dados atualizados
+    console.log('Atualizando estatísticas...');
+  }, 30000);
+}
+
+// Exportar para PDF
+function exportarPDF() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Gerando PDF...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular geração de PDF
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = 'utilizador_joao_silva.pdf';
+    link.click();
+    
+    btn.html(originalText).prop('disabled', false);
+    
+    // Mostrar notificação
+    mostrarNotificacao('PDF gerado com sucesso!', 'success');
+  }, 2000);
+}
+
+// Exportar para Excel
+function exportarExcel() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Gerando Excel...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular geração de Excel
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = 'utilizador_joao_silva.xlsx';
+    link.click();
+    
+    btn.html(originalText).prop('disabled', false);
+    
+    // Mostrar notificação
+    mostrarNotificacao('Excel gerado com sucesso!', 'success');
+  }, 2000);
+}
+
+// Imprimir ficha
+function imprimirFicha() {
+  // Criar uma nova janela com apenas o conteúdo da ficha
+  const printWindow = window.open('', '_blank');
+  const printContent = `
+    <html>
+      <head>
+        <title>Ficha do Utilizador - João Silva</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .info-section { margin-bottom: 20px; }
+          .info-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+          @media print { body { margin: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>SYNTRA ERP</h1>
+          <h2>Ficha do Utilizador</h2>
+          <p><strong>João Silva</strong> - USR001</p>
+        </div>
+        <div class="info-section">
+          <h3>Dados Básicos</h3>
+          <div class="info-item"><span>Nome:</span><span>João Silva</span></div>
+          <div class="info-item"><span>Email:</span><span>joao.silva@empresa.com</span></div>
+          <div class="info-item"><span>Telefone:</span><span>(84) 99999-9999</span></div>
+          <div class="info-item"><span>Perfil:</span><span>Gerente</span></div>
+          <div class="info-item"><span>Status:</span><span>Ativo</span></div>
+        </div>
+        <div class="info-section">
+          <h3>Lojas Acessíveis</h3>
+          <ul>
+            <li>Loja Principal - Rua Principal, 123</li>
+            <li>Loja Secundária - Avenida Central, 456</li>
+          </ul>
+        </div>
+        <div class="info-section">
+          <h3>Estatísticas</h3>
+          <div class="info-item"><span>Vendas este mês:</span><span>127</span></div>
+          <div class="info-item"><span>Total de logins:</span><span>1,247</span></div>
+          <div class="info-item"><span>Taxa de presença:</span><span>98%</span></div>
+        </div>
+      </body>
+    </html>
+  `;
+  
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  
+  setTimeout(function() {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+}
+
+// Resetar senha
+function resetarSenha() {
+  if (confirm('Tem certeza que deseja resetar a senha do utilizador? Uma nova senha será gerada e enviada por email.')) {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Resetando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      btn.html(originalText).prop('disabled', false);
+      mostrarNotificacao('Senha resetada com sucesso! Nova senha enviada por email.', 'success');
+    }, 2000);
+  }
+}
+
+// Enviar credenciais
+function enviarCredenciais() {
+  if (confirm('Deseja enviar as credenciais de acesso por email para o utilizador?')) {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Enviando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      btn.html(originalText).prop('disabled', false);
+      mostrarNotificacao('Credenciais enviadas por email com sucesso!', 'success');
+    }, 2000);
+  }
+}
+
+// Bloquear sessões ativas
+function bloquearSessoes() {
+  if (confirm('Tem certeza que deseja bloquear todas as sessões ativas do utilizador? Ele será desconectado imediatamente.')) {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Bloqueando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      btn.html(originalText).prop('disabled', false);
+      mostrarNotificacao('Sessões bloqueadas com sucesso!', 'warning');
+      
+      // Atualizar contador de sessões ativas
+      $('.security-item:contains("Sessões ativas") span:last').text('0');
+    }, 2000);
+  }
+}
+
+// Bloquear utilizador
+function bloquearUtilizador() {
+  if (confirm('Tem certeza que deseja bloquear este utilizador? Ele não conseguirá mais fazer login no sistema.')) {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Bloqueando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      mostrarNotificacao('Utilizador bloqueado com sucesso!', 'warning');
+      
+      // Redirecionar para a lista
+      setTimeout(function() {
+        window.location.href = '/pessoas/utilizadores';
+      }, 1500);
+    }, 2000);
+  }
+}
+
+// Carregar mais atividades
+function carregarMaisAtividades() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Carregando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular carregamento de mais atividades
+    const novaAtividade = `
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <div class="timeline-date">
+            <i class="fas fa-clock"></i> 05/12/2024 às 16:45
+          </div>
+          <div class="timeline-title">Cliente adicionado</div>
+          <div class="timeline-description">
+            Novo cliente cadastrado: Maria Santos | NUIT: 123456789
+          </div>
+        </div>
+      </div>
+    `;
+    
+    $('.timeline').append(novaAtividade);
+    btn.html(originalText).prop('disabled', false);
+    
+    // Ocultar botão se não houver mais itens
+    btn.hide();
+  }, 1000);
+}
+
+// Mostrar notificação
+function mostrarNotificacao(mensagem, tipo = 'info') {
+  // Criar elemento de notificação
+  const notificacao = $(`
+    <div class="alert alert-${tipo} alert-dismissible fade show position-fixed" 
+         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+      ${mensagem}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `);
+  
+  // Adicionar ao body
+  $('body').append(notificacao);
+  
+  // Remover automaticamente após 5 segundos
+  setTimeout(function() {
+    notificacao.alert('close');
+  }, 5000);
+}
+</script>
+<% end %>

@@ -1,0 +1,207 @@
+
+
+<!-- Filtros -->
+<div class="row mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <form method="GET" class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Período</label>
+            <select name="periodo" class="form-control">
+              <option value="3">Próximos 3 meses</option>
+              <option value="6">Próximos 6 meses</option>
+              <option value="12">Próximos 12 meses</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Cenário</label>
+            <select name="cenario" class="form-control">
+              <option value="otimista">Otimista</option>
+              <option value="realista" selected>Realista</option>
+              <option value="pessimista">Pessimista</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Base de Cálculo</label>
+            <select name="base" class="form-control">
+              <option value="historico">Histórico</option>
+              <option value="orcamento">Orçamento</option>
+              <option value="misto" selected>Misto</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">&nbsp;</label>
+            <div>
+              <button type="submit" class="btn btn-primary">Atualizar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Gráfico de Projeção -->
+<div class="row mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Evolução Projetada do Fluxo de Caixa</h3>
+      </div>
+      <div class="card-body">
+        <canvas id="projecaoChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabela de Projeções -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Detalhes da Projeção</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Período</th>
+                <th>Entradas Previstas</th>
+                <th>Saídas Previstas</th>
+                <th>Saldo Projetado</th>
+                <th>Variação</th>
+                <th>Cenário</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (typeof projecoes !== 'undefined') { %>
+                <% projecoes.forEach(function(projecao, index) { %>
+                  <tr>
+                    <td><%= projecao.periodo %></td>
+                    <td class="text-success"><%= formatCurrency(projecao.entradas_previstas) %></td>
+                    <td class="text-danger"><%= formatCurrency(projecao.saidas_previstas) %></td>
+                    <td class="<%= projecao.saldo_projetado > 0 ? 'text-success' : 'text-danger' %>">
+                      <%= formatCurrency(projecao.saldo_projetado) %>
+                    </td>
+                    <td>
+                      <% const variacao = projecao.entradas_previstas - projecao.saidas_previstas; %>
+                      <span class="<%= variacao > 0 ? 'text-success' : 'text-danger' %>">
+                        <%= variacao > 0 ? '+' : '' %><%= formatCurrency(variacao) %>
+                      </span>
+                    </td>
+                    <td><span class="badge badge-info">Realista</span></td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td>Janeiro 2024</td>
+                  <td class="text-success">120.000,00 MT</td>
+                  <td class="text-danger">95.000,00 MT</td>
+                  <td class="text-success">25.000,00 MT</td>
+                  <td class="text-success">+25.000,00 MT</td>
+                  <td><span class="badge badge-info">Realista</span></td>
+                </tr>
+                <tr>
+                  <td>Fevereiro 2024</td>
+                  <td class="text-success">135.000,00 MT</td>
+                  <td class="text-danger">105.000,00 MT</td>
+                  <td class="text-success">30.000,00 MT</td>
+                  <td class="text-success">+30.000,00 MT</td>
+                  <td><span class="badge badge-info">Realista</span></td>
+                </tr>
+                <tr>
+                  <td>Março 2024</td>
+                  <td class="text-success">150.000,00 MT</td>
+                  <td class="text-danger">115.000,00 MT</td>
+                  <td class="text-success">35.000,00 MT</td>
+                  <td class="text-success">+35.000,00 MT</td>
+                  <td><span class="badge badge-info">Realista</span></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+$(document).ready(function() {
+  // Gráfico de Projeção
+  const ctx = document.getElementById('projecaoChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Janeiro 2024', 'Fevereiro 2024', 'Março 2024'],
+      datasets: [{
+        label: 'Entradas Previstas',
+        data: [120000, 135000, 150000],
+        borderColor: 'rgb(40, 167, 69)',
+        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+        tension: 0.1
+      }, {
+        label: 'Saídas Previstas',
+        data: [95000, 105000, 115000],
+        borderColor: 'rgb(220, 53, 69)',
+        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+        tension: 0.1
+      }, {
+        label: 'Saldo Projetado',
+        data: [25000, 30000, 35000],
+        borderColor: 'rgb(0, 123, 255)',
+        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+        tension: 0.1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString('pt-MZ') + ' MT';
+            }
+          }
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': ' + context.parsed.y.toLocaleString('pt-MZ') + ' MT';
+            }
+          }
+        }
+      }
+    }
+  });
+});
+
+function gerarProjecao() {
+  Swal.fire({
+    title: 'Gerar Nova Projeção',
+    text: 'Deseja gerar uma nova projeção baseada nos dados atuais?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sim, gerar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Simular geração de projeção
+      toastr.info('Gerando nova projeção...');
+      
+      setTimeout(() => {
+        toastr.success('Projeção gerada com sucesso!');
+        location.reload();
+      }, 2000);
+    }
+  });
+}
+</script>

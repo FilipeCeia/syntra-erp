@@ -1,0 +1,224 @@
+<!-- Breadcrumb -->
+
+
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <form action="/empresa" method="POST" enctype="multipart/form-data">
+      <div class="row">
+        <!-- Informações Básicas -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-building"></i> Informações da Empresa
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="nome">Nome da Empresa *</label>
+                    <input type="text" class="form-control" id="nome" name="nome" 
+                           value="<%= empresa.nome %>" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="nuit">NUIT *</label>
+                    <input type="text" class="form-control" id="nuit" name="nuit" 
+                           value="<%= empresa.nuit %>" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="endereco">Endereço *</label>
+                    <input type="text" class="form-control" id="endereco" name="endereco" 
+                           value="<%= empresa.endereco %>" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="cidade">Cidade *</label>
+                    <input type="text" class="form-control" id="cidade" name="cidade" 
+                           value="<%= empresa.cidade %>" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="provincia">Província *</label>
+                    <select class="form-control" id="provincia" name="provincia" required>
+                      <option value="Maputo" <%= empresa.provincia === 'Maputo' ? 'selected' : '' %>>Maputo</option>
+                      <option value="Gaza" <%= empresa.provincia === 'Gaza' ? 'selected' : '' %>>Gaza</option>
+                      <option value="Inhambane" <%= empresa.provincia === 'Inhambane' ? 'selected' : '' %>>Inhambane</option>
+                      <option value="Sofala" <%= empresa.provincia === 'Sofala' ? 'selected' : '' %>>Sofala</option>
+                      <option value="Manica" <%= empresa.provincia === 'Manica' ? 'selected' : '' %>>Manica</option>
+                      <option value="Tete" <%= empresa.provincia === 'Tete' ? 'selected' : '' %>>Tete</option>
+                      <option value="Zambézia" <%= empresa.provincia === 'Zambézia' ? 'selected' : '' %>>Zambézia</option>
+                      <option value="Nampula" <%= empresa.provincia === 'Nampula' ? 'selected' : '' %>>Nampula</option>
+                      <option value="Cabo Delgado" <%= empresa.provincia === 'Cabo Delgado' ? 'selected' : '' %>>Cabo Delgado</option>
+                      <option value="Niassa" <%= empresa.provincia === 'Niassa' ? 'selected' : '' %>>Niassa</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="telefone">Telefone *</label>
+                    <input type="text" class="form-control" id="telefone" name="telefone" 
+                           value="<%= empresa.telefone %>" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" class="form-control" id="email" name="email" 
+                           value="<%= empresa.email %>" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="url" class="form-control" id="website" name="website" 
+                           value="<%= empresa.website %>">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="atividade_principal">Atividade Principal *</label>
+                    <input type="text" class="form-control" id="atividade_principal" name="atividade_principal" 
+                           value="<%= empresa.atividade_principal %>" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Configurações Fiscais -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-calculator"></i> Configurações Fiscais
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="regime_iva">Regime de IVA *</label>
+                    <select class="form-control" id="regime_iva" name="regime_iva" required>
+                      <option value="Regime Geral" <%= empresa.regime_iva === 'Regime Geral' ? 'selected' : '' %>>Regime Geral</option>
+                      <option value="Regime Simplificado" <%= empresa.regime_iva === 'Regime Simplificado' ? 'selected' : '' %>>Regime Simplificado</option>
+                      <option value="Isento" <%= empresa.regime_iva === 'Isento' ? 'selected' : '' %>>Isento</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="ano_fiscal">Ano Fiscal *</label>
+                    <input type="number" class="form-control" id="ano_fiscal" name="ano_fiscal" 
+                           value="<%= empresa.ano_fiscal %>" min="2020" max="2030" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="moeda_base">Moeda Base *</label>
+                    <select class="form-control" id="moeda_base" name="moeda_base" required>
+                      <option value="MZN" <%= empresa.moeda_base === 'MZN' ? 'selected' : '' %>>Metical (MZN)</option>
+                      <option value="USD" <%= empresa.moeda_base === 'USD' ? 'selected' : '' %>>Dólar Americano (USD)</option>
+                      <option value="EUR" <%= empresa.moeda_base === 'EUR' ? 'selected' : '' %>>Euro (EUR)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="capital_social">Capital Social</label>
+                    <input type="number" class="form-control" id="capital_social" name="capital_social" 
+                           value="<%= empresa.capital_social %>" step="0.01" min="0">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Logotipo -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-image"></i> Logotipo
+              </h3>
+            </div>
+            <div class="card-body text-center">
+              <div class="form-group">
+                <img src="<%= empresa.logotipo %>" alt="Logotipo" class="img-fluid mb-3" 
+                     style="max-height: 150px; border: 1px solid #ddd; padding: 10px;">
+              </div>
+              <div class="form-group">
+                <label for="logotipo">Alterar Logotipo</label>
+                <input type="file" class="form-control-file" id="logotipo" name="logotipo" 
+                       accept="image/*">
+                <small class="form-text text-muted">
+                  Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 2MB
+                </small>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Informações Adicionais -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-info-circle"></i> Informações Adicionais
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="data_constituicao">Data de Constituição</label>
+                <input type="date" class="form-control" id="data_constituicao" name="data_constituicao" 
+                       value="<%= empresa.data_constituicao %>">
+              </div>
+              <div class="form-group">
+                <label for="codigo_postal">Código Postal</label>
+                <input type="text" class="form-control" id="codigo_postal" name="codigo_postal" 
+                       value="<%= empresa.codigo_postal %>">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botões de Ação -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Salvar Alterações
+              </button>
+              <a href="/dashboard" class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> Cancelar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

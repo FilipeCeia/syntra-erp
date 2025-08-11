@@ -1,0 +1,337 @@
+<!-- Editar Loja -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/lojas">Lojas</a></li>
+          <li class="breadcrumb-item"><a href="/lojas/<%= loja.id %>"><%= loja.nome %></a></li>
+          <li class="breadcrumb-item active">Editar</li>
+        </ol>
+      </nav>
+      <h1 class="h3 mb-0 text-gray-800">Editar Loja</h1>
+      <p class="mb-0 text-muted">Atualizar informações da loja <%= loja.nome %></p>
+    </div>
+    <div>
+      <a href="/lojas/<%= loja.id %>" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Formulário Principal -->
+    <div class="col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Informações da Loja</h6>
+        </div>
+        <div class="card-body">
+          <form action="/lojas/<%= loja.id %>" method="POST" id="editLojaForm">
+            <input type="hidden" name="_method" value="PUT">
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="codigo" class="form-label">Código da Loja <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="codigo" name="codigo" value="<%= loja.codigo %>" required>
+                  <div class="form-text">Código único para identificação da loja</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="nome" class="form-label">Nome da Loja <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="nome" name="nome" value="<%= loja.nome %>" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="endereco" class="form-label">Endereço <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="endereco" name="endereco" rows="2" required><%= loja.endereco %></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="telefone" class="form-label">Telefone</label>
+                  <input type="tel" class="form-control" id="telefone" name="telefone" value="<%= loja.telefone %>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" value="<%= loja.email %>">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="gerente" class="form-label">Gerente <span class="text-danger">*</span></label>
+                  <select class="form-select" id="gerente" name="gerente_id" required>
+                    <option value="">Selecionar gerente...</option>
+                    <% funcionarios.forEach(funcionario => { %>
+                      <option value="<%= funcionario.id %>" <%= loja.gerente_id == funcionario.id ? 'selected' : '' %>>
+                        <%= funcionario.nome %> - <%= funcionario.cargo %>
+                      </option>
+                    <% }); %>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="meta_mensal" class="form-label">Meta Mensal (MZN)</label>
+                  <input type="number" class="form-control" id="meta_mensal" name="meta_mensal" 
+                         value="<%= loja.meta_mensal %>" step="0.01" min="0">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="data_abertura" class="form-label">Data de Abertura</label>
+                  <input type="date" class="form-control" id="data_abertura" name="data_abertura" 
+                         value="<%= loja.data_abertura.toISOString().split('T')[0] %>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                  <select class="form-select" id="status" name="status" required>
+                    <option value="Ativa" <%= loja.status === 'Ativa' ? 'selected' : '' %>>Ativa</option>
+                    <option value="Inativa" <%= loja.status === 'Inativa' ? 'selected' : '' %>>Inativa</option>
+                    <option value="Manutenção" <%= loja.status === 'Manutenção' ? 'selected' : '' %>>Em Manutenção</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="observacoes" class="form-label">Observações</label>
+              <textarea class="form-control" id="observacoes" name="observacoes" rows="3" 
+                        placeholder="Informações adicionais sobre a loja..."><%= loja.observacoes || '' %></textarea>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-danger" onclick="confirmarExclusao()">
+                <i class="fas fa-trash"></i> Excluir Loja
+              </button>
+              <div>
+                <a href="/lojas/<%= loja.id %>" class="btn btn-secondary me-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar com Informações Adicionais -->
+    <div class="col-lg-4">
+      <!-- Estatísticas Atuais -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Estatísticas Atuais</h6>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <div class="h4 font-weight-bold text-primary"><%= estatisticas.funcionarios %></div>
+            <div class="small text-gray-500">Funcionários Ativos</div>
+          </div>
+          <hr>
+          <div class="text-center mb-3">
+            <div class="h4 font-weight-bold text-success"><%= estatisticas.vendas_mes.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></div>
+            <div class="small text-gray-500">Vendas Este Mês</div>
+          </div>
+          <hr>
+          <div class="text-center">
+            <div class="h4 font-weight-bold text-<%= estatisticas.percentual_meta >= 100 ? 'success' : estatisticas.percentual_meta >= 80 ? 'warning' : 'danger' %>">
+              <%= estatisticas.percentual_meta.toFixed(1) %>%
+            </div>
+            <div class="small text-gray-500">% da Meta Atingida</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dicas de Preenchimento -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Dicas</h6>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle"></i>
+            <strong>Importante:</strong> Alterações no status da loja podem afetar as operações em andamento.
+          </div>
+          
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2">
+              <i class="fas fa-check text-success"></i>
+              <small>Mantenha as informações de contato atualizadas</small>
+            </li>
+            <li class="mb-2">
+              <i class="fas fa-check text-success"></i>
+              <small>Defina metas realistas baseadas no histórico</small>
+            </li>
+            <li class="mb-2">
+              <i class="fas fa-check text-success"></i>
+              <small>Monitore regularmente a performance da loja</small>
+            </li>
+            <li>
+              <i class="fas fa-check text-success"></i>
+              <small>Mantenha um gerente responsável sempre designado</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Histórico de Alterações -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Última Atualização</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="mr-3">
+              <div class="icon-circle bg-info">
+                <i class="fas fa-clock text-white"></i>
+              </div>
+            </div>
+            <div>
+              <div class="small text-gray-500">Atualizado em</div>
+              <div class="font-weight-bold"><%= loja.updated_at ? loja.updated_at.toLocaleDateString('pt-PT') : 'N/A' %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="confirmarExclusaoModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Exclusão</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger" role="alert">
+          <i class="fas fa-exclamation-triangle"></i>
+          <strong>Atenção!</strong> Esta ação não pode ser desfeita.
+        </div>
+        <p>Tem certeza que deseja excluir a loja <strong><%= loja.nome %></strong>?</p>
+        <p class="text-muted">Esta ação irá:</p>
+        <ul class="text-muted">
+          <li>Remover permanentemente a loja do sistema</li>
+          <li>Afetar relatórios e históricos relacionados</li>
+          <li>Requerer reatribuição de funcionários</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form action="/lojas/<%= loja.id %>" method="POST" style="display: inline;">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Excluir Definitivamente
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Validação do formulário
+document.getElementById('editLojaForm').addEventListener('submit', function(e) {
+  const codigo = document.getElementById('codigo').value;
+  const nome = document.getElementById('nome').value;
+  const endereco = document.getElementById('endereco').value;
+  const gerente = document.getElementById('gerente').value;
+  const status = document.getElementById('status').value;
+  
+  if (!codigo || !nome || !endereco || !gerente || !status) {
+    e.preventDefault();
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return false;
+  }
+  
+  // Validação do código (apenas letras, números e hífens)
+  const codigoRegex = /^[A-Za-z0-9-]+$/;
+  if (!codigoRegex.test(codigo)) {
+    e.preventDefault();
+    alert('O código da loja deve conter apenas letras, números e hífens.');
+    return false;
+  }
+});
+
+// Auto-geração de email baseado no nome
+document.getElementById('nome').addEventListener('input', function() {
+  const nome = this.value;
+  const emailField = document.getElementById('email');
+  
+  if (nome && !emailField.value) {
+    const emailSugerido = nome.toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/[^a-z0-9]/g, '') + '@syntra.co.mz';
+    emailField.value = emailSugerido;
+  }
+});
+
+// Formatação do telefone
+document.getElementById('telefone').addEventListener('input', function() {
+  let value = this.value.replace(/\D/g, '');
+  if (value.length >= 9) {
+    value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{3})/, '+258 $1 $2 $3 $4');
+  }
+  this.value = value;
+});
+
+// Confirmação de exclusão
+function confirmarExclusao() {
+  const modal = new bootstrap.Modal(document.getElementById('confirmarExclusaoModal'));
+  modal.show();
+}
+
+// Validação em tempo real
+function validarCampo(campo, regex, mensagem) {
+  campo.addEventListener('blur', function() {
+    if (this.value && !regex.test(this.value)) {
+      this.classList.add('is-invalid');
+      let feedback = this.parentNode.querySelector('.invalid-feedback');
+      if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback';
+        this.parentNode.appendChild(feedback);
+      }
+      feedback.textContent = mensagem;
+    } else {
+      this.classList.remove('is-invalid');
+      const feedback = this.parentNode.querySelector('.invalid-feedback');
+      if (feedback) {
+        feedback.remove();
+      }
+    }
+  });
+}
+
+// Aplicar validações
+validarCampo(
+  document.getElementById('email'),
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  'Por favor, insira um email válido.'
+);
+
+validarCampo(
+  document.getElementById('codigo'),
+  /^[A-Za-z0-9-]+$/,
+  'O código deve conter apenas letras, números e hífens.'
+);
+</script>

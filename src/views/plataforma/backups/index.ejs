@@ -1,0 +1,745 @@
+<!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Acções Rápidas -->
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Acções Rápidas</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-backup">
+                    <i class="fas fa-download mr-2"></i> Criar Backup Agora
+                  </button>
+                </div>
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-restore">
+                    <i class="fas fa-upload mr-2"></i> Restaurar Backup
+                  </button>
+                </div>
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#modal-schedule">
+                    <i class="fas fa-calendar-alt mr-2"></i> Agendar Backups
+                  </button>
+                </div>
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#modal-export">
+                    <i class="fas fa-file-export mr-2"></i> Exportar Dados
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status do Backup -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Status do Backup</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="far fa-calendar-check"></i></span>
+                    <div class="info-box-content">
+                      <span class="info-box-text">Último Backup</span>
+                      <span class="info-box-number">Hoje, 03:00</span>
+                      <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>
+                      </div>
+                      <span class="progress-description">
+                        Completo (245 MB)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                    <div class="info-box-content">
+                      <span class="info-box-text">Próximo Backup</span>
+                      <span class="info-box-number">Amanhã, 03:00</span>
+                      <div class="progress">
+                        <div class="progress-bar" style="width: 0%"></div>
+                      </div>
+                      <span class="progress-description">
+                        Agendado (Automático)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <div class="info-box bg-warning">
+                    <span class="info-box-icon"><i class="fas fa-hdd"></i></span>
+                    <div class="info-box-content">
+                      <span class="info-box-text">Espaço Utilizado</span>
+                      <span class="info-box-number">1.2 GB</span>
+                      <div class="progress">
+                        <div class="progress-bar" style="width: 40%"></div>
+                      </div>
+                      <span class="progress-description">
+                        40% do espaço alocado
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-box bg-danger">
+                    <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <div class="info-box-content">
+                      <span class="info-box-text">Alertas</span>
+                      <span class="info-box-number">0</span>
+                      <div class="progress">
+                        <div class="progress-bar" style="width: 0%"></div>
+                      </div>
+                      <span class="progress-description">
+                        Nenhum problema detectado
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card card-info">
+            <div class="card-header">
+              <h3 class="card-title">Configurações Actuais</h3>
+            </div>
+            <div class="card-body">
+              <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <td><strong>Frequência de Backup</strong></td>
+                    <td>Diário (03:00)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Retenção de Backups</strong></td>
+                    <td>30 dias</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tipo de Backup</strong></td>
+                    <td>Completo (Base de dados + Ficheiros)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Compressão</strong></td>
+                    <td>Activada (Nível 5)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Encriptação</strong></td>
+                    <td>Activada (AES-256)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Armazenamento</strong></td>
+                    <td>Local + Google Drive</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Notificações</strong></td>
+                    <td>Email (Apenas falhas)</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-3">
+                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-settings">
+                  <i class="fas fa-cog mr-1"></i> Alterar Configurações
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Histórico de Backups -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Histórico de Backups</h3>
+              <div class="card-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Pesquisar">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Data e Hora</th>
+                    <th>Tipo</th>
+                    <th>Tamanho</th>
+                    <th>Status</th>
+                    <th>Armazenamento</th>
+                    <th>Acções</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>BKP-20230815-0300</td>
+                    <td>15/08/2023 03:00</td>
+                    <td>Completo</td>
+                    <td>245 MB</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>Local, Google Drive</td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning">
+                          <i class="fas fa-redo-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>BKP-20230814-0300</td>
+                    <td>14/08/2023 03:00</td>
+                    <td>Completo</td>
+                    <td>242 MB</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>Local, Google Drive</td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning">
+                          <i class="fas fa-redo-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>BKP-20230813-0300</td>
+                    <td>13/08/2023 03:00</td>
+                    <td>Completo</td>
+                    <td>240 MB</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>Local, Google Drive</td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning">
+                          <i class="fas fa-redo-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>BKP-20230812-1500</td>
+                    <td>12/08/2023 15:00</td>
+                    <td>Manual</td>
+                    <td>238 MB</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>Local</td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning">
+                          <i class="fas fa-redo-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>BKP-20230812-0300</td>
+                    <td>12/08/2023 03:00</td>
+                    <td>Completo</td>
+                    <td>237 MB</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>Local, Google Drive</td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning">
+                          <i class="fas fa-redo-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer clearfix">
+              <ul class="pagination pagination-sm m-0 float-right">
+                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Histórico de Restaurações -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Histórico de Restaurações</h3>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Data e Hora</th>
+                    <th>Backup Utilizado</th>
+                    <th>Utilizador</th>
+                    <th>Status</th>
+                    <th>Duração</th>
+                    <th>Notas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>RST-20230810-1423</td>
+                    <td>10/08/2023 14:23</td>
+                    <td>BKP-20230810-0300</td>
+                    <td>admin@syntra.co.mz</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>5m 12s</td>
+                    <td>Restauração de teste</td>
+                  </tr>
+                  <tr>
+                    <td>RST-20230801-0945</td>
+                    <td>01/08/2023 09:45</td>
+                    <td>BKP-20230731-0300</td>
+                    <td>admin@syntra.co.mz</td>
+                    <td><span class="badge bg-success">Completo</span></td>
+                    <td>4m 55s</td>
+                    <td>Após actualização do sistema</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  
+<!-- /.content-wrapper -->
+
+<!-- Modais -->
+
+<!-- Modal Criar Backup -->
+<div class="modal fade" id="modal-backup">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Criar Backup Agora</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="backup-type">Tipo de Backup</label>
+            <select class="form-control" id="backup-type">
+              <option selected>Completo (Base de dados + Ficheiros)</option>
+              <option>Apenas Base de dados</option>
+              <option>Apenas Ficheiros</option>
+              <option>Personalizado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="backup-description">Descrição (opcional)</label>
+            <input type="text" class="form-control" id="backup-description" placeholder="Backup manual">
+          </div>
+          <div class="form-group">
+            <label>Opções de Armazenamento</label>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="storage-local" checked>
+              <label for="storage-local" class="custom-control-label">Armazenamento Local</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="storage-gdrive" checked>
+              <label for="storage-gdrive" class="custom-control-label">Google Drive</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="storage-dropbox">
+              <label for="storage-dropbox" class="custom-control-label">Dropbox</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="backup-compress" checked>
+              <label class="custom-control-label" for="backup-compress">Comprimir Backup</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="backup-encrypt" checked>
+              <label class="custom-control-label" for="backup-encrypt">Encriptar Backup</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Iniciar Backup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Restaurar Backup -->
+<div class="modal fade" id="modal-restore">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h4 class="modal-title">Restaurar Backup</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-warning">
+          <h5><i class="icon fas fa-exclamation-triangle"></i> Atenção!</h5>
+          Restaurar um backup irá substituir todos os dados actuais. Esta acção não pode ser desfeita.
+        </div>
+        <form>
+          <div class="form-group">
+            <label for="restore-backup">Seleccionar Backup</label>
+            <select class="form-control" id="restore-backup">
+              <option>BKP-20230815-0300 (15/08/2023 03:00) - 245 MB</option>
+              <option>BKP-20230814-0300 (14/08/2023 03:00) - 242 MB</option>
+              <option>BKP-20230813-0300 (13/08/2023 03:00) - 240 MB</option>
+              <option>BKP-20230812-1500 (12/08/2023 15:00) - 238 MB</option>
+              <option>BKP-20230812-0300 (12/08/2023 03:00) - 237 MB</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="restore-options">Opções de Restauração</label>
+            <select class="form-control" id="restore-options">
+              <option selected>Restaurar tudo</option>
+              <option>Apenas Base de dados</option>
+              <option>Apenas Ficheiros</option>
+              <option>Personalizado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="restore-notes">Notas (opcional)</label>
+            <textarea class="form-control" id="restore-notes" rows="2" placeholder="Motivo da restauração"></textarea>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="confirm-restore">
+              <label for="confirm-restore" class="custom-control-label">Confirmo que compreendo que esta acção irá substituir todos os dados actuais e não pode ser desfeita.</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-warning" disabled>Restaurar Backup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agendar Backups -->
+<div class="modal fade" id="modal-schedule">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Agendar Backups</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="schedule-frequency">Frequência</label>
+            <select class="form-control" id="schedule-frequency">
+              <option>A cada hora</option>
+              <option>A cada 6 horas</option>
+              <option>A cada 12 horas</option>
+              <option selected>Diário</option>
+              <option>Semanal</option>
+              <option>Mensal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="schedule-time">Hora do Dia</label>
+            <div class="input-group date" id="timepicker" data-target-input="nearest">
+              <input type="text" class="form-control" id="schedule-time" value="03:00">
+              <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="far fa-clock"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="schedule-day">Dia da Semana (para backups semanais)</label>
+            <select class="form-control" id="schedule-day" disabled>
+              <option>Segunda-feira</option>
+              <option>Terça-feira</option>
+              <option>Quarta-feira</option>
+              <option>Quinta-feira</option>
+              <option>Sexta-feira</option>
+              <option>Sábado</option>
+              <option>Domingo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="schedule-retention">Retenção de Backups (dias)</label>
+            <input type="number" class="form-control" id="schedule-retention" value="30">
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="schedule-notify" checked>
+              <label class="custom-control-label" for="schedule-notify">Notificar por email em caso de falha</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Guardar Agendamento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Exportar Dados -->
+<div class="modal fade" id="modal-export">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Exportar Dados</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Seleccionar Dados para Exportação</label>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="export-clients" checked>
+              <label for="export-clients" class="custom-control-label">Clientes</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="export-products" checked>
+              <label for="export-products" class="custom-control-label">Produtos</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="export-sales" checked>
+              <label for="export-sales" class="custom-control-label">Vendas</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="export-purchases" checked>
+              <label for="export-purchases" class="custom-control-label">Compras</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="export-inventory" checked>
+              <label for="export-inventory" class="custom-control-label">Inventário</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="export-users">
+              <label for="export-users" class="custom-control-label">Utilizadores</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="export-format">Formato de Exportação</label>
+            <select class="form-control" id="export-format">
+              <option selected>CSV</option>
+              <option>Excel</option>
+              <option>JSON</option>
+              <option>XML</option>
+              <option>SQL</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="export-date-range">Intervalo de Datas</label>
+            <select class="form-control" id="export-date-range">
+              <option>Hoje</option>
+              <option>Últimos 7 dias</option>
+              <option>Últimos 30 dias</option>
+              <option>Este mês</option>
+              <option selected>Todos os dados</option>
+              <option>Personalizado</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Exportar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Configurações de Backup -->
+<div class="modal fade" id="modal-settings">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Configurações de Backup</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="settings-frequency">Frequência de Backup</label>
+                <select class="form-control" id="settings-frequency">
+                  <option>A cada hora</option>
+                  <option>A cada 6 horas</option>
+                  <option>A cada 12 horas</option>
+                  <option selected>Diário</option>
+                  <option>Semanal</option>
+                  <option>Mensal</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="settings-time">Hora do Dia</label>
+                <input type="text" class="form-control" id="settings-time" value="03:00">
+              </div>
+              <div class="form-group">
+                <label for="settings-retention">Retenção de Backups (dias)</label>
+                <input type="number" class="form-control" id="settings-retention" value="30">
+              </div>
+              <div class="form-group">
+                <label for="settings-type">Tipo de Backup</label>
+                <select class="form-control" id="settings-type">
+                  <option selected>Completo (Base de dados + Ficheiros)</option>
+                  <option>Apenas Base de dados</option>
+                  <option>Apenas Ficheiros</option>
+                  <option>Personalizado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="settings-compression">Nível de Compressão</label>
+                <select class="form-control" id="settings-compression">
+                  <option>Nenhum</option>
+                  <option>Baixo (Nível 1)</option>
+                  <option>Médio (Nível 3)</option>
+                  <option selected>Alto (Nível 5)</option>
+                  <option>Máximo (Nível 9)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="settings-encryption">Encriptação</label>
+                <select class="form-control" id="settings-encryption">
+                  <option>Nenhuma</option>
+                  <option>Básica (AES-128)</option>
+                  <option selected>Forte (AES-256)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Locais de Armazenamento</label>
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="settings-storage-local" checked>
+                  <label for="settings-storage-local" class="custom-control-label">Armazenamento Local</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="settings-storage-gdrive" checked>
+                  <label for="settings-storage-gdrive" class="custom-control-label">Google Drive</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="settings-storage-dropbox">
+                  <label for="settings-storage-dropbox" class="custom-control-label">Dropbox</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="settings-storage-s3">
+                  <label for="settings-storage-s3" class="custom-control-label">Amazon S3</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="settings-storage-ftp">
+                  <label for="settings-storage-ftp" class="custom-control-label">FTP</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Notificações</label>
+                <select class="form-control" id="settings-notifications">
+                  <option>Nenhuma</option>
+                  <option selected>Apenas falhas</option>
+                  <option>Falhas e sucessos</option>
+                  <option>Todas as actividades</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Guardar Configurações</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  $(function () {
+    // Inicializar componentes se necessário
+    $('#confirm-restore').change(function() {
+      if($(this).is(':checked')) {
+        $('.modal-footer .btn-warning').prop('disabled', false);
+      } else {
+        $('.modal-footer .btn-warning').prop('disabled', true);
+      }
+    });
+
+    $('#schedule-frequency').change(function() {
+      if($(this).val() === 'Semanal') {
+        $('#schedule-day').prop('disabled', false);
+      } else {
+        $('#schedule-day').prop('disabled', true);
+      }
+    });
+  });
+</script>

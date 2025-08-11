@@ -1,0 +1,1165 @@
+<%- contentFor('title') %>
+Editar Utilizador - SYNTRA ERP
+<% end %>
+
+<%- contentFor('styles') %>
+<style>
+  .form-section {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+  }
+  .required-field {
+    color: #dc3545;
+  }
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  .permission-group {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .permission-group h6 {
+    color: #495057;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .permission-item {
+    margin-bottom: 8px;
+  }
+  .permission-item .form-check {
+    margin-bottom: 0;
+  }
+  .loja-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+  .loja-card:hover {
+    background-color: #e9ecef;
+  }
+  .loja-card.selected {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+  }
+  .perfil-card {
+    background-color: #ffffff;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .perfil-card:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .perfil-card.selected {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+  }
+  .perfil-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #6c757d;
+  }
+  .perfil-card.selected .perfil-icon {
+    color: #007bff;
+  }
+  .perfil-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .perfil-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .password-strength {
+    margin-top: 5px;
+  }
+  .strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .strength-weak {
+    background-color: #dc3545;
+    width: 25%;
+  }
+  .strength-fair {
+    background-color: #ffc107;
+    width: 50%;
+  }
+  .strength-good {
+    background-color: #28a745;
+    width: 75%;
+  }
+  .strength-strong {
+    background-color: #007bff;
+    width: 100%;
+  }
+  .avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+  }
+  .btn-action {
+    min-width: 120px;
+  }
+  .form-floating > .form-control {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+  }
+  .form-floating > label {
+    padding: 1rem 0.75rem;
+  }
+  .invalid-feedback {
+    display: block;
+  }
+  .is-invalid {
+    border-color: #dc3545;
+  }
+  .is-valid {
+    border-color: #28a745;
+  }
+  .history-item {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 0 6px 6px 0;
+  }
+  .history-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+  }
+  .history-action {
+    font-weight: 600;
+    color: #495057;
+  }
+  .history-details {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 5px;
+  }
+  .audit-info {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .audit-info .row {
+    margin-bottom: 10px;
+  }
+  .audit-info .row:last-child {
+    margin-bottom: 0;
+  }
+  .status-badge {
+    font-size: 0.875rem;
+    padding: 6px 12px;
+  }
+  .quick-stats {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .quick-stats .stat-item {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .quick-stats .stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+  }
+  .quick-stats .stat-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+  .danger-zone {
+    background-color: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .danger-zone h6 {
+    color: #c53030;
+    margin-bottom: 15px;
+  }
+  .btn-danger-outline {
+    color: #dc3545;
+    border-color: #dc3545;
+  }
+  .btn-danger-outline:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+  }
+</style>
+<% end %>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Editar Utilizador</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas">Pessoas</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas/utilizadores">Utilizadores</a></li>
+          <li class="breadcrumb-item active">Editar</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <a href="/pessoas/utilizadores" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <a href="/pessoas/utilizadores/1" class="btn btn-outline-info me-2">
+        <i class="fas fa-eye"></i> Visualizar
+      </a>
+      <button type="button" class="btn btn-outline-warning me-2" onclick="resetarSenha()">
+        <i class="fas fa-key"></i> Resetar Senha
+      </button>
+    </div>
+  </div>
+
+  <form id="formUtilizador" novalidate>
+    <input type="hidden" id="utilizadorId" name="id" value="1">
+    
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Dados Básicos -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-user"></i> Dados Básicos
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome completo" value="João Silva" required>
+                <label for="nome">Nome Completo <span class="required-field">*</span></label>
+                <div class="invalid-feedback">Por favor, insira o nome completo.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="joao.silva@empresa.com" required>
+                <label for="email">Email <span class="required-field">*</span></label>
+                <div class="invalid-feedback">Por favor, insira um email válido.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Código do utilizador" value="USR001" readonly>
+                <label for="codigo">Código do Utilizador</label>
+                <div class="form-text">O código não pode ser alterado</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="Telefone" value="(84) 99999-9999">
+                <label for="telefone">Telefone</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alterar Senha -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-key"></i> Alterar Senha
+            <small class="text-muted">(deixe em branco para manter a senha atual)</small>
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="novaSenha" name="novaSenha" placeholder="Nova senha">
+                <label for="novaSenha">Nova Senha</label>
+                <div class="invalid-feedback">A senha deve ter pelo menos 8 caracteres.</div>
+                <div class="password-strength">
+                  <div class="strength-bar" id="strengthBar"></div>
+                  <small class="text-muted" id="strengthText">Digite uma nova senha</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="confirmarNovaSenha" name="confirmarNovaSenha" placeholder="Confirmar nova senha">
+                <label for="confirmarNovaSenha">Confirmar Nova Senha</label>
+                <div class="invalid-feedback">As senhas não coincidem.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="enviarNovasSenha" name="enviarNovasSenha">
+            <label class="form-check-label" for="enviarNovasSenha">
+              Enviar nova senha por email
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="forcarAlteracaoSenha" name="forcarAlteracaoSenha">
+            <label class="form-check-label" for="forcarAlteracaoSenha">
+              Forçar alteração de senha no próximo login
+            </label>
+          </div>
+        </div>
+
+        <!-- Perfil e Permissões -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-shield-alt"></i> Perfil e Permissões
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="perfil-card" data-perfil="admin">
+                <div class="perfil-icon">
+                  <i class="fas fa-crown"></i>
+                </div>
+                <div class="perfil-title">Administrador</div>
+                <div class="perfil-description">Acesso total ao sistema</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="perfil-card selected" data-perfil="gerente">
+                <div class="perfil-icon">
+                  <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="perfil-title">Gerente</div>
+                <div class="perfil-description">Gestão e relatórios</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="perfil-card" data-perfil="vendedor">
+                <div class="perfil-icon">
+                  <i class="fas fa-handshake"></i>
+                </div>
+                <div class="perfil-title">Vendedor</div>
+                <div class="perfil-description">Vendas e clientes</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="perfil-card" data-perfil="caixa">
+                <div class="perfil-icon">
+                  <i class="fas fa-cash-register"></i>
+                </div>
+                <div class="perfil-title">Operador de Caixa</div>
+                <div class="perfil-description">POS e vendas</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="perfil-card" data-perfil="operador">
+                <div class="perfil-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="perfil-title">Operador</div>
+                <div class="perfil-description">Acesso limitado</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="perfil-card" data-perfil="personalizado">
+                <div class="perfil-icon">
+                  <i class="fas fa-cog"></i>
+                </div>
+                <div class="perfil-title">Personalizado</div>
+                <div class="perfil-description">Permissões específicas</div>
+              </div>
+            </div>
+          </div>
+          
+          <input type="hidden" id="perfilSelecionado" name="perfil" value="gerente" required>
+          
+          <!-- Permissões Específicas (mostrado apenas para perfil personalizado) -->
+          <div id="permissoesEspecificas" style="display: none;">
+            <h6 class="mt-4 mb-3">Permissões Específicas</h6>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="permission-group">
+                  <h6><i class="fas fa-shopping-cart"></i> Vendas</h6>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_vendas_criar" name="permissoes[]" value="vendas_criar">
+                      <label class="form-check-label" for="perm_vendas_criar">Criar vendas</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_vendas_editar" name="permissoes[]" value="vendas_editar">
+                      <label class="form-check-label" for="perm_vendas_editar">Editar vendas</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_vendas_cancelar" name="permissoes[]" value="vendas_cancelar">
+                      <label class="form-check-label" for="perm_vendas_cancelar">Cancelar vendas</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_vendas_desconto" name="permissoes[]" value="vendas_desconto">
+                      <label class="form-check-label" for="perm_vendas_desconto">Aplicar descontos</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="permission-group">
+                  <h6><i class="fas fa-box"></i> Stock</h6>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_stock_consultar" name="permissoes[]" value="stock_consultar">
+                      <label class="form-check-label" for="perm_stock_consultar">Consultar stock</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_stock_ajustar" name="permissoes[]" value="stock_ajustar">
+                      <label class="form-check-label" for="perm_stock_ajustar">Ajustar stock</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_stock_transferir" name="permissoes[]" value="stock_transferir">
+                      <label class="form-check-label" for="perm_stock_transferir">Transferir stock</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="permission-group">
+                  <h6><i class="fas fa-chart-bar"></i> Relatórios</h6>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_relatorios_vendas" name="permissoes[]" value="relatorios_vendas">
+                      <label class="form-check-label" for="perm_relatorios_vendas">Relatórios de vendas</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_relatorios_financeiros" name="permissoes[]" value="relatorios_financeiros">
+                      <label class="form-check-label" for="perm_relatorios_financeiros">Relatórios financeiros</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_relatorios_stock" name="permissoes[]" value="relatorios_stock">
+                      <label class="form-check-label" for="perm_relatorios_stock">Relatórios de stock</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="permission-group">
+                  <h6><i class="fas fa-cogs"></i> Configurações</h6>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_config_sistema" name="permissoes[]" value="config_sistema">
+                      <label class="form-check-label" for="perm_config_sistema">Configurações do sistema</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_config_utilizadores" name="permissoes[]" value="config_utilizadores">
+                      <label class="form-check-label" for="perm_config_utilizadores">Gestão de utilizadores</label>
+                    </div>
+                  </div>
+                  <div class="permission-item">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="perm_config_backup" name="permissoes[]" value="config_backup">
+                      <label class="form-check-label" for="perm_config_backup">Backup e restauro</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lojas Acessíveis -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-store"></i> Lojas Acessíveis
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="loja-card selected" data-loja="1">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="loja1" name="lojas[]" value="1" checked>
+                  <label class="form-check-label" for="loja1">
+                    <strong>Loja Principal</strong><br>
+                    <small class="text-muted">Rua Principal, 123</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="loja-card selected" data-loja="2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="loja2" name="lojas[]" value="2" checked>
+                  <label class="form-check-label" for="loja2">
+                    <strong>Loja Secundária</strong><br>
+                    <small class="text-muted">Avenida Central, 456</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="loja-card" data-loja="3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="loja3" name="lojas[]" value="3">
+                  <label class="form-check-label" for="loja3">
+                    <strong>Armazém</strong><br>
+                    <small class="text-muted">Zona Industrial</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="todasLojas" onchange="selecionarTodasLojas()">
+            <label class="form-check-label" for="todasLojas">
+              Selecionar todas as lojas
+            </label>
+          </div>
+        </div>
+
+        <!-- Histórico de Alterações -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-history"></i> Histórico de Alterações
+          </h5>
+          
+          <div class="history-item">
+            <div class="history-date">
+              <i class="fas fa-clock"></i> 15/12/2024 às 14:30
+            </div>
+            <div class="history-action">
+              Perfil alterado de "Vendedor" para "Gerente"
+            </div>
+            <div class="history-details">
+              Alterado por: Admin Sistema | IP: 192.168.1.100
+            </div>
+          </div>
+          
+          <div class="history-item">
+            <div class="history-date">
+              <i class="fas fa-clock"></i> 10/12/2024 às 09:15
+            </div>
+            <div class="history-action">
+              Senha alterada
+            </div>
+            <div class="history-details">
+              Alterado por: João Silva | IP: 192.168.1.105
+            </div>
+          </div>
+          
+          <div class="history-item">
+            <div class="history-date">
+              <i class="fas fa-clock"></i> 05/12/2024 às 16:45
+            </div>
+            <div class="history-action">
+              Acesso à loja "Armazém" removido
+            </div>
+            <div class="history-details">
+              Alterado por: Admin Sistema | IP: 192.168.1.100
+            </div>
+          </div>
+          
+          <div class="text-center mt-3">
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="carregarMaisHistorico()">
+              <i class="fas fa-plus"></i> Carregar mais
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Estatísticas Rápidas -->
+        <div class="quick-stats">
+          <div class="row">
+            <div class="col-6">
+              <div class="stat-item">
+                <span class="stat-number">127</span>
+                <span class="stat-label">Vendas este mês</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <span class="stat-number">15</span>
+                <span class="stat-label">Dias desde último login</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Taxa de presença</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <span class="stat-number">4.8</span>
+                <span class="stat-label">Avaliação média</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pré-visualização -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-eye"></i> Pré-visualização
+          </h5>
+          
+          <div class="text-center">
+            <div class="avatar-preview" id="avatarPreview">JS</div>
+            <h6 id="previewNome">João Silva</h6>
+            <p class="text-muted" id="previewEmail">joao.silva@empresa.com</p>
+            <span class="badge bg-primary" id="previewPerfil">Gerente</span>
+          </div>
+          
+          <hr>
+          
+          <div class="small">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Código:</span>
+              <span id="previewCodigo">USR001</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Telefone:</span>
+              <span id="previewTelefone">(84) 99999-9999</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Lojas:</span>
+              <span id="previewLojas">2</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Status:</span>
+              <span><span class="badge bg-success status-badge">Ativo</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações de Auditoria -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-info-circle"></i> Informações de Auditoria
+          </h5>
+          
+          <div class="audit-info">
+            <div class="row">
+              <div class="col-5"><strong>Criado em:</strong></div>
+              <div class="col-7">01/11/2024 às 10:30</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Criado por:</strong></div>
+              <div class="col-7">Admin Sistema</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Última alteração:</strong></div>
+              <div class="col-7">15/12/2024 às 14:30</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Alterado por:</strong></div>
+              <div class="col-7">Admin Sistema</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Último login:</strong></div>
+              <div class="col-7">30/11/2024 às 08:15</div>
+            </div>
+            <div class="row">
+              <div class="col-5"><strong>Total de logins:</strong></div>
+              <div class="col-7">1,247</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configurações Adicionais -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <i class="fas fa-cog"></i> Configurações
+          </h5>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked>
+            <label class="form-check-label" for="ativo">
+              Utilizador ativo
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="notificacoes" name="notificacoes" checked>
+            <label class="form-check-label" for="notificacoes">
+              Receber notificações
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="relatoriosEmail" name="relatoriosEmail">
+            <label class="form-check-label" for="relatoriosEmail">
+              Relatórios por email
+            </label>
+          </div>
+          
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder="Observações sobre o utilizador...">Gerente responsável pela loja principal. Excelente desempenho em vendas.</textarea>
+          </div>
+        </div>
+
+        <!-- Acções -->
+        <div class="form-section">
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-action">
+              <i class="fas fa-save"></i> Atualizar Utilizador
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-action" onclick="salvarRascunho()">
+              <i class="fas fa-file-alt"></i> Salvar como Rascunho
+            </button>
+            <button type="button" class="btn btn-outline-warning btn-action" onclick="resetarFormulario()">
+              <i class="fas fa-undo"></i> Resetar Alterações
+            </button>
+            <a href="/pessoas/utilizadores" class="btn btn-outline-danger btn-action">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+          </div>
+        </div>
+
+        <!-- Zona de Perigo -->
+        <div class="danger-zone">
+          <h6><i class="fas fa-exclamation-triangle"></i> Zona de Perigo</h6>
+          <p class="small text-muted mb-3">
+            As ações abaixo são irreversíveis. Tenha cuidado ao executá-las.
+          </p>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-outline-warning btn-sm" onclick="bloquearUtilizador()">
+              <i class="fas fa-lock"></i> Bloquear Utilizador
+            </button>
+            <button type="button" class="btn btn-danger-outline btn-sm" onclick="eliminarUtilizador()">
+              <i class="fas fa-trash"></i> Eliminar Utilizador
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+// Inicialização
+$(document).ready(function() {
+  // Configurar validação do formulário
+  configurarValidacao();
+  
+  // Configurar eventos
+  configurarEventos();
+  
+  // Configurar máscaras
+  configurarMascaras();
+  
+  // Atualizar pré-visualização inicial
+  atualizarPreview();
+});
+
+// Configurar validação
+function configurarValidacao() {
+  const form = document.getElementById('formUtilizador');
+  
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (validarFormulario()) {
+      atualizarUtilizador();
+    }
+    
+    form.classList.add('was-validated');
+  });
+}
+
+// Configurar eventos
+function configurarEventos() {
+  // Eventos de perfil
+  $('.perfil-card').on('click', function() {
+    $('.perfil-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    const perfil = $(this).data('perfil');
+    $('#perfilSelecionado').val(perfil);
+    
+    // Mostrar/ocultar permissões específicas
+    if (perfil === 'personalizado') {
+      $('#permissoesEspecificas').show();
+    } else {
+      $('#permissoesEspecificas').hide();
+      // Limpar permissões específicas
+      $('input[name="permissoes[]"]').prop('checked', false);
+    }
+    
+    atualizarPreview();
+  });
+  
+  // Eventos de loja
+  $('.loja-card').on('click', function() {
+    const checkbox = $(this).find('input[type="checkbox"]');
+    checkbox.prop('checked', !checkbox.prop('checked'));
+    
+    if (checkbox.prop('checked')) {
+      $(this).addClass('selected');
+    } else {
+      $(this).removeClass('selected');
+    }
+    
+    atualizarPreview();
+  });
+  
+  // Eventos de campos
+  $('#nome, #email, #telefone').on('input', atualizarPreview);
+  $('input[name="lojas[]"], input[name="permissoes[]"]').on('change', atualizarPreview);
+  
+  // Validação de nova senha
+  $('#novaSenha').on('input', function() {
+    const senha = $(this).val();
+    if (senha) {
+      validarForcaSenha(senha);
+    } else {
+      $('#strengthBar').removeClass('strength-weak strength-fair strength-good strength-strong');
+      $('#strengthText').text('Digite uma nova senha');
+    }
+  });
+  
+  $('#confirmarNovaSenha').on('input', function() {
+    validarConfirmacaoSenha();
+  });
+}
+
+// Configurar máscaras
+function configurarMascaras() {
+  // Máscara para telefone
+  $('#telefone').mask('(00) 00000-0000', {
+    placeholder: '(00) 00000-0000'
+  });
+}
+
+// Validar força da senha
+function validarForcaSenha(senha) {
+  const strengthBar = $('#strengthBar');
+  const strengthText = $('#strengthText');
+  
+  let score = 0;
+  let feedback = '';
+  
+  if (senha.length >= 8) score++;
+  if (/[a-z]/.test(senha)) score++;
+  if (/[A-Z]/.test(senha)) score++;
+  if (/[0-9]/.test(senha)) score++;
+  if (/[^A-Za-z0-9]/.test(senha)) score++;
+  
+  strengthBar.removeClass('strength-weak strength-fair strength-good strength-strong');
+  
+  switch (score) {
+    case 0:
+    case 1:
+      strengthBar.addClass('strength-weak');
+      feedback = 'Muito fraca';
+      break;
+    case 2:
+      strengthBar.addClass('strength-fair');
+      feedback = 'Fraca';
+      break;
+    case 3:
+    case 4:
+      strengthBar.addClass('strength-good');
+      feedback = 'Boa';
+      break;
+    case 5:
+      strengthBar.addClass('strength-strong');
+      feedback = 'Muito forte';
+      break;
+  }
+  
+  strengthText.text(feedback);
+}
+
+// Validar confirmação de senha
+function validarConfirmacaoSenha() {
+  const novaSenha = $('#novaSenha').val();
+  const confirmarNovaSenha = $('#confirmarNovaSenha').val();
+  const field = $('#confirmarNovaSenha')[0];
+  
+  if (novaSenha && confirmarNovaSenha && novaSenha !== confirmarNovaSenha) {
+    field.setCustomValidity('As senhas não coincidem');
+    $('#confirmarNovaSenha').addClass('is-invalid').removeClass('is-valid');
+  } else {
+    field.setCustomValidity('');
+    $('#confirmarNovaSenha').removeClass('is-invalid');
+    if (confirmarNovaSenha) {
+      $('#confirmarNovaSenha').addClass('is-valid');
+    }
+  }
+}
+
+// Selecionar todas as lojas
+function selecionarTodasLojas() {
+  const todasSelecionadas = $('#todasLojas').prop('checked');
+  
+  $('input[name="lojas[]"]').prop('checked', todasSelecionadas);
+  
+  if (todasSelecionadas) {
+    $('.loja-card').addClass('selected');
+  } else {
+    $('.loja-card').removeClass('selected');
+  }
+  
+  atualizarPreview();
+}
+
+// Atualizar pré-visualização
+function atualizarPreview() {
+  const nome = $('#nome').val() || 'Nome do Utilizador';
+  const email = $('#email').val() || 'email@exemplo.com';
+  const codigo = $('#codigo').val() || '-';
+  const telefone = $('#telefone').val() || '-';
+  const perfil = $('#perfilSelecionado').val();
+  
+  // Atualizar avatar
+  const iniciais = nome.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  $('#avatarPreview').text(iniciais || '?');
+  
+  // Atualizar informações
+  $('#previewNome').text(nome);
+  $('#previewEmail').text(email);
+  $('#previewCodigo').text(codigo);
+  $('#previewTelefone').text(telefone);
+  
+  // Atualizar perfil
+  const perfilNomes = {
+    'admin': 'Administrador',
+    'gerente': 'Gerente',
+    'vendedor': 'Vendedor',
+    'caixa': 'Operador de Caixa',
+    'operador': 'Operador',
+    'personalizado': 'Personalizado'
+  };
+  
+  if (perfil) {
+    $('#previewPerfil').text(perfilNomes[perfil]);
+  }
+  
+  // Contar lojas selecionadas
+  const lojasCount = $('input[name="lojas[]"]:checked').length;
+  $('#previewLojas').text(lojasCount);
+}
+
+// Validar formulário
+function validarFormulario() {
+  let valido = true;
+  
+  // Validar campos obrigatórios
+  const camposObrigatorios = ['nome', 'email'];
+  
+  camposObrigatorios.forEach(campo => {
+    const element = $(`#${campo}`);
+    if (!element.val().trim()) {
+      element.addClass('is-invalid');
+      valido = false;
+    } else {
+      element.removeClass('is-invalid').addClass('is-valid');
+    }
+  });
+  
+  // Validar email
+  const email = $('#email').val();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    $('#email').addClass('is-invalid');
+    valido = false;
+  }
+  
+  // Validar nova senha se fornecida
+  const novaSenha = $('#novaSenha').val();
+  if (novaSenha && novaSenha.length < 8) {
+    $('#novaSenha').addClass('is-invalid');
+    valido = false;
+  }
+  
+  // Validar confirmação de senha
+  validarConfirmacaoSenha();
+  if ($('#confirmarNovaSenha').hasClass('is-invalid')) {
+    valido = false;
+  }
+  
+  // Validar perfil
+  if (!$('#perfilSelecionado').val()) {
+    alert('Por favor, selecione um perfil para o utilizador.');
+    valido = false;
+  }
+  
+  // Validar pelo menos uma loja
+  if ($('input[name="lojas[]"]:checked').length === 0) {
+    alert('Por favor, selecione pelo menos uma loja para o utilizador.');
+    valido = false;
+  }
+  
+  return valido;
+}
+
+// Atualizar utilizador
+function atualizarUtilizador() {
+  const formData = new FormData(document.getElementById('formUtilizador'));
+  
+  // Simular atualização
+  const btn = $('button[type="submit"]');
+  const originalText = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Atualizando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    alert('Utilizador atualizado com sucesso!');
+    btn.html(originalText).prop('disabled', false);
+  }, 2000);
+}
+
+// Salvar como rascunho
+function salvarRascunho() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Salvando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    alert('Rascunho salvo com sucesso!');
+    btn.html(originalText).prop('disabled', false);
+  }, 1000);
+}
+
+// Resetar formulário
+function resetarFormulario() {
+  if (confirm('Tem certeza que deseja resetar todas as alterações?')) {
+    location.reload();
+  }
+}
+
+// Resetar senha
+function resetarSenha() {
+  if (confirm('Tem certeza que deseja resetar a senha do utilizador? Uma nova senha será gerada e enviada por email.')) {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Resetando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      alert('Senha resetada com sucesso! Nova senha enviada por email.');
+      btn.html(originalText).prop('disabled', false);
+    }, 2000);
+  }
+}
+
+// Bloquear utilizador
+function bloquearUtilizador() {
+  if (confirm('Tem certeza que deseja bloquear este utilizador? Ele não conseguirá mais fazer login no sistema.')) {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Bloqueando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      alert('Utilizador bloqueado com sucesso!');
+      window.location.href = '/pessoas/utilizadores';
+    }, 2000);
+  }
+}
+
+// Eliminar utilizador
+function eliminarUtilizador() {
+  const confirmacao = prompt('Para confirmar a eliminação, digite "ELIMINAR" (em maiúsculas):');
+  
+  if (confirmacao === 'ELIMINAR') {
+    const btn = $(event.target);
+    const originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Eliminando...').prop('disabled', true);
+    
+    setTimeout(function() {
+      alert('Utilizador eliminado com sucesso!');
+      window.location.href = '/pessoas/utilizadores';
+    }, 2000);
+  } else if (confirmacao !== null) {
+    alert('Confirmação incorreta. Eliminação cancelada.');
+  }
+}
+
+// Carregar mais histórico
+function carregarMaisHistorico() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Carregando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular carregamento de mais itens do histórico
+    const novoItem = `
+      <div class="history-item">
+        <div class="history-date">
+          <i class="fas fa-clock"></i> 01/12/2024 às 11:20
+        </div>
+        <div class="history-action">
+          Utilizador criado
+        </div>
+        <div class="history-details">
+          Criado por: Admin Sistema | IP: 192.168.1.100
+        </div>
+      </div>
+    `;
+    
+    btn.parent().before(novoItem);
+    btn.html(originalText).prop('disabled', false);
+    
+    // Ocultar botão se não houver mais itens
+    btn.hide();
+  }, 1000);
+}
+</script>
+<% end %>

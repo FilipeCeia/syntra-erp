@@ -1,0 +1,403 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-file-invoice"></i> Facturas
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/vendas/facturas/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Factura
+      </a>
+      <a href="/vendas/facturas" class="btn btn-secondary btn-sm">
+        <i class="fas fa-sync"></i> Atualizar
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-filter"></i> Filtros
+      </h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/vendas/facturas">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="search">Buscar</label>
+              <input type="text" class="form-control" id="search" name="search" 
+                     value="<%= filters.search %>" placeholder="Número, cliente, NUIT...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select class="form-control" id="status" name="status">
+                <option value="">Todos</option>
+                <option value="Rascunho" <%= filters.status === 'Rascunho' ? 'selected' : '' %>>Rascunho</option>
+                <option value="Emitida" <%= filters.status === 'Emitida' ? 'selected' : '' %>>Emitida</option>
+                <option value="Paga" <%= filters.status === 'Paga' ? 'selected' : '' %>>Paga</option>
+                <option value="Pendente" <%= filters.status === 'Pendente' ? 'selected' : '' %>>Pendente</option>
+                <option value="Cancelada" <%= filters.status === 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="tipo">Tipo</label>
+              <select class="form-control" id="tipo" name="tipo">
+                <option value="">Todos</option>
+                <option value="Factura" <%= filters.tipo === 'Factura' ? 'selected' : '' %>>Factura</option>
+                <option value="Factura-Recibo" <%= filters.tipo === 'Factura-Recibo' ? 'selected' : '' %>>Factura-Recibo</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+                <a href="/vendas/facturas" class="btn btn-secondary">
+                  <i class="fas fa-times"></i> Limpar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela de Facturas -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Lista de Facturas
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Cliente</th>
+              <th>NUIT</th>
+              <th>Data Emissão</th>
+              <th>Data Vencimento</th>
+              <th>Valor Líquido</th>
+              <th>IVA</th>
+              <th>Valor Total</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (facturas && facturas.length > 0) { %>
+              <% facturas.forEach(factura => { %>
+              <tr>
+                <td>
+                  <strong><%= factura.numero %></strong>
+                  <br>
+                  <small class="text-muted">Série: <%= factura.serie %> | Seq: <%= factura.sequencia %></small>
+                </td>
+                <td>
+                  <strong><%= factura.cliente.nome %></strong>
+                  <br>
+                  <small class="text-muted"><%= factura.cliente.endereco_fiscal %></small>
+                </td>
+                <td><%= factura.cliente.nuit %></td>
+                <td><%= factura.data_emissao.toLocaleDateString('pt-MZ') %></td>
+                <td>
+                  <%= factura.data_vencimento.toLocaleDateString('pt-MZ') %>
+                  <% 
+                    const hoje = new Date();
+                    const vencimento = new Date(factura.data_vencimento);
+                    const diasRestantes = Math.ceil((vencimento - hoje) / (1000 * 60 * 60 * 24));
+                  %>
+                  <% if (diasRestantes < 0 && factura.status !== 'Paga') { %>
+                    <br><small class="text-danger">Vencida há <%= Math.abs(diasRestantes) %> dias</small>
+                  <% } else if (diasRestantes <= 7 && diasRestantes >= 0 && factura.status !== 'Paga') { %>
+                    <br><small class="text-warning">Vence em <%= diasRestantes %> dias</small>
+                  <% } %>
+                </td>
+                <td class="text-right">
+                  <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_liquido) %>
+                </td>
+                <td class="text-right">
+                  <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_iva) %>
+                </td>
+                <td class="text-right">
+                  <strong><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_total) %></strong>
+                </td>
+                <td>
+                  <% if (factura.status === 'Rascunho') { %>
+                    <span class="badge badge-secondary">Rascunho</span>
+                  <% } else if (factura.status === 'Emitida') { %>
+                    <span class="badge badge-info">Emitida</span>
+                  <% } else if (factura.status === 'Paga') { %>
+                    <span class="badge badge-success">Paga</span>
+                  <% } else if (factura.status === 'Pendente') { %>
+                    <span class="badge badge-warning">Pendente</span>
+                  <% } else if (factura.status === 'Cancelada') { %>
+                    <span class="badge badge-danger">Cancelada</span>
+                  <% } else { %>
+                    <span class="badge badge-light"><%= factura.status %></span>
+                  <% } %>
+                  <br>
+                  <small class="text-muted"><%= factura.condicoes_pagamento %></small>
+                </td>
+                <td>
+                  <div class="btn-group-vertical" role="group">
+                    <!-- Ver Detalhes -->
+                    <a href="/vendas/facturas/<%= factura.id %>" class="btn btn-sm btn-outline-primary mb-1" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i> Ver
+                    </a>
+                    
+                    <!-- Editar (apenas se não estiver paga ou cancelada) -->
+                    <% if (factura.status !== 'Paga' && factura.status !== 'Cancelada') { %>
+                      <a href="/vendas/facturas/<%= factura.id %>/edit" class="btn btn-sm btn-outline-warning mb-1" title="Editar">
+                        <i class="fas fa-edit"></i> Editar
+                      </a>
+                    <% } %>
+                    
+                    <!-- Emitir (apenas se for rascunho) -->
+                    <% if (factura.status === 'Rascunho') { %>
+                      <form method="POST" action="/vendas/facturas/<%= factura.id %>/emitir" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-outline-success mb-1" title="Emitir Factura"
+                                onclick="return confirm('Tem certeza que deseja emitir esta factura?')">
+                          <i class="fas fa-paper-plane"></i> Emitir
+                        </button>
+                      </form>
+                    <% } %>
+                    
+                    <!-- Imprimir -->
+                    <a href="/vendas/facturas/<%= factura.id %>/imprimir" class="btn btn-sm btn-outline-secondary mb-1" title="Imprimir" target="_blank">
+                      <i class="fas fa-print"></i> Imprimir
+                    </a>
+                    
+                    <!-- Cancelar (apenas se não estiver paga ou cancelada) -->
+                    <% if (factura.status !== 'Paga' && factura.status !== 'Cancelada') { %>
+                      <button type="button" class="btn btn-sm btn-outline-danger" title="Cancelar Factura"
+                              onclick="cancelarFactura(<%= factura.id %>, '<%= factura.numero %>')">
+                        <i class="fas fa-times"></i> Cancelar
+                      </button>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="10" class="text-center text-muted py-4">
+                  <i class="fas fa-file-invoice fa-3x mb-3"></i>
+                  <br>
+                  Nenhuma factura encontrada.
+                  <br>
+                  <a href="/vendas/facturas/create" class="btn btn-primary btn-sm mt-2">
+                    <i class="fas fa-plus"></i> Criar primeira factura
+                  </a>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pagination && pagination.totalPages > 1) { %>
+      <nav aria-label="Paginação">
+        <ul class="pagination justify-content-center">
+          <!-- Página Anterior -->
+          <% if (pagination.hasPrev) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&tipo=<%= filters.tipo %>">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </span>
+            </li>
+          <% } %>
+
+          <!-- Números das Páginas -->
+          <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+            <% if (i === pagination.currentPage) { %>
+              <li class="page-item active">
+                <span class="page-link"><%= i %></span>
+              </li>
+            <% } else { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= i %>&search=<%= filters.search %>&status=<%= filters.status %>&tipo=<%= filters.tipo %>">
+                  <%= i %>
+                </a>
+              </li>
+            <% } %>
+          <% } %>
+
+          <!-- Próxima Página -->
+          <% if (pagination.hasNext) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&tipo=<%= filters.tipo %>">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </span>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+
+      <!-- Informações da Paginação -->
+      <div class="text-center text-muted">
+        Mostrando <%= Math.min(10, pagination.totalItems) %> de <%= pagination.totalItems %> registros
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Resumo Estatístico -->
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total de Facturas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= pagination ? pagination.totalItems : 0 %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Valor Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const valorTotal = facturas ? facturas.reduce((sum, f) => sum + f.valor_total, 0) : 0;
+                %>
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(valorTotal) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const pendentes = facturas ? facturas.filter(f => f.status === 'Pendente').length : 0;
+                %>
+                <%= pendentes %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                IVA Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const ivaTotal = facturas ? facturas.reduce((sum, f) => sum + f.valor_iva, 0) : 0;
+                %>
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(ivaTotal) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-percentage fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cancelamento -->
+<div class="modal fade" id="cancelarModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-times text-danger"></i> Cancelar Factura
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="cancelarForm" method="POST">
+        <div class="modal-body">
+          <p>Tem certeza que deseja cancelar a factura <strong id="facturaNumero"></strong>?</p>
+          <div class="form-group">
+            <label for="motivo">Motivo do cancelamento:</label>
+            <textarea class="form-control" id="motivo" name="motivo" rows="3" required
+                      placeholder="Descreva o motivo do cancelamento..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-check"></i> Confirmar Cancelamento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function cancelarFactura(id, numero) {
+  document.getElementById('facturaNumero').textContent = numero;
+  document.getElementById('cancelarForm').action = `/vendas/facturas/${id}/cancelar`;
+  $('#cancelarModal').modal('show');
+}
+</script>

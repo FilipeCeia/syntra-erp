@@ -1,0 +1,475 @@
+<%
+// Título da página
+const pageTitle = 'Novo Fornecedor - SYNTRA ERP';
+%>
+<style>
+  .required-field::after {
+    content: ' *';
+    color: #dc3545;
+  }
+  .form-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .nuit-validation {
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+  .nuit-valid { color: #28a745; }
+  .nuit-invalid { color: #dc3545; }
+</style>
+</style>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Novo Fornecedor</h1>
+      <p class="mb-0 text-muted">Registo de dados de fornecedor</p>
+    </div>
+    <div>
+      <a href="/pessoas/fornecedores" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button type="button" class="btn btn-outline-info" onclick="limparFormulario()">
+        <i class="fas fa-eraser"></i> Limpar
+      </button>
+    </div>
+  </div>
+
+  <form id="fornecedorForm" action="/pessoas/fornecedores" method="POST">
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Dados Básicos -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-user-tie"></i> Dados Básicos</h5>
+          
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="nome" class="form-label required-field">Nome/Razão Social</label>
+                <input type="text" class="form-control" id="nome" name="nome" required maxlength="255">
+                <div class="invalid-feedback">Por favor, informe o nome ou razão social.</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="codigo" class="form-label">Código</label>
+                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Auto-gerado" readonly>
+                <div class="form-text">Código será gerado automaticamente</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nuit" class="form-label required-field">NUIT</label>
+                <input type="text" class="form-control" id="nuit" name="nuit" required maxlength="9" pattern="[0-9]{9}">
+                <div id="nuitValidation" class="nuit-validation"></div>
+                <div class="invalid-feedback">NUIT deve ter 9 dígitos numéricos.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="alvara" class="form-label">Número de Alvará</label>
+                <input type="text" class="form-control" id="alvara" name="alvara" maxlength="50">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="telefone" class="form-label required-field">Contacto Telefónico</label>
+                <input type="tel" class="form-control" id="telefone" name="telefone" required maxlength="20">
+                <div class="invalid-feedback">Por favor, informe o contacto telefónico.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label required-field">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required maxlength="255">
+                <div class="invalid-feedback">Por favor, informe um email válido.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-map-marker-alt"></i> Endereço</h5>
+          
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço Completo</label>
+                <textarea class="form-control" id="endereco" name="endereco" rows="3" maxlength="500"></textarea>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="cidade" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" maxlength="100">
+              </div>
+              <div class="mb-3">
+                <label for="provincia" class="form-label">Província</label>
+                <select class="form-select" id="provincia" name="provincia">
+                  <option value="">Selecione...</option>
+                  <option value="Maputo Cidade">Maputo Cidade</option>
+                  <option value="Maputo Província">Maputo Província</option>
+                  <option value="Gaza">Gaza</option>
+                  <option value="Inhambane">Inhambane</option>
+                  <option value="Sofala">Sofala</option>
+                  <option value="Manica">Manica</option>
+                  <option value="Tete">Tete</option>
+                  <option value="Zambézia">Zambézia</option>
+                  <option value="Nampula">Nampula</option>
+                  <option value="Cabo Delgado">Cabo Delgado</option>
+                  <option value="Niassa">Niassa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacto e Condições -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-handshake"></i> Contacto e Condições Comerciais</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="pessoa_contacto" class="form-label">Pessoa de Contacto</label>
+                <input type="text" class="form-control" id="pessoa_contacto" name="pessoa_contacto" maxlength="255">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="telefone_contacto" class="form-label">Telefone da Pessoa de Contacto</label>
+                <input type="tel" class="form-control" id="telefone_contacto" name="telefone_contacto" maxlength="20">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="condicoes_pagamento" class="form-label">Condições de Pagamento</label>
+                <select class="form-select" id="condicoes_pagamento" name="condicoes_pagamento">
+                  <option value="">Selecione...</option>
+                  <option value="a_vista">À Vista</option>
+                  <option value="30_dias">30 Dias</option>
+                  <option value="60_dias">60 Dias</option>
+                  <option value="90_dias">90 Dias</option>
+                  <option value="personalizado">Personalizado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="prazo_pagamento" class="form-label">Prazo de Pagamento (dias)</label>
+                <input type="number" class="form-control" id="prazo_pagamento" name="prazo_pagamento" min="0" max="365">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" maxlength="1000"></textarea>
+            <div class="form-text">Informações adicionais sobre o fornecedor</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Configurações -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-cogs"></i> Configurações</h5>
+          
+          <div class="mb-3">
+            <label for="regime_tributario" class="form-label">Regime Tributário</label>
+            <select class="form-select" id="regime_tributario" name="regime_tributario">
+              <option value="geral">Geral</option>
+              <option value="simplificado">Simplificado</option>
+              <option value="isento">Isento</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="status" class="form-label">Estado</label>
+            <select class="form-select" id="status" name="status">
+              <option value="activo" selected>Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="fornecedor_preferencial" name="fornecedor_preferencial">
+              <label class="form-check-label" for="fornecedor_preferencial">
+                Fornecedor Preferencial
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="aceita_devolucoes" name="aceita_devolucoes" checked>
+              <label class="form-check-label" for="aceita_devolucoes">
+                Aceita Devoluções
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-info-circle"></i> Informações</h5>
+          
+          <div class="alert alert-info">
+            <small>
+              <i class="fas fa-lightbulb"></i>
+              <strong>Dica:</strong> Campos marcados com <span class="text-danger">*</span> são obrigatórios.
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="limite_credito" class="form-label">Limite de Crédito (MT)</label>
+            <input type="number" class="form-control" id="limite_credito" name="limite_credito" min="0" step="0.01">
+            <div class="form-text">Valor máximo para compras a crédito</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="desconto_padrao" class="form-label">Desconto Padrão (%)</label>
+            <input type="number" class="form-control" id="desconto_padrao" name="desconto_padrao" min="0" max="100" step="0.01">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-outline-secondary me-2" onclick="window.history.back()">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="button" class="btn btn-outline-primary me-2" onclick="salvarRascunho()">
+              <i class="fas fa-save"></i> Salvar Rascunho
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-check"></i> Salvar Fornecedor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+<script>
+$(document).ready(function() {
+  // Gerar código automático
+  gerarCodigo();
+  
+  // Validação de NUIT em tempo real
+  $('#nuit').on('input', function() {
+    validarNUIT(this.value);
+  });
+  
+  // Máscara para telefone
+  $('#telefone, #telefone_contacto').on('input', function() {
+    let value = this.value.replace(/\D/g, '');
+    if (value.length >= 9) {
+      value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{3})/, '+258 $1 $2 $3 $4');
+    }
+    this.value = value;
+  });
+  
+  // Validação do formulário
+  $('#fornecedorForm').on('submit', function(e) {
+    e.preventDefault();
+    if (validarFormulario()) {
+      salvarFornecedor();
+    }
+  });
+  
+  // Condições de pagamento personalizado
+  $('#condicoes_pagamento').on('change', function() {
+    if (this.value === 'personalizado') {
+      $('#prazo_pagamento').prop('required', true).focus();
+    } else {
+      $('#prazo_pagamento').prop('required', false);
+      // Definir prazo baseado na seleção
+      const prazos = {
+        'a_vista': 0,
+        '30_dias': 30,
+        '60_dias': 60,
+        '90_dias': 90
+      };
+      $('#prazo_pagamento').val(prazos[this.value] || '');
+    }
+  });
+});
+
+function gerarCodigo() {
+  // Gerar código automático baseado no timestamp
+  const codigo = 'FOR' + Date.now().toString().slice(-6);
+  $('#codigo').val(codigo);
+}
+
+function validarNUIT(nuit) {
+  const nuitValidation = $('#nuitValidation');
+  
+  if (!nuit) {
+    nuitValidation.text('').removeClass('nuit-valid nuit-invalid');
+    return false;
+  }
+  
+  // Verificar se tem 9 dígitos
+  if (!/^\d{9}$/.test(nuit)) {
+    nuitValidation.text('NUIT deve ter exatamente 9 dígitos').removeClass('nuit-valid').addClass('nuit-invalid');
+    return false;
+  }
+  
+  // Algoritmo de validação do NUIT moçambicano
+  const digits = nuit.split('').map(Number);
+  const checkDigit = digits[8];
+  
+  let sum = 0;
+  for (let i = 0; i < 8; i++) {
+    sum += digits[i] * (9 - i);
+  }
+  
+  const remainder = sum % 11;
+  const expectedCheckDigit = remainder < 2 ? remainder : 11 - remainder;
+  
+  if (checkDigit === expectedCheckDigit) {
+    nuitValidation.text('✓ NUIT válido').removeClass('nuit-invalid').addClass('nuit-valid');
+    return true;
+  } else {
+    nuitValidation.text('✗ NUIT inválido').removeClass('nuit-valid').addClass('nuit-invalid');
+    return false;
+  }
+}
+
+function validarFormulario() {
+  let isValid = true;
+  
+  // Validar campos obrigatórios
+  const camposObrigatorios = ['nome', 'nuit', 'telefone', 'email'];
+  
+  camposObrigatorios.forEach(campo => {
+    const elemento = document.getElementById(campo);
+    if (!elemento.value.trim()) {
+      elemento.classList.add('is-invalid');
+      isValid = false;
+    } else {
+      elemento.classList.remove('is-invalid');
+    }
+  });
+  
+  // Validar NUIT
+  if (!validarNUIT($('#nuit').val())) {
+    $('#nuit').addClass('is-invalid');
+    isValid = false;
+  } else {
+    $('#nuit').removeClass('is-invalid');
+  }
+  
+  // Validar email
+  const email = $('#email').val();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (email && !emailRegex.test(email)) {
+    $('#email').addClass('is-invalid');
+    isValid = false;
+  } else {
+    $('#email').removeClass('is-invalid');
+  }
+  
+  if (!isValid) {
+    alert('Por favor, corrija os campos destacados em vermelho.');
+  }
+  
+  return isValid;
+}
+
+function salvarFornecedor() {
+  const formData = new FormData(document.getElementById('fornecedorForm'));
+  
+  // Mostrar loading
+  const submitBtn = $('button[type="submit"]');
+  const originalText = submitBtn.html();
+  submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Salvando...').prop('disabled', true);
+  
+  $.ajax({
+    url: '/pessoas/fornecedores',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(response) {
+      if (response.success) {
+        alert('Fornecedor criado com sucesso!');
+        window.location.href = '/pessoas/fornecedores';
+      } else {
+        alert('Erro ao criar fornecedor: ' + response.message);
+      }
+    },
+    error: function(xhr) {
+      const response = xhr.responseJSON;
+      alert('Erro ao criar fornecedor: ' + (response?.message || 'Erro interno do servidor'));
+    },
+    complete: function() {
+      submitBtn.html(originalText).prop('disabled', false);
+    }
+  });
+}
+
+function salvarRascunho() {
+  const formData = new FormData(document.getElementById('fornecedorForm'));
+  formData.append('rascunho', 'true');
+  
+  $.ajax({
+    url: '/pessoas/fornecedores/rascunho',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(response) {
+      if (response.success) {
+        alert('Rascunho salvo com sucesso!');
+      } else {
+        alert('Erro ao salvar rascunho: ' + response.message);
+      }
+    },
+    error: function() {
+      alert('Erro ao salvar rascunho.');
+    }
+  });
+}
+
+function limparFormulario() {
+  if (confirm('Tem certeza que deseja limpar todos os campos?')) {
+    document.getElementById('fornecedorForm').reset();
+    $('.is-invalid').removeClass('is-invalid');
+    $('#nuitValidation').text('').removeClass('nuit-valid nuit-invalid');
+    gerarCodigo();
+  }
+}
+</script>
+</script>

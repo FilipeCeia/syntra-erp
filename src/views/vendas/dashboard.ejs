@@ -1,0 +1,309 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-chart-line"></i> Dashboard Vendas
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/vendas/facturas/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Factura
+      </a>
+      <a href="/vendas/cotacoes/create" class="btn btn-info btn-sm">
+        <i class="fas fa-file-alt"></i> Nova Cotação
+      </a>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row">
+    <!-- Vendas Hoje -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Vendas Hoje
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(dashboardData.resumo.vendas_hoje) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vendas do Mês -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Vendas do Mês
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(dashboardData.resumo.vendas_mes) %>
+              </div>
+              <div class="text-xs text-success">
+                <i class="fas fa-arrow-up"></i> +<%= dashboardData.resumo.crescimento_mensal %>%
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Facturas Pendentes -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Facturas Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= dashboardData.resumo.facturas_pendentes %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cotações Abertas -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Cotações Abertas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= dashboardData.resumo.cotacoes_abertas %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Vendas Recentes -->
+    <div class="col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-list"></i> Vendas Recentes
+          </h6>
+          <a href="/vendas" class="btn btn-sm btn-outline-primary">
+            Ver Todas
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Cliente</th>
+                  <th>Tipo</th>
+                  <th>Valor</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% dashboardData.vendas_recentes.forEach(venda => { %>
+                <tr>
+                  <td><%= venda.numero %></td>
+                  <td><%= venda.cliente %></td>
+                  <td>
+                    <% if (venda.tipo === 'Factura') { %>
+                      <span class="badge badge-primary">Factura</span>
+                    <% } else if (venda.tipo === 'Factura-Recibo') { %>
+                      <span class="badge badge-success">Factura-Recibo</span>
+                    <% } else { %>
+                      <span class="badge badge-info">Cotação</span>
+                    <% } %>
+                  </td>
+                  <td><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor) %></td>
+                  <td><%= venda.data.toLocaleDateString('pt-MZ') %></td>
+                  <td>
+                    <% if (venda.status === 'Paga') { %>
+                      <span class="badge badge-success">Paga</span>
+                    <% } else if (venda.status === 'Pendente') { %>
+                      <span class="badge badge-warning">Pendente</span>
+                    <% } else { %>
+                      <span class="badge badge-secondary"><%= venda.status %></span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (venda.tipo === 'Cotação') { %>
+                      <a href="/vendas/cotacoes/<%= venda.id %>" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                    <% } else { %>
+                      <a href="/vendas/facturas/<%= venda.id %>" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                    <% } %>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Clientes -->
+    <div class="col-lg-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-users"></i> Top Clientes
+          </h6>
+        </div>
+        <div class="card-body">
+          <% dashboardData.top_clientes.forEach((cliente, index) => { %>
+          <div class="d-flex align-items-center mb-3">
+            <div class="mr-3">
+              <div class="icon-circle bg-primary">
+                <i class="fas fa-user text-white"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1">
+              <div class="small text-gray-500">#<%= index + 1 %></div>
+              <div class="font-weight-bold"><%= cliente.nome %></div>
+              <div class="text-xs text-gray-500">
+                <%= cliente.facturas %> facturas • 
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cliente.vendas) %>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Ticket Médio -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-calculator"></i> Ticket Médio
+          </h6>
+        </div>
+        <div class="card-body text-center">
+          <div class="h2 mb-0 font-weight-bold text-primary">
+            <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(dashboardData.resumo.ticket_medio) %>
+          </div>
+          <div class="text-xs text-gray-500">Valor médio por venda</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de Vendas Mensais -->
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-chart-bar"></i> Performance Mensal
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-bar">
+            <canvas id="vendasChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Gráfico de Vendas Mensais
+const ctx = document.getElementById('vendasChart').getContext('2d');
+const vendasChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: [<% dashboardData.vendas_por_mes.forEach((item, index) => { %>'<%= item.mes %>'<% if (index < dashboardData.vendas_por_mes.length - 1) { %>,<% } %><% }); %>],
+    datasets: [{
+      label: 'Vendas Realizadas',
+      data: [<% dashboardData.vendas_por_mes.forEach((item, index) => { %><%= item.vendas %><% if (index < dashboardData.vendas_por_mes.length - 1) { %>,<% } %><% }); %>],
+      backgroundColor: 'rgba(78, 115, 223, 0.8)',
+      borderColor: 'rgba(78, 115, 223, 1)',
+      borderWidth: 1
+    }, {
+      label: 'Meta',
+      data: [<% dashboardData.vendas_por_mes.forEach((item, index) => { %><%= item.meta %><% if (index < dashboardData.vendas_por_mes.length - 1) { %>,<% } %><% }); %>],
+      backgroundColor: 'rgba(28, 200, 138, 0.3)',
+      borderColor: 'rgba(28, 200, 138, 1)',
+      borderWidth: 2,
+      type: 'line'
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return new Intl.NumberFormat('pt-MZ', { 
+              style: 'currency', 
+              currency: 'MZN',
+              minimumFractionDigits: 0
+            }).format(value);
+          }
+        }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + 
+              new Intl.NumberFormat('pt-MZ', { 
+                style: 'currency', 
+                currency: 'MZN' 
+              }).format(context.parsed.y);
+          }
+        }
+      }
+    }
+  }
+});
+</script>
+
+<style>
+.icon-circle {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

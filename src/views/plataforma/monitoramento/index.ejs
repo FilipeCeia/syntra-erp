@@ -1,0 +1,421 @@
+<!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Info boxes -->
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-server"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">CPU</span>
+              <span class="info-box-number">12<small>%</small></span>
+              <div class="progress">
+                <div class="progress-bar bg-info" style="width: 12%"></div>
+              </div>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-memory"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Memória</span>
+              <span class="info-box-number">2.4<small>GB</small> / 8<small>GB</small></span>
+              <div class="progress">
+                <div class="progress-bar bg-success" style="width: 30%"></div>
+              </div>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix hidden-md-up"></div>
+
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-hdd"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Disco</span>
+              <span class="info-box-number">45<small>GB</small> / 500<small>GB</small></span>
+              <div class="progress">
+                <div class="progress-bar bg-warning" style="width: 9%"></div>
+              </div>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-network-wired"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Rede</span>
+              <span class="info-box-number">2.5<small>MB/s</small></span>
+              <div class="progress">
+                <div class="progress-bar bg-danger" style="width: 25%"></div>
+              </div>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Utilização do Sistema</h5>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <p class="text-center">
+                    <strong>Utilização: 1 Jan, 2023 - 30 Jun, 2023</strong>
+                  </p>
+
+                  <div class="chart">
+                    <!-- Sales Chart Canvas -->
+                    <canvas id="utilizacaoChart" height="180" style="height: 180px;"></canvas>
+                  </div>
+                  <!-- /.chart-responsive -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-4">
+                  <p class="text-center">
+                    <strong>Métricas de Desempenho</strong>
+                  </p>
+
+                  <div class="progress-group">
+                    Tempo de Resposta
+                    <span class="float-right"><b>160</b>/200 ms</span>
+                    <div class="progress progress-sm">
+                      <div class="progress-bar bg-primary" style="width: 80%"></div>
+                    </div>
+                  </div>
+                  <!-- /.progress-group -->
+
+                  <div class="progress-group">
+                    Requisições por Segundo
+                    <span class="float-right"><b>310</b>/400</span>
+                    <div class="progress progress-sm">
+                      <div class="progress-bar bg-success" style="width: 75%"></div>
+                    </div>
+                  </div>
+
+                  <!-- /.progress-group -->
+                  <div class="progress-group">
+                    <span class="progress-text">Tempo de Processamento DB</span>
+                    <span class="float-right"><b>30</b>/100 ms</span>
+                    <div class="progress progress-sm">
+                      <div class="progress-bar bg-warning" style="width: 30%"></div>
+                    </div>
+                  </div>
+
+                  <!-- /.progress-group -->
+                  <div class="progress-group">
+                    Erros por Minuto
+                    <span class="float-right"><b>2</b>/100</span>
+                    <div class="progress progress-sm">
+                      <div class="progress-bar bg-danger" style="width: 2%"></div>
+                    </div>
+                  </div>
+                  <!-- /.progress-group -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- ./card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+      <!-- Main row -->
+      <div class="row">
+        <!-- Left col -->
+        <div class="col-md-8">
+          <!-- TABLE: LATEST ORDERS -->
+          <div class="card">
+            <div class="card-header border-transparent">
+              <h3 class="card-title">Logs do Sistema</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table m-0">
+                  <thead>
+                  <tr>
+                    <th>Data/Hora</th>
+                    <th>Nível</th>
+                    <th>Origem</th>
+                    <th>Mensagem</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td><%= moment().format('DD/MM/YYYY HH:mm:ss') %></td>
+                    <td><span class="badge badge-success">INFO</span></td>
+                    <td>Sistema</td>
+                    <td>Inicialização do sistema concluída</td>
+                  </tr>
+                  <tr>
+                    <td><%= moment().subtract(5, 'minutes').format('DD/MM/YYYY HH:mm:ss') %></td>
+                    <td><span class="badge badge-warning">AVISO</span></td>
+                    <td>Banco de Dados</td>
+                    <td>Consulta lenta detectada (2.5s)</td>
+                  </tr>
+                  <tr>
+                    <td><%= moment().subtract(15, 'minutes').format('DD/MM/YYYY HH:mm:ss') %></td>
+                    <td><span class="badge badge-info">INFO</span></td>
+                    <td>Autenticação</td>
+                    <td>Login bem-sucedido: admin@syntra.co.mz</td>
+                  </tr>
+                  <tr>
+                    <td><%= moment().subtract(30, 'minutes').format('DD/MM/YYYY HH:mm:ss') %></td>
+                    <td><span class="badge badge-danger">ERRO</span></td>
+                    <td>API</td>
+                    <td>Falha na conexão com serviço externo</td>
+                  </tr>
+                  <tr>
+                    <td><%= moment().subtract(45, 'minutes').format('DD/MM/YYYY HH:mm:ss') %></td>
+                    <td><span class="badge badge-info">INFO</span></td>
+                    <td>Sistema</td>
+                    <td>Backup automático iniciado</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.table-responsive -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer clearfix">
+              <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Ver Todos os Logs</a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Exportar Logs</a>
+            </div>
+            <!-- /.card-footer -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-md-4">
+          <!-- PRODUCT LIST -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Status dos Serviços</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+              <ul class="products-list product-list-in-card pl-2 pr-2">
+                <li class="item">
+                  <div class="product-img">
+                    <i class="fas fa-database fa-2x text-success"></i>
+                  </div>
+                  <div class="product-info">
+                    <a href="javascript:void(0)" class="product-title">Banco de Dados
+                      <span class="badge badge-success float-right">Online</span></a>
+                    <span class="product-description">
+                      Última verificação: <%= moment().subtract(2, 'minutes').format('HH:mm:ss') %>
+                    </span>
+                  </div>
+                </li>
+                <!-- /.item -->
+                <li class="item">
+                  <div class="product-img">
+                    <i class="fas fa-server fa-2x text-success"></i>
+                  </div>
+                  <div class="product-info">
+                    <a href="javascript:void(0)" class="product-title">Servidor Web
+                      <span class="badge badge-success float-right">Online</span></a>
+                    <span class="product-description">
+                      Última verificação: <%= moment().subtract(1, 'minutes').format('HH:mm:ss') %>
+                    </span>
+                  </div>
+                </li>
+                <!-- /.item -->
+                <li class="item">
+                  <div class="product-img">
+                    <i class="fas fa-envelope fa-2x text-warning"></i>
+                  </div>
+                  <div class="product-info">
+                    <a href="javascript:void(0)" class="product-title">Serviço de Email
+                      <span class="badge badge-warning float-right">Lento</span></a>
+                    <span class="product-description">
+                      Última verificação: <%= moment().subtract(5, 'minutes').format('HH:mm:ss') %>
+                    </span>
+                  </div>
+                </li>
+                <!-- /.item -->
+                <li class="item">
+                  <div class="product-img">
+                    <i class="fas fa-file fa-2x text-success"></i>
+                  </div>
+                  <div class="product-info">
+                    <a href="javascript:void(0)" class="product-title">Sistema de Arquivos
+                      <span class="badge badge-success float-right">Online</span></a>
+                    <span class="product-description">
+                      Última verificação: <%= moment().subtract(3, 'minutes').format('HH:mm:ss') %>
+                    </span>
+                  </div>
+                </li>
+                <!-- /.item -->
+                <li class="item">
+                  <div class="product-img">
+                    <i class="fas fa-clock fa-2x text-danger"></i>
+                  </div>
+                  <div class="product-info">
+                    <a href="javascript:void(0)" class="product-title">Serviço de Agendamento
+                      <span class="badge badge-danger float-right">Offline</span></a>
+                    <span class="product-description">
+                      Última verificação: <%= moment().subtract(10, 'minutes').format('HH:mm:ss') %>
+                    </span>
+                  </div>
+                </li>
+                <!-- /.item -->
+              </ul>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer text-center">
+              <a href="javascript:void(0)" class="btn btn-sm btn-primary">Reiniciar Serviços</a>
+            </div>
+            <!-- /.card-footer -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div><!--/. container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+
+<script>
+  $(function () {
+    'use strict'
+
+    // Gráfico de utilização
+    var utilizacaoCanvas = $('#utilizacaoChart').get(0).getContext('2d')
+
+    var utilizacaoData = {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [
+        {
+          label: 'CPU',
+          backgroundColor: 'rgba(60,141,188,0.3)',
+          borderColor: 'rgba(60,141,188,0.8)',
+          pointRadius: 3,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(60,141,188,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data: [28, 48, 40, 19, 25, 27]
+        },
+        {
+          label: 'Memória',
+          backgroundColor: 'rgba(40,167,69,0.3)',
+          borderColor: 'rgba(40,167,69,0.8)',
+          pointRadius: 3,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(40,167,69,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(40,167,69,1)',
+          data: [65, 59, 80, 81, 56, 55]
+        },
+        {
+          label: 'Disco',
+          backgroundColor: 'rgba(255,193,7,0.3)',
+          borderColor: 'rgba(255,193,7,0.8)',
+          pointRadius: 3,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(255,193,7,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(255,193,7,1)',
+          data: [10, 12, 15, 18, 20, 25]
+        }
+      ]
+    }
+
+    var utilizacaoOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: true
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            beginAtZero: true,
+            max: 100
+          }
+        }]
+      }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    // eslint-disable-next-line no-unused-vars
+    var utilizacaoChart = new Chart(utilizacaoCanvas, {
+      type: 'line',
+      data: utilizacaoData,
+      options: utilizacaoOptions
+    })
+
+    // Atualizar dados a cada 30 segundos
+    setInterval(function() {
+      // Aqui você pode fazer uma requisição AJAX para atualizar os dados
+      console.log('Atualizando dados de monitoramento...');
+    }, 30000);
+  })
+</script>

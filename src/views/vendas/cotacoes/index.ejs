@@ -1,0 +1,467 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-file-contract"></i> Cotações
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/vendas/cotacoes/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Cotação
+      </a>
+      <a href="/vendas/cotacoes/relatorios" class="btn btn-info btn-sm">
+        <i class="fas fa-chart-bar"></i> Relatórios
+      </a>
+      <a href="/vendas/cotacoes" class="btn btn-secondary btn-sm">
+        <i class="fas fa-sync"></i> Atualizar
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-filter"></i> Filtros
+      </h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/vendas/cotacoes">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="search">Buscar</label>
+              <input type="text" class="form-control" id="search" name="search" 
+                     value="<%= filters.search %>" placeholder="Número, cliente, NUIT...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select class="form-control" id="status" name="status">
+                <option value="">Todos</option>
+                <option value="Rascunho" <%= filters.status === 'Rascunho' ? 'selected' : '' %>>Rascunho</option>
+                <option value="Enviada" <%= filters.status === 'Enviada' ? 'selected' : '' %>>Enviada</option>
+                <option value="Aceita" <%= filters.status === 'Aceita' ? 'selected' : '' %>>Aceita</option>
+                <option value="Rejeitada" <%= filters.status === 'Rejeitada' ? 'selected' : '' %>>Rejeitada</option>
+                <option value="Expirada" <%= filters.status === 'Expirada' ? 'selected' : '' %>>Expirada</option>
+                <option value="Convertida" <%= filters.status === 'Convertida' ? 'selected' : '' %>>Convertida</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validade">Validade</label>
+              <select class="form-control" id="validade" name="validade">
+                <option value="">Todas</option>
+                <option value="vigente" <%= filters.validade === 'vigente' ? 'selected' : '' %>>Vigentes</option>
+                <option value="vencendo" <%= filters.validade === 'vencendo' ? 'selected' : '' %>>Vencendo (7 dias)</option>
+                <option value="expirada" <%= filters.validade === 'expirada' ? 'selected' : '' %>>Expiradas</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+                <a href="/vendas/cotacoes" class="btn btn-secondary">
+                  <i class="fas fa-times"></i> Limpar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela de Cotações -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Lista de Cotações
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Cliente</th>
+              <th>NUIT</th>
+              <th>Data Criação</th>
+              <th>Validade</th>
+              <th>Valor Total</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (cotacoes && cotacoes.length > 0) { %>
+              <% cotacoes.forEach(cotacao => { %>
+              <tr>
+                <td>
+                  <strong><%= cotacao.numero %></strong>
+                  <br>
+                  <small class="text-muted">Série: <%= cotacao.serie %> | Seq: <%= cotacao.sequencia %></small>
+                </td>
+                <td>
+                  <strong><%= cotacao.cliente.nome %></strong>
+                  <br>
+                  <small class="text-muted"><%= cotacao.cliente.endereco_fiscal %></small>
+                </td>
+                <td><%= cotacao.cliente.nuit %></td>
+                <td><%= cotacao.data_criacao.toLocaleDateString('pt-MZ') %></td>
+                <td>
+                  <%= cotacao.data_validade.toLocaleDateString('pt-MZ') %>
+                  <% 
+                    const hoje = new Date();
+                    const validade = new Date(cotacao.data_validade);
+                    const diasRestantes = Math.ceil((validade - hoje) / (1000 * 60 * 60 * 24));
+                  %>
+                  <% if (diasRestantes < 0) { %>
+                    <br><small class="text-danger">Expirada há <%= Math.abs(diasRestantes) %> dias</small>
+                  <% } else if (diasRestantes <= 7 && diasRestantes >= 0) { %>
+                    <br><small class="text-warning">Expira em <%= diasRestantes %> dias</small>
+                  <% } else { %>
+                    <br><small class="text-success">Válida por <%= diasRestantes %> dias</small>
+                  <% } %>
+                </td>
+                <td class="text-right">
+                  <strong><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_total) %></strong>
+                </td>
+                <td>
+                  <% if (cotacao.status === 'Rascunho') { %>
+                    <span class="badge badge-secondary">Rascunho</span>
+                  <% } else if (cotacao.status === 'Enviada') { %>
+                    <span class="badge badge-info">Enviada</span>
+                  <% } else if (cotacao.status === 'Aceita') { %>
+                    <span class="badge badge-success">Aceita</span>
+                  <% } else if (cotacao.status === 'Rejeitada') { %>
+                    <span class="badge badge-danger">Rejeitada</span>
+                  <% } else if (cotacao.status === 'Expirada') { %>
+                    <span class="badge badge-dark">Expirada</span>
+                  <% } else if (cotacao.status === 'Convertida') { %>
+                    <span class="badge badge-primary">Convertida</span>
+                  <% } else { %>
+                    <span class="badge badge-light"><%= cotacao.status %></span>
+                  <% } %>
+                  <br>
+                  <small class="text-muted">Validade: <%= cotacao.dias_validade %> dias</small>
+                </td>
+                <td>
+                  <div class="btn-group-vertical" role="group">
+                    <!-- Ver Detalhes -->
+                    <a href="/vendas/cotacoes/<%= cotacao.id %>" class="btn btn-sm btn-outline-primary mb-1" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i> Ver
+                    </a>
+                    
+                    <!-- Editar (apenas se não estiver convertida ou expirada) -->
+                    <% if (cotacao.status !== 'Convertida' && cotacao.status !== 'Expirada') { %>
+                      <a href="/vendas/cotacoes/<%= cotacao.id %>/edit" class="btn btn-sm btn-outline-warning mb-1" title="Editar">
+                        <i class="fas fa-edit"></i> Editar
+                      </a>
+                    <% } %>
+                    
+                    <!-- Enviar (apenas se for rascunho) -->
+                    <% if (cotacao.status === 'Rascunho') { %>
+                      <form method="POST" action="/vendas/cotacoes/<%= cotacao.id %>/enviar" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-outline-success mb-1" title="Enviar Cotação"
+                                onclick="return confirm('Tem certeza que deseja enviar esta cotação?')">
+                          <i class="fas fa-paper-plane"></i> Enviar
+                        </button>
+                      </form>
+                    <% } %>
+                    
+                    <!-- Converter em Factura (apenas se aceita e não convertida) -->
+                    <% if (cotacao.status === 'Aceita' && cotacao.status !== 'Convertida') { %>
+                      <a href="/vendas/facturas/create?cotacao=<%= cotacao.id %>" class="btn btn-sm btn-outline-primary mb-1" title="Converter em Factura">
+                        <i class="fas fa-exchange-alt"></i> Converter
+                      </a>
+                    <% } %>
+                    
+                    <!-- Imprimir -->
+                    <a href="/vendas/cotacoes/<%= cotacao.id %>/imprimir" class="btn btn-sm btn-outline-secondary mb-1" title="Imprimir" target="_blank">
+                      <i class="fas fa-print"></i> Imprimir
+                    </a>
+                    
+                    <!-- Enviar por Email -->
+                    <button type="button" class="btn btn-sm btn-outline-info mb-1" title="Enviar por Email"
+                            onclick="enviarEmail(<%= cotacao.id %>, '<%= cotacao.numero %>', '<%= cotacao.cliente.email %>')">
+                      <i class="fas fa-envelope"></i> Email
+                    </button>
+                    
+                    <!-- Cancelar (apenas se não estiver convertida) -->
+                    <% if (cotacao.status !== 'Convertida') { %>
+                      <button type="button" class="btn btn-sm btn-outline-danger" title="Cancelar Cotação"
+                              onclick="cancelarCotacao(<%= cotacao.id %>, '<%= cotacao.numero %>')">
+                        <i class="fas fa-times"></i> Cancelar
+                      </button>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                  <i class="fas fa-file-contract fa-3x mb-3"></i>
+                  <br>
+                  Nenhuma cotação encontrada.
+                  <br>
+                  <a href="/vendas/cotacoes/create" class="btn btn-primary btn-sm mt-2">
+                    <i class="fas fa-plus"></i> Criar primeira cotação
+                  </a>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pagination && pagination.totalPages > 1) { %>
+      <nav aria-label="Paginação">
+        <ul class="pagination justify-content-center">
+          <!-- Página Anterior -->
+          <% if (pagination.hasPrev) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&validade=<%= filters.validade %>">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </span>
+            </li>
+          <% } %>
+
+          <!-- Números das Páginas -->
+          <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+            <% if (i === pagination.currentPage) { %>
+              <li class="page-item active">
+                <span class="page-link"><%= i %></span>
+              </li>
+            <% } else { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= i %>&search=<%= filters.search %>&status=<%= filters.status %>&validade=<%= filters.validade %>">
+                  <%= i %>
+                </a>
+              </li>
+            <% } %>
+          <% } %>
+
+          <!-- Próxima Página -->
+          <% if (pagination.hasNext) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&validade=<%= filters.validade %>">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </span>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+
+      <!-- Informações da Paginação -->
+      <div class="text-center text-muted">
+        Mostrando <%= Math.min(10, pagination.totalItems) %> de <%= pagination.totalItems %> registros
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Resumo Estatístico -->
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total de Cotações
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= pagination ? pagination.totalItems : 0 %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-contract fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Valor Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const valorTotal = cotacoes ? cotacoes.reduce((sum, c) => sum + c.valor_total, 0) : 0;
+                %>
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(valorTotal) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const pendentes = cotacoes ? cotacoes.filter(c => c.status === 'Enviada').length : 0;
+                %>
+                <%= pendentes %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Taxa Conversão
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const totalCotacoes = cotacoes ? cotacoes.length : 0;
+                  const convertidas = cotacoes ? cotacoes.filter(c => c.status === 'Convertida').length : 0;
+                  const taxaConversao = totalCotacoes > 0 ? (convertidas / totalCotacoes * 100) : 0;
+                %>
+                <%= taxaConversao.toFixed(1) %>%
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-percentage fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cancelamento -->
+<div class="modal fade" id="cancelarModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-times text-danger"></i> Cancelar Cotação
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="cancelarForm" method="POST">
+        <div class="modal-body">
+          <p>Tem certeza que deseja cancelar a cotação <strong id="cotacaoNumero"></strong>?</p>
+          <div class="form-group">
+            <label for="motivo">Motivo do cancelamento:</label>
+            <textarea class="form-control" id="motivo" name="motivo" rows="3" required
+                      placeholder="Descreva o motivo do cancelamento..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-check"></i> Confirmar Cancelamento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Envio por Email -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-envelope text-primary"></i> Enviar Cotação por Email
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="emailForm" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="email_destinatario">Email do destinatário:</label>
+            <input type="email" class="form-control" id="email_destinatario" name="email_destinatario" required>
+          </div>
+          <div class="form-group">
+            <label for="assunto">Assunto:</label>
+            <input type="text" class="form-control" id="assunto" name="assunto" required>
+          </div>
+          <div class="form-group">
+            <label for="mensagem">Mensagem:</label>
+            <textarea class="form-control" id="mensagem" name="mensagem" rows="4"
+                      placeholder="Mensagem personalizada (opcional)..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Enviar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function cancelarCotacao(id, numero) {
+  document.getElementById('cotacaoNumero').textContent = numero;
+  document.getElementById('cancelarForm').action = `/vendas/cotacoes/${id}/cancelar`;
+  $('#cancelarModal').modal('show');
+}
+
+function enviarEmail(id, numero, email) {
+  document.getElementById('email_destinatario').value = email || '';
+  document.getElementById('assunto').value = `Cotação ${numero}`;
+  document.getElementById('emailForm').action = `/vendas/cotacoes/${id}/enviar-email`;
+  $('#emailModal').modal('show');
+}
+</script>

@@ -1,0 +1,735 @@
+<%
+// Título da página
+const pageTitle = 'Novo Cliente - SYNTRA ERP';
+%>
+<style>
+  .form-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .required-field {
+    color: #dc3545;
+  }
+  .nuit-validation {
+    margin-top: 5px;
+    font-size: 0.875rem;
+  }
+  .nuit-valid {
+    color: #28a745;
+  }
+  .nuit-invalid {
+    color: #dc3545;
+  }
+  .tipo-toggle {
+    background-color: #e9ecef;
+    border-radius: 25px;
+    padding: 5px;
+    margin-bottom: 20px;
+  }
+  .tipo-option {
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .tipo-option.active {
+    background-color: #007bff;
+    color: white;
+  }
+  .empresa-fields {
+    display: none;
+  }
+  .limite-credito-info {
+    background-color: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 0.875rem;
+  }
+  .form-actions {
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 0 0 8px 8px;
+  }
+  .preview-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+  }
+  .validation-message {
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+</style>
+</style>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Criar Novo Cliente</h1>
+      <p class="mb-0 text-muted">Preencha os dados do cliente</p>
+    </div>
+    <div>
+      <a href="/pessoas/clientes" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button type="button" class="btn btn-outline-info me-2" onclick="previewCliente()">
+        <i class="fas fa-eye"></i> Pré-visualizar
+      </button>
+      <button type="button" class="btn btn-outline-warning me-2" onclick="salvarRascunho()">
+        <i class="fas fa-save"></i> Salvar Rascunho
+      </button>
+    </div>
+  </div>
+
+  <form id="formCliente" novalidate>
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Tipo de Cliente -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-user-tag"></i> Tipo de Cliente</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="tipo-toggle d-flex">
+                <div class="tipo-option active flex-fill" data-tipo="particular" onclick="selecionarTipo('particular')">
+                  <i class="fas fa-user"></i> Particular
+                </div>
+                <div class="tipo-option flex-fill" data-tipo="empresa" onclick="selecionarTipo('empresa')">
+                  <i class="fas fa-building"></i> Empresa
+                </div>
+              </div>
+              <input type="hidden" id="tipo" name="tipo" value="particular">
+            </div>
+          </div>
+        </div>
+
+        <!-- Dados Básicos -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-user"></i> Dados Básicos</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nome" class="form-label">
+                  Nome/Razão Social <span class="required-field">*</span>
+                </label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+                <div class="invalid-feedback">Por favor, insira o nome.</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="codigo" class="form-label">Código do Cliente</label>
+                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Será gerado automaticamente">
+                <div class="form-text">Deixe em branco para gerar automaticamente</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="telefone" class="form-label">
+                  Contacto Telefónico <span class="required-field">*</span>
+                </label>
+                <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="+258 XX XXX XXXX" required>
+                <div class="invalid-feedback">Por favor, insira o telefone.</div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nuit" class="form-label">
+                  NUIT <span id="nuitRequired" class="required-field" style="display: none;">*</span>
+                  <span id="nuitOptional" class="text-muted">(Opcional para particulares)</span>
+                </label>
+                <input type="text" class="form-control" id="nuit" name="nuit" placeholder="123456789">
+                <div class="nuit-validation" id="nuitValidation"></div>
+                <div class="invalid-feedback">NUIT inválido.</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="cliente@exemplo.co.mz">
+                <div class="invalid-feedback">Por favor, insira um email válido.</div>
+              </div>
+              
+              <div class="mb-3 empresa-fields">
+                <label for="alvara" class="form-label">Número de Alvará</label>
+                <input type="text" class="form-control" id="alvara" name="alvara" placeholder="ALV2024001">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-map-marker-alt"></i> Endereço</h5>
+          
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço Completo</label>
+                <textarea class="form-control" id="endereco" name="endereco" rows="2" placeholder="Av. Julius Nyerere, 123, Maputo"></textarea>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="cidade" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Maputo">
+              </div>
+              <div class="mb-3">
+                <label for="provincia" class="form-label">Província</label>
+                <select class="form-select" id="provincia" name="provincia">
+                  <option value="">Seleccionar...</option>
+                  <option value="maputo-cidade">Maputo Cidade</option>
+                  <option value="maputo">Maputo</option>
+                  <option value="gaza">Gaza</option>
+                  <option value="inhambane">Inhambane</option>
+                  <option value="sofala">Sofala</option>
+                  <option value="manica">Manica</option>
+                  <option value="tete">Tete</option>
+                  <option value="zambézia">Zambézia</option>
+                  <option value="nampula">Nampula</option>
+                  <option value="cabo-delgado">Cabo Delgado</option>
+                  <option value="niassa">Niassa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Condições Comerciais -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-handshake"></i> Condições Comerciais</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="limite_credito" class="form-label">Limite de Crédito (MT)</label>
+                <input type="number" class="form-control" id="limite_credito" name="limite_credito" min="0" step="0.01" placeholder="0.00">
+                <div class="limite-credito-info">
+                  <i class="fas fa-info-circle"></i> 
+                  O limite de crédito define o valor máximo que o cliente pode dever.
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="condicoes_pagamento" class="form-label">Condições de Pagamento</label>
+                <select class="form-select" id="condicoes_pagamento" name="condicoes_pagamento">
+                  <option value="">Seleccionar...</option>
+                  <option value="a-vista">À Vista</option>
+                  <option value="15-dias">15 Dias</option>
+                  <option value="30-dias">30 Dias</option>
+                  <option value="45-dias">45 Dias</option>
+                  <option value="60-dias">60 Dias</option>
+                  <option value="90-dias">90 Dias</option>
+                  <option value="personalizado">Personalizado</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="desconto_padrao" class="form-label">Desconto Padrão (%)</label>
+                <input type="number" class="form-control" id="desconto_padrao" name="desconto_padrao" min="0" max="100" step="0.01" placeholder="0.00">
+              </div>
+              
+              <div class="mb-3">
+                <label for="prazo_pagamento" class="form-label">Prazo de Pagamento (dias)</label>
+                <input type="number" class="form-control" id="prazo_pagamento" name="prazo_pagamento" min="0" placeholder="30">
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder="Informações adicionais sobre o cliente..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Configurações -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-cogs"></i> Configurações</h5>
+          
+          <div class="mb-3">
+            <label for="regime_tributario" class="form-label">Regime Tributário</label>
+            <select class="form-select" id="regime_tributario" name="regime_tributario">
+              <option value="geral">Geral</option>
+              <option value="simplificado">Simplificado</option>
+              <option value="isento">Isento</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="status" class="form-label">Estado</label>
+            <select class="form-select" id="status" name="status">
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
+            </select>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="cliente_preferencial" name="cliente_preferencial">
+            <label class="form-check-label" for="cliente_preferencial">
+              Cliente Preferencial
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="aceita_marketing" name="aceita_marketing" checked>
+            <label class="form-check-label" for="aceita_marketing">
+              Aceita receber comunicações de marketing
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="enviar_boas_vindas" name="enviar_boas_vindas" checked>
+            <label class="form-check-label" for="enviar_boas_vindas">
+              Enviar email de boas-vindas
+            </label>
+          </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-info-circle"></i> Informações Adicionais</h5>
+          
+          <div class="mb-3">
+            <label for="data_nascimento" class="form-label">Data de Nascimento/Constituição</label>
+            <input type="date" class="form-control" id="data_nascimento" name="data_nascimento">
+          </div>
+          
+          <div class="mb-3">
+            <label for="profissao" class="form-label">Profissão/Actividade</label>
+            <input type="text" class="form-control" id="profissao" name="profissao" placeholder="Comerciante, Engenheiro, etc.">
+          </div>
+          
+          <div class="mb-3">
+            <label for="referencia" class="form-label">Como nos conheceu?</label>
+            <select class="form-select" id="referencia" name="referencia">
+              <option value="">Seleccionar...</option>
+              <option value="indicacao">Indicação de cliente</option>
+              <option value="internet">Internet/Website</option>
+              <option value="redes-sociais">Redes Sociais</option>
+              <option value="publicidade">Publicidade</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="vendedor_responsavel" class="form-label">Vendedor Responsável</label>
+            <select class="form-select" id="vendedor_responsavel" name="vendedor_responsavel">
+              <option value="">Seleccionar...</option>
+              <option value="1">João Silva</option>
+              <option value="2">Maria Santos</option>
+              <option value="3">Pedro Machado</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pré-visualização -->
+        <div class="preview-card" id="previewCard" style="display: none;">
+          <h6><i class="fas fa-eye"></i> Pré-visualização</h6>
+          <div id="previewContent">
+            <!-- Conteúdo da pré-visualização -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acções -->
+    <div class="form-actions">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-muted">
+            <i class="fas fa-info-circle"></i> 
+            Campos marcados com <span class="required-field">*</span> são obrigatórios
+          </small>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-secondary me-2" onclick="limparFormulario()">
+            <i class="fas fa-eraser"></i> Limpar
+          </button>
+          <button type="button" class="btn btn-outline-warning me-2" onclick="salvarRascunho()">
+            <i class="fas fa-save"></i> Salvar Rascunho
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check"></i> Criar Cliente
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+<script>
+// Variáveis globais
+let nuitValido = false;
+let tipoCliente = 'particular';
+
+// Inicialização
+$(document).ready(function() {
+  // Máscara para telefone
+  $('#telefone').mask('+258 00 000 0000');
+  
+  // Validação de NUIT em tempo real
+  $('#nuit').on('input', function() {
+    validarNUIT($(this).val());
+  });
+  
+  // Validação do formulário
+  $('#formCliente').on('submit', function(e) {
+    e.preventDefault();
+    if (validarFormulario()) {
+      salvarCliente();
+    }
+  });
+  
+  // Auto-geração de código
+  $('#nome').on('blur', function() {
+    if (!$('#codigo').val()) {
+      gerarCodigo();
+    }
+  });
+  
+  // Condições de pagamento personalizado
+  $('#condicoes_pagamento').on('change', function() {
+    if ($(this).val() === 'personalizado') {
+      $('#prazo_pagamento').focus();
+    }
+  });
+});
+
+// Seleccionar tipo de cliente
+function selecionarTipo(tipo) {
+  tipoCliente = tipo;
+  $('#tipo').val(tipo);
+  
+  // Actualizar interface
+  $('.tipo-option').removeClass('active');
+  $(`.tipo-option[data-tipo="${tipo}"]`).addClass('active');
+  
+  if (tipo === 'empresa') {
+    $('.empresa-fields').show();
+    $('#nuitRequired').show();
+    $('#nuitOptional').hide();
+    $('#nuit').attr('required', true);
+  } else {
+    $('.empresa-fields').hide();
+    $('#nuitRequired').hide();
+    $('#nuitOptional').show();
+    $('#nuit').attr('required', false);
+  }
+  
+  // Validar NUIT novamente
+  if ($('#nuit').val()) {
+    validarNUIT($('#nuit').val());
+  }
+}
+
+// Validar NUIT
+function validarNUIT(nuit) {
+  const $validation = $('#nuitValidation');
+  
+  if (!nuit) {
+    $validation.html('');
+    nuitValido = tipoCliente === 'particular';
+    return;
+  }
+  
+  // Remover espaços e caracteres especiais
+  nuit = nuit.replace(/\D/g, '');
+  
+  if (nuit.length !== 9) {
+    $validation.html('<i class="fas fa-times"></i> NUIT deve ter 9 dígitos').addClass('nuit-invalid').removeClass('nuit-valid');
+    nuitValido = false;
+    return;
+  }
+  
+  // Validação do algoritmo de NUIT
+  if (validarAlgoritmoNUIT(nuit)) {
+    $validation.html('<i class="fas fa-check"></i> NUIT válido').addClass('nuit-valid').removeClass('nuit-invalid');
+    nuitValido = true;
+    
+    // Verificar se já existe
+    verificarNUITExistente(nuit);
+  } else {
+    $validation.html('<i class="fas fa-times"></i> NUIT inválido').addClass('nuit-invalid').removeClass('nuit-valid');
+    nuitValido = false;
+  }
+}
+
+// Algoritmo de validação de NUIT
+function validarAlgoritmoNUIT(nuit) {
+  const digits = nuit.split('').map(Number);
+  const checkDigit = digits[8];
+  
+  let sum = 0;
+  for (let i = 0; i < 8; i++) {
+    sum += digits[i] * (9 - i);
+  }
+  
+  const remainder = sum % 11;
+  const expectedCheckDigit = remainder < 2 ? remainder : 11 - remainder;
+  
+  return checkDigit === expectedCheckDigit;
+}
+
+// Verificar se NUIT já existe
+function verificarNUITExistente(nuit) {
+  $.ajax({
+    url: '/api/pessoas/clientes/verificar-nuit',
+    type: 'GET',
+    data: { nuit: nuit },
+    success: function(response) {
+      if (response.existe) {
+        $('#nuitValidation').html('<i class="fas fa-exclamation-triangle"></i> NUIT já cadastrado').addClass('nuit-invalid').removeClass('nuit-valid');
+        nuitValido = false;
+      }
+    }
+  });
+}
+
+// Gerar código automático
+function gerarCodigo() {
+  const nome = $('#nome').val();
+  if (!nome) return;
+  
+  $.ajax({
+    url: '/api/pessoas/clientes/gerar-codigo',
+    type: 'POST',
+    data: { nome: nome, tipo: tipoCliente },
+    success: function(response) {
+      $('#codigo').val(response.codigo);
+    }
+  });
+}
+
+// Validar formulário
+function validarFormulario() {
+  let valido = true;
+  
+  // Validar campos obrigatórios
+  const camposObrigatorios = ['nome', 'telefone'];
+  
+  if (tipoCliente === 'empresa') {
+    camposObrigatorios.push('nuit');
+  }
+  
+  camposObrigatorios.forEach(function(campo) {
+    const $campo = $('#' + campo);
+    if (!$campo.val().trim()) {
+      $campo.addClass('is-invalid');
+      valido = false;
+    } else {
+      $campo.removeClass('is-invalid');
+    }
+  });
+  
+  // Validar NUIT se preenchido
+  if ($('#nuit').val() && !nuitValido) {
+    $('#nuit').addClass('is-invalid');
+    valido = false;
+  } else {
+    $('#nuit').removeClass('is-invalid');
+  }
+  
+  // Validar email se preenchido
+  const email = $('#email').val();
+  if (email && !validarEmail(email)) {
+    $('#email').addClass('is-invalid');
+    valido = false;
+  } else {
+    $('#email').removeClass('is-invalid');
+  }
+  
+  return valido;
+}
+
+// Validar email
+function validarEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+// Salvar cliente
+function salvarCliente() {
+  const dadosCliente = {
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val() || 0,
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val() || 0,
+    desconto_padrao: $('#desconto_padrao').val() || 0,
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    enviar_boas_vindas: $('#enviar_boas_vindas').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  };
+  
+  $.ajax({
+    url: '/pessoas/clientes',
+    type: 'POST',
+    data: dadosCliente,
+    success: function(response) {
+      if (response.success) {
+        alert('Cliente criado com sucesso!');
+        
+        if ($('#enviar_boas_vindas').is(':checked') && $('#email').val()) {
+          enviarBoasVindas(response.cliente.id);
+        }
+        
+        window.location.href = '/pessoas/clientes/' + response.cliente.id;
+      } else {
+        alert('Erro ao criar cliente: ' + response.message);
+      }
+    },
+    error: function() {
+      alert('Erro ao criar cliente.');
+    }
+  });
+}
+
+// Salvar rascunho
+function salvarRascunho() {
+  const dadosRascunho = {
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val(),
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val(),
+    desconto_padrao: $('#desconto_padrao').val(),
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  };
+  
+  localStorage.setItem('rascunho_cliente', JSON.stringify(dadosRascunho));
+  alert('Rascunho salvo com sucesso!');
+}
+
+// Carregar rascunho
+function carregarRascunho() {
+  const rascunho = localStorage.getItem('rascunho_cliente');
+  if (rascunho) {
+    const dados = JSON.parse(rascunho);
+    
+    Object.keys(dados).forEach(function(campo) {
+      const $campo = $('#' + campo);
+      if ($campo.length) {
+        if ($campo.attr('type') === 'checkbox') {
+          $campo.prop('checked', dados[campo]);
+        } else {
+          $campo.val(dados[campo]);
+        }
+      }
+    });
+    
+    // Actualizar tipo
+    if (dados.tipo) {
+      selecionarTipo(dados.tipo);
+    }
+  }
+}
+
+// Limpar formulário
+function limparFormulario() {
+  if (confirm('Deseja limpar todos os campos?')) {
+    $('#formCliente')[0].reset();
+    $('.is-invalid').removeClass('is-invalid');
+    $('#nuitValidation').html('');
+    selecionarTipo('particular');
+    localStorage.removeItem('rascunho_cliente');
+  }
+}
+
+// Pré-visualizar cliente
+function previewCliente() {
+  const nome = $('#nome').val() || 'Nome do Cliente';
+  const tipo = $('#tipo').val() === 'particular' ? 'Particular' : 'Empresa';
+  const telefone = $('#telefone').val() || 'Não informado';
+  const email = $('#email').val() || 'Não informado';
+  const nuit = $('#nuit').val() || 'Não informado';
+  
+  const previewHtml = `
+    <div class="mb-2"><strong>${nome}</strong></div>
+    <div class="mb-1"><small class="badge bg-info">${tipo}</small></div>
+    <div class="mb-1"><small><i class="fas fa-phone"></i> ${telefone}</small></div>
+    <div class="mb-1"><small><i class="fas fa-envelope"></i> ${email}</small></div>
+    <div class="mb-1"><small><i class="fas fa-id-card"></i> ${nuit}</small></div>
+  `;
+  
+  $('#previewContent').html(previewHtml);
+  $('#previewCard').show();
+}
+
+// Enviar email de boas-vindas
+function enviarBoasVindas(clienteId) {
+  $.ajax({
+    url: '/pessoas/clientes/' + clienteId + '/boas-vindas',
+    type: 'POST',
+    success: function() {
+      console.log('Email de boas-vindas enviado');
+    },
+    error: function() {
+      console.log('Erro ao enviar email de boas-vindas');
+    }
+  });
+}
+
+// Verificar se há rascunho ao carregar a página
+$(document).ready(function() {
+  if (localStorage.getItem('rascunho_cliente')) {
+    if (confirm('Foi encontrado um rascunho salvo. Deseja carregá-lo?')) {
+      carregarRascunho();
+    }
+  }
+});
+</script>
+</script>

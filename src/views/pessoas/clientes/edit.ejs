@@ -1,0 +1,1034 @@
+<%
+// Título da página
+const pageTitle = 'Editar Cliente - SYNTRA ERP';
+%>
+<style>
+  .form-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .required-field {
+    color: #dc3545;
+  }
+  .nuit-validation {
+    margin-top: 5px;
+    font-size: 0.875rem;
+  }
+  .nuit-valid {
+    color: #28a745;
+  }
+  .nuit-invalid {
+    color: #dc3545;
+  }
+  .tipo-toggle {
+    background-color: #e9ecef;
+    border-radius: 25px;
+    padding: 5px;
+    margin-bottom: 20px;
+  }
+  .tipo-option {
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .tipo-option.active {
+    background-color: #007bff;
+    color: white;
+  }
+  .empresa-fields {
+    display: none;
+  }
+  .limite-credito-info {
+    background-color: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 0.875rem;
+  }
+  .form-actions {
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 0 0 8px 8px;
+  }
+  .historico-item {
+    border-left: 3px solid #007bff;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 0 6px 6px 0;
+  }
+  .info-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+  }
+  .stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 5px;
+  }
+  .audit-info {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .financial-alert {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .financial-alert.danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  .financial-alert.success {
+    background-color: #d1edff;
+    border-color: #bee5eb;
+  }
+</style>
+</style>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Editar Cliente</h1>
+      <p class="mb-0 text-muted">Código: <strong id="clienteCodigo">CLI001</strong></p>
+    </div>
+    <div>
+      <a href="/pessoas/clientes" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <a href="/pessoas/clientes/1" class="btn btn-outline-info me-2">
+        <i class="fas fa-eye"></i> Visualizar
+      </a>
+      <button type="button" class="btn btn-outline-warning me-2" onclick="salvarRascunho()">
+        <i class="fas fa-save"></i> Salvar Rascunho
+      </button>
+      <button type="button" class="btn btn-outline-danger me-2" onclick="confirmarExclusao()">
+        <i class="fas fa-trash"></i> Excluir
+      </button>
+    </div>
+  </div>
+
+  <form id="formEditarCliente" novalidate>
+    <input type="hidden" id="clienteId" name="id" value="1">
+    
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Informações do Cliente -->
+        <div class="info-card">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4 class="mb-1" id="clienteNomeHeader">João Silva Santos</h4>
+              <p class="mb-0 opacity-75">
+                <i class="fas fa-user"></i> Particular • 
+                <i class="fas fa-calendar"></i> Cliente desde 15/01/2024
+              </p>
+            </div>
+            <div class="col-md-4 text-end">
+              <div class="badge bg-success fs-6 mb-2">ACTIVO</div>
+              <div class="small opacity-75">
+                Última venda: 28/11/2024
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipo de Cliente -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-user-tag"></i> Tipo de Cliente</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="tipo-toggle d-flex">
+                <div class="tipo-option active flex-fill" data-tipo="particular" onclick="selecionarTipo('particular')">
+                  <i class="fas fa-user"></i> Particular
+                </div>
+                <div class="tipo-option flex-fill" data-tipo="empresa" onclick="selecionarTipo('empresa')">
+                  <i class="fas fa-building"></i> Empresa
+                </div>
+              </div>
+              <input type="hidden" id="tipo" name="tipo" value="particular">
+            </div>
+          </div>
+        </div>
+
+        <!-- Dados Básicos -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-user"></i> Dados Básicos</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nome" class="form-label">
+                  Nome/Razão Social <span class="required-field">*</span>
+                </label>
+                <input type="text" class="form-control" id="nome" name="nome" value="João Silva Santos" required>
+                <div class="invalid-feedback">Por favor, insira o nome.</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="codigo" class="form-label">Código do Cliente</label>
+                <input type="text" class="form-control" id="codigo" name="codigo" value="CLI001" readonly>
+                <div class="form-text">Código gerado automaticamente</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="telefone" class="form-label">
+                  Contacto Telefónico <span class="required-field">*</span>
+                </label>
+                <input type="tel" class="form-control" id="telefone" name="telefone" value="+258 84 123 4567" required>
+                <div class="invalid-feedback">Por favor, insira o telefone.</div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nuit" class="form-label">
+                  NUIT <span id="nuitRequired" class="required-field" style="display: none;">*</span>
+                  <span id="nuitOptional" class="text-muted">(Opcional para particulares)</span>
+                </label>
+                <input type="text" class="form-control" id="nuit" name="nuit" value="">
+                <div class="nuit-validation" id="nuitValidation"></div>
+                <div class="invalid-feedback">NUIT inválido.</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="joao.silva@email.com">
+                <div class="invalid-feedback">Por favor, insira um email válido.</div>
+              </div>
+              
+              <div class="mb-3 empresa-fields">
+                <label for="alvara" class="form-label">Número de Alvará</label>
+                <input type="text" class="form-control" id="alvara" name="alvara" value="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-map-marker-alt"></i> Endereço</h5>
+          
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço Completo</label>
+                <textarea class="form-control" id="endereco" name="endereco" rows="2">Av. Julius Nyerere, 1234, Maputo</textarea>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="cidade" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" value="Maputo">
+              </div>
+              <div class="mb-3">
+                <label for="provincia" class="form-label">Província</label>
+                <select class="form-select" id="provincia" name="provincia">
+                  <option value="">Seleccionar...</option>
+                  <option value="maputo-cidade" selected>Maputo Cidade</option>
+                  <option value="maputo">Maputo</option>
+                  <option value="gaza">Gaza</option>
+                  <option value="inhambane">Inhambane</option>
+                  <option value="sofala">Sofala</option>
+                  <option value="manica">Manica</option>
+                  <option value="tete">Tete</option>
+                  <option value="zambézia">Zambézia</option>
+                  <option value="nampula">Nampula</option>
+                  <option value="cabo-delgado">Cabo Delgado</option>
+                  <option value="niassa">Niassa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Condições Comerciais -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-handshake"></i> Condições Comerciais</h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="limite_credito" class="form-label">Limite de Crédito (MT)</label>
+                <input type="number" class="form-control" id="limite_credito" name="limite_credito" min="0" step="0.01" value="50000.00">
+                <div class="limite-credito-info">
+                  <i class="fas fa-info-circle"></i> 
+                  Limite actual: 50,000.00 MT • Utilizado: 15,750.00 MT
+                </div>
+                <div class="financial-alert">
+                  <i class="fas fa-exclamation-triangle"></i> 
+                  Cliente utilizou 31.5% do limite de crédito
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="condicoes_pagamento" class="form-label">Condições de Pagamento</label>
+                <select class="form-select" id="condicoes_pagamento" name="condicoes_pagamento">
+                  <option value="">Seleccionar...</option>
+                  <option value="a-vista">À Vista</option>
+                  <option value="15-dias">15 Dias</option>
+                  <option value="30-dias" selected>30 Dias</option>
+                  <option value="45-dias">45 Dias</option>
+                  <option value="60-dias">60 Dias</option>
+                  <option value="90-dias">90 Dias</option>
+                  <option value="personalizado">Personalizado</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="desconto_padrao" class="form-label">Desconto Padrão (%)</label>
+                <input type="number" class="form-control" id="desconto_padrao" name="desconto_padrao" min="0" max="100" step="0.01" value="5.00">
+              </div>
+              
+              <div class="mb-3">
+                <label for="prazo_pagamento" class="form-label">Prazo de Pagamento (dias)</label>
+                <input type="number" class="form-control" id="prazo_pagamento" name="prazo_pagamento" min="0" value="30">
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3">Cliente preferencial com histórico de pagamentos pontuais.</textarea>
+          </div>
+        </div>
+
+        <!-- Histórico de Alterações -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-history"></i> Histórico de Alterações</h5>
+          
+          <div class="historico-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>Limite de crédito alterado</strong>
+                <div class="small text-muted">De 30,000.00 MT para 50,000.00 MT</div>
+              </div>
+              <div class="text-end">
+                <div class="small text-muted">28/11/2024 14:30</div>
+                <div class="small">Por: Admin</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="historico-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>Email actualizado</strong>
+                <div class="small text-muted">joao.santos@email.com → joao.silva@email.com</div>
+              </div>
+              <div class="text-end">
+                <div class="small text-muted">15/11/2024 09:15</div>
+                <div class="small">Por: Vendedor1</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="historico-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>Cliente criado</strong>
+                <div class="small text-muted">Registo inicial do cliente</div>
+              </div>
+              <div class="text-end">
+                <div class="small text-muted">15/01/2024 10:00</div>
+                <div class="small">Por: Admin</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Estatísticas Rápidas -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+          
+          <div class="row">
+            <div class="col-6">
+              <div class="stat-card">
+                <div class="stat-value">47</div>
+                <div class="stat-label">Total Vendas</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-card">
+                <div class="stat-value">285,450</div>
+                <div class="stat-label">Volume (MT)</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-card">
+                <div class="stat-value">15,750</div>
+                <div class="stat-label">Saldo Devedor</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-card">
+                <div class="stat-value">28 dias</div>
+                <div class="stat-label">Prazo Médio</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configurações -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-cogs"></i> Configurações</h5>
+          
+          <div class="mb-3">
+            <label for="regime_tributario" class="form-label">Regime Tributário</label>
+            <select class="form-select" id="regime_tributario" name="regime_tributario">
+              <option value="geral" selected>Geral</option>
+              <option value="simplificado">Simplificado</option>
+              <option value="isento">Isento</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="status" class="form-label">Estado</label>
+            <select class="form-select" id="status" name="status">
+              <option value="1" selected>Activo</option>
+              <option value="0">Inactivo</option>
+              <option value="2">Bloqueado</option>
+            </select>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="cliente_preferencial" name="cliente_preferencial" checked>
+            <label class="form-check-label" for="cliente_preferencial">
+              Cliente Preferencial
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="aceita_marketing" name="aceita_marketing" checked>
+            <label class="form-check-label" for="aceita_marketing">
+              Aceita receber comunicações de marketing
+            </label>
+          </div>
+        </div>
+
+        <!-- Informações Financeiras -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-money-bill-wave"></i> Informações Financeiras</h5>
+          
+          <div class="mb-3">
+            <label class="form-label">Saldo Actual</label>
+            <div class="financial-alert danger">
+              <strong>15,750.00 MT</strong> (Devedor)
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Limite Disponível</label>
+            <div class="financial-alert success">
+              <strong>34,250.00 MT</strong> (68.5% disponível)
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Última Factura</label>
+            <div class="small">
+              <strong>FAC2024001234</strong><br>
+              28/11/2024 • 8,500.00 MT
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Próximo Vencimento</label>
+            <div class="small text-warning">
+              <i class="fas fa-clock"></i> 05/12/2024<br>
+              Valor: 7,250.00 MT
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="form-section">
+          <h5 class="section-title"><i class="fas fa-info-circle"></i> Informações Adicionais</h5>
+          
+          <div class="mb-3">
+            <label for="data_nascimento" class="form-label">Data de Nascimento/Constituição</label>
+            <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="1985-03-15">
+          </div>
+          
+          <div class="mb-3">
+            <label for="profissao" class="form-label">Profissão/Actividade</label>
+            <input type="text" class="form-control" id="profissao" name="profissao" value="Comerciante">
+          </div>
+          
+          <div class="mb-3">
+            <label for="referencia" class="form-label">Como nos conheceu?</label>
+            <select class="form-select" id="referencia" name="referencia">
+              <option value="">Seleccionar...</option>
+              <option value="indicacao" selected>Indicação de cliente</option>
+              <option value="internet">Internet/Website</option>
+              <option value="redes-sociais">Redes Sociais</option>
+              <option value="publicidade">Publicidade</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="vendedor_responsavel" class="form-label">Vendedor Responsável</label>
+            <select class="form-select" id="vendedor_responsavel" name="vendedor_responsavel">
+              <option value="">Seleccionar...</option>
+              <option value="1" selected>João Silva</option>
+              <option value="2">Maria Santos</option>
+              <option value="3">Pedro Machado</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Informações de Auditoria -->
+        <div class="audit-info">
+          <h6><i class="fas fa-shield-alt"></i> Auditoria</h6>
+          <div class="small">
+            <strong>Criado:</strong> 15/01/2024 10:00 por Admin<br>
+            <strong>Última alteração:</strong> 28/11/2024 14:30 por Admin<br>
+            <strong>Total de alterações:</strong> 8
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acções -->
+    <div class="form-actions">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-muted">
+            <i class="fas fa-info-circle"></i> 
+            Campos marcados com <span class="required-field">*</span> são obrigatórios
+          </small>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-secondary me-2" onclick="resetarFormulario()">
+            <i class="fas fa-undo"></i> Resetar
+          </button>
+          <button type="button" class="btn btn-outline-warning me-2" onclick="salvarRascunho()">
+            <i class="fas fa-save"></i> Salvar Rascunho
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check"></i> Actualizar Cliente
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+<script>
+// Variáveis globais
+let nuitValido = true;
+let tipoCliente = 'particular';
+let dadosOriginais = {};
+
+// Inicialização
+$(document).ready(function() {
+  // Salvar dados originais
+  salvarDadosOriginais();
+  
+  // Máscara para telefone
+  $('#telefone').mask('+258 00 000 0000');
+  
+  // Validação de NUIT em tempo real
+  $('#nuit').on('input', function() {
+    validarNUIT($(this).val());
+  });
+  
+  // Validação do formulário
+  $('#formEditarCliente').on('submit', function(e) {
+    e.preventDefault();
+    if (validarFormulario()) {
+      actualizarCliente();
+    }
+  });
+  
+  // Detectar alterações
+  $('#formEditarCliente input, #formEditarCliente select, #formEditarCliente textarea').on('change', function() {
+    detectarAlteracoes();
+  });
+  
+  // Condições de pagamento personalizado
+  $('#condicoes_pagamento').on('change', function() {
+    if ($(this).val() === 'personalizado') {
+      $('#prazo_pagamento').focus();
+    }
+  });
+  
+  // Actualizar nome no header
+  $('#nome').on('input', function() {
+    $('#clienteNomeHeader').text($(this).val() || 'Nome do Cliente');
+  });
+});
+
+// Salvar dados originais
+function salvarDadosOriginais() {
+  dadosOriginais = {
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val(),
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val(),
+    desconto_padrao: $('#desconto_padrao').val(),
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  };
+}
+
+// Detectar alterações
+function detectarAlteracoes() {
+  const dadosActuais = {
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val(),
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val(),
+    desconto_padrao: $('#desconto_padrao').val(),
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  };
+  
+  const temAlteracoes = JSON.stringify(dadosOriginais) !== JSON.stringify(dadosActuais);
+  
+  if (temAlteracoes) {
+    $('button[type="submit"]').removeClass('btn-primary').addClass('btn-warning').html('<i class="fas fa-exclamation-triangle"></i> Actualizar (Alterações Pendentes)');
+  } else {
+    $('button[type="submit"]').removeClass('btn-warning').addClass('btn-primary').html('<i class="fas fa-check"></i> Actualizar Cliente');
+  }
+}
+
+// Seleccionar tipo de cliente
+function selecionarTipo(tipo) {
+  tipoCliente = tipo;
+  $('#tipo').val(tipo);
+  
+  // Actualizar interface
+  $('.tipo-option').removeClass('active');
+  $(`.tipo-option[data-tipo="${tipo}"]`).addClass('active');
+  
+  if (tipo === 'empresa') {
+    $('.empresa-fields').show();
+    $('#nuitRequired').show();
+    $('#nuitOptional').hide();
+    $('#nuit').attr('required', true);
+  } else {
+    $('.empresa-fields').hide();
+    $('#nuitRequired').hide();
+    $('#nuitOptional').show();
+    $('#nuit').attr('required', false);
+  }
+  
+  // Validar NUIT novamente
+  if ($('#nuit').val()) {
+    validarNUIT($('#nuit').val());
+  }
+  
+  detectarAlteracoes();
+}
+
+// Validar NUIT
+function validarNUIT(nuit) {
+  const $validation = $('#nuitValidation');
+  
+  if (!nuit) {
+    $validation.html('');
+    nuitValido = tipoCliente === 'particular';
+    return;
+  }
+  
+  // Remover espaços e caracteres especiais
+  nuit = nuit.replace(/\D/g, '');
+  
+  if (nuit.length !== 9) {
+    $validation.html('<i class="fas fa-times"></i> NUIT deve ter 9 dígitos').addClass('nuit-invalid').removeClass('nuit-valid');
+    nuitValido = false;
+    return;
+  }
+  
+  // Validação do algoritmo de NUIT
+  if (validarAlgoritmoNUIT(nuit)) {
+    $validation.html('<i class="fas fa-check"></i> NUIT válido').addClass('nuit-valid').removeClass('nuit-invalid');
+    nuitValido = true;
+    
+    // Verificar se já existe (excluindo o cliente actual)
+    verificarNUITExistente(nuit);
+  } else {
+    $validation.html('<i class="fas fa-times"></i> NUIT inválido').addClass('nuit-invalid').removeClass('nuit-valid');
+    nuitValido = false;
+  }
+}
+
+// Algoritmo de validação de NUIT
+function validarAlgoritmoNUIT(nuit) {
+  const digits = nuit.split('').map(Number);
+  const checkDigit = digits[8];
+  
+  let sum = 0;
+  for (let i = 0; i < 8; i++) {
+    sum += digits[i] * (9 - i);
+  }
+  
+  const remainder = sum % 11;
+  const expectedCheckDigit = remainder < 2 ? remainder : 11 - remainder;
+  
+  return checkDigit === expectedCheckDigit;
+}
+
+// Verificar se NUIT já existe
+function verificarNUITExistente(nuit) {
+  const clienteId = $('#clienteId').val();
+  
+  $.ajax({
+    url: '/api/pessoas/clientes/verificar-nuit',
+    type: 'GET',
+    data: { nuit: nuit, excluir_id: clienteId },
+    success: function(response) {
+      if (response.existe) {
+        $('#nuitValidation').html('<i class="fas fa-exclamation-triangle"></i> NUIT já cadastrado em outro cliente').addClass('nuit-invalid').removeClass('nuit-valid');
+        nuitValido = false;
+      }
+    }
+  });
+}
+
+// Validar formulário
+function validarFormulario() {
+  let valido = true;
+  
+  // Validar campos obrigatórios
+  const camposObrigatorios = ['nome', 'telefone'];
+  
+  if (tipoCliente === 'empresa') {
+    camposObrigatorios.push('nuit');
+  }
+  
+  camposObrigatorios.forEach(function(campo) {
+    const $campo = $('#' + campo);
+    if (!$campo.val().trim()) {
+      $campo.addClass('is-invalid');
+      valido = false;
+    } else {
+      $campo.removeClass('is-invalid');
+    }
+  });
+  
+  // Validar NUIT se preenchido
+  if ($('#nuit').val() && !nuitValido) {
+    $('#nuit').addClass('is-invalid');
+    valido = false;
+  } else {
+    $('#nuit').removeClass('is-invalid');
+  }
+  
+  // Validar email se preenchido
+  const email = $('#email').val();
+  if (email && !validarEmail(email)) {
+    $('#email').addClass('is-invalid');
+    valido = false;
+  } else {
+    $('#email').removeClass('is-invalid');
+  }
+  
+  return valido;
+}
+
+// Validar email
+function validarEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+// Actualizar cliente
+function actualizarCliente() {
+  const dadosCliente = {
+    id: $('#clienteId').val(),
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val() || 0,
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val() || 0,
+    desconto_padrao: $('#desconto_padrao').val() || 0,
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  };
+  
+  $.ajax({
+    url: '/pessoas/clientes/' + dadosCliente.id,
+    type: 'PUT',
+    data: dadosCliente,
+    success: function(response) {
+      if (response.success) {
+        alert('Cliente actualizado com sucesso!');
+        
+        // Actualizar dados originais
+        salvarDadosOriginais();
+        detectarAlteracoes();
+        
+        // Redirecionar para visualização
+        window.location.href = '/pessoas/clientes/' + dadosCliente.id;
+      } else {
+        alert('Erro ao actualizar cliente: ' + response.message);
+      }
+    },
+    error: function() {
+      alert('Erro ao actualizar cliente.');
+    }
+  });
+}
+
+// Salvar rascunho
+function salvarRascunho() {
+  const dadosRascunho = {
+    id: $('#clienteId').val(),
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val(),
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val(),
+    desconto_padrao: $('#desconto_padrao').val(),
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  };
+  
+  localStorage.setItem('rascunho_cliente_edit_' + dadosRascunho.id, JSON.stringify(dadosRascunho));
+  alert('Rascunho salvo com sucesso!');
+}
+
+// Resetar formulário
+function resetarFormulario() {
+  if (confirm('Deseja resetar todos os campos para os valores originais?')) {
+    // Restaurar dados originais
+    Object.keys(dadosOriginais).forEach(function(campo) {
+      const $campo = $('#' + campo);
+      if ($campo.length) {
+        if ($campo.attr('type') === 'checkbox') {
+          $campo.prop('checked', dadosOriginais[campo]);
+        } else {
+          $campo.val(dadosOriginais[campo]);
+        }
+      }
+    });
+    
+    // Actualizar tipo
+    if (dadosOriginais.tipo) {
+      selecionarTipo(dadosOriginais.tipo);
+    }
+    
+    // Limpar validações
+    $('.is-invalid').removeClass('is-invalid');
+    $('#nuitValidation').html('');
+    
+    // Actualizar nome no header
+    $('#clienteNomeHeader').text(dadosOriginais.nome);
+    
+    detectarAlteracoes();
+  }
+}
+
+// Confirmar exclusão
+function confirmarExclusao() {
+  const nomeCliente = $('#nome').val();
+  const clienteId = $('#clienteId').val();
+  
+  if (confirm(`Tem certeza que deseja excluir o cliente "${nomeCliente}"?\n\nEsta acção não pode ser desfeita.`)) {
+    if (confirm('ATENÇÃO: Todos os dados relacionados (vendas, histórico, etc.) serão mantidos, mas o cliente ficará inactivo.\n\nConfirma a exclusão?')) {
+      excluirCliente(clienteId);
+    }
+  }
+}
+
+// Excluir cliente
+function excluirCliente(clienteId) {
+  $.ajax({
+    url: '/pessoas/clientes/' + clienteId,
+    type: 'DELETE',
+    success: function(response) {
+      if (response.success) {
+        alert('Cliente excluído com sucesso!');
+        window.location.href = '/pessoas/clientes';
+      } else {
+        alert('Erro ao excluir cliente: ' + response.message);
+      }
+    },
+    error: function() {
+      alert('Erro ao excluir cliente.');
+    }
+  });
+}
+
+// Verificar se há rascunho ao carregar a página
+$(document).ready(function() {
+  const clienteId = $('#clienteId').val();
+  const rascunho = localStorage.getItem('rascunho_cliente_edit_' + clienteId);
+  
+  if (rascunho) {
+    if (confirm('Foi encontrado um rascunho salvo para este cliente. Deseja carregá-lo?')) {
+      const dados = JSON.parse(rascunho);
+      
+      Object.keys(dados).forEach(function(campo) {
+        if (campo !== 'id') { // Não alterar o ID
+          const $campo = $('#' + campo);
+          if ($campo.length) {
+            if ($campo.attr('type') === 'checkbox') {
+              $campo.prop('checked', dados[campo]);
+            } else {
+              $campo.val(dados[campo]);
+            }
+          }
+        }
+      });
+      
+      // Actualizar tipo
+      if (dados.tipo) {
+        selecionarTipo(dados.tipo);
+      }
+      
+      // Actualizar nome no header
+      $('#clienteNomeHeader').text(dados.nome);
+      
+      detectarAlteracoes();
+    } else {
+      localStorage.removeItem('rascunho_cliente_edit_' + clienteId);
+    }
+  }
+});
+
+// Aviso antes de sair da página com alterações
+window.addEventListener('beforeunload', function(e) {
+  const temAlteracoes = JSON.stringify(dadosOriginais) !== JSON.stringify({
+    tipo: $('#tipo').val(),
+    nome: $('#nome').val(),
+    codigo: $('#codigo').val(),
+    nuit: $('#nuit').val(),
+    telefone: $('#telefone').val(),
+    email: $('#email').val(),
+    alvara: $('#alvara').val(),
+    endereco: $('#endereco').val(),
+    cidade: $('#cidade').val(),
+    provincia: $('#provincia').val(),
+    limite_credito: $('#limite_credito').val(),
+    condicoes_pagamento: $('#condicoes_pagamento').val(),
+    prazo_pagamento: $('#prazo_pagamento').val(),
+    desconto_padrao: $('#desconto_padrao').val(),
+    observacoes: $('#observacoes').val(),
+    regime_tributario: $('#regime_tributario').val(),
+    status: $('#status').val(),
+    cliente_preferencial: $('#cliente_preferencial').is(':checked'),
+    aceita_marketing: $('#aceita_marketing').is(':checked'),
+    data_nascimento: $('#data_nascimento').val(),
+    profissao: $('#profissao').val(),
+    referencia: $('#referencia').val(),
+    vendedor_responsavel: $('#vendedor_responsavel').val()
+  });
+  
+  if (temAlteracoes) {
+    e.preventDefault();
+    e.returnValue = 'Tem alterações não salvas. Deseja realmente sair?';
+  }
+});
+</script>
+</script>

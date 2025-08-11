@@ -1,0 +1,1111 @@
+<%- contentFor('title') %>
+Configurações - Importação/Exportação - SYNTRA ERP
+<% end %>
+
+<%- contentFor('styles') %>
+<style>
+  .config-section {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .section-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+  }
+  .config-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+  .config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .config-title {
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+  }
+  .config-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+  .template-field {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  .field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .field-name {
+    font-weight: 600;
+    color: #495057;
+  }
+  .field-type {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background-color: #e9ecef;
+    color: #495057;
+  }
+  .field-required {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  .field-optional {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  .validation-rule {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+  }
+  .rule-type {
+    font-weight: 600;
+    color: #856404;
+    margin-bottom: 5px;
+  }
+  .rule-description {
+    color: #856404;
+  }
+  .format-option {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .format-option:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+  }
+  .format-option.active {
+    border-color: #007bff;
+    background-color: #e3f2fd;
+  }
+  .format-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .format-name {
+    font-weight: 600;
+    color: #495057;
+  }
+  .format-extension {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background-color: #e9ecef;
+    color: #495057;
+  }
+  .format-settings {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+  }
+  .notification-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  .notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .notification-title {
+    font-weight: 600;
+    color: #495057;
+  }
+  .notification-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  .security-setting {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .security-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .security-icon {
+    font-size: 1.2rem;
+    margin-right: 10px;
+    color: #dc3545;
+  }
+  .security-title {
+    font-weight: 600;
+    color: #495057;
+  }
+  .security-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  .backup-item {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  .backup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .backup-name {
+    font-weight: 600;
+    color: #495057;
+  }
+  .backup-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .backup-details {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .log-entry {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+  }
+  .log-timestamp {
+    color: #6c757d;
+    margin-right: 10px;
+  }
+  .log-level {
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  .log-info { border-left-color: #17a2b8; }
+  .log-warning { border-left-color: #ffc107; }
+  .log-error { border-left-color: #dc3545; }
+  .log-success { border-left-color: #28a745; }
+</style>
+<% end %>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Configurações - Importação/Exportação</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas">Pessoas</a></li>
+          <li class="breadcrumb-item"><a href="/pessoas/importacao">Importação/Exportação</a></li>
+          <li class="breadcrumb-item active">Configurações</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <button type="button" class="btn btn-success me-2" onclick="salvarConfiguracoes()">
+        <i class="fas fa-save"></i> Salvar Configurações
+      </button>
+      <button type="button" class="btn btn-outline-secondary" onclick="restaurarPadrao()">
+        <i class="fas fa-undo"></i> Restaurar Padrão
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Coluna Principal -->
+    <div class="col-lg-8">
+      <!-- Templates de Importação -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-file-import"></i> Templates de Importação
+        </h5>
+        
+        <!-- Template Fornecedores -->
+        <div class="config-item">
+          <div class="config-header">
+            <h6 class="config-title">
+              <i class="fas fa-truck"></i> Template Fornecedores
+            </h6>
+            <div>
+              <button type="button" class="btn btn-outline-primary btn-sm me-2" onclick="editarTemplate('fornecedores')">
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <button type="button" class="btn btn-outline-success btn-sm" onclick="baixarTemplate('fornecedores')">
+                <i class="fas fa-download"></i> Baixar
+              </button>
+            </div>
+          </div>
+          <div class="config-description">
+            Define os campos obrigatórios e opcionais para importação de fornecedores
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <h6><i class="fas fa-asterisk text-danger"></i> Campos Obrigatórios</h6>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Nome/Razão Social</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna A - Texto até 255 caracteres</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">NUIT</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna B - 9 dígitos numéricos</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Telefone</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna C - 9 dígitos (formato: 8XXXXXXXX)</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Email</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna D - Formato de email válido</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-circle text-info"></i> Campos Opcionais</h6>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Endereço</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna E - Endereço completo</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Pessoa de Contacto</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna F - Nome da pessoa de contacto</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Condições de Pagamento</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna G - Texto livre</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Número de Alvará</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna H - Número do alvará</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Template Clientes -->
+        <div class="config-item">
+          <div class="config-header">
+            <h6 class="config-title">
+              <i class="fas fa-users"></i> Template Clientes
+            </h6>
+            <div>
+              <button type="button" class="btn btn-outline-primary btn-sm me-2" onclick="editarTemplate('clientes')">
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <button type="button" class="btn btn-outline-success btn-sm" onclick="baixarTemplate('clientes')">
+                <i class="fas fa-download"></i> Baixar
+              </button>
+            </div>
+          </div>
+          <div class="config-description">
+            Define os campos obrigatórios e opcionais para importação de clientes
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <h6><i class="fas fa-asterisk text-danger"></i> Campos Obrigatórios</h6>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Nome/Razão Social</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna A - Texto até 255 caracteres</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Telefone</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna B - 9 dígitos (formato: 8XXXXXXXX)</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-circle text-info"></i> Campos Opcionais</h6>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">NUIT</span>
+                  <span class="field-type field-optional">Opcional*</span>
+                </div>
+                <small class="text-muted">Coluna C - 9 dígitos (obrigatório para empresas)</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Email</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna D - Formato de email válido</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Limite de Crédito</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna E - Valor numérico</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Template Utilizadores -->
+        <div class="config-item">
+          <div class="config-header">
+            <h6 class="config-title">
+              <i class="fas fa-user-tie"></i> Template Utilizadores
+            </h6>
+            <div>
+              <button type="button" class="btn btn-outline-primary btn-sm me-2" onclick="editarTemplate('utilizadores')">
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <button type="button" class="btn btn-outline-success btn-sm" onclick="baixarTemplate('utilizadores')">
+                <i class="fas fa-download"></i> Baixar
+              </button>
+            </div>
+          </div>
+          <div class="config-description">
+            Define os campos obrigatórios e opcionais para importação de utilizadores
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <h6><i class="fas fa-asterisk text-danger"></i> Campos Obrigatórios</h6>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Nome Completo</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna A - Nome completo do utilizador</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Email</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna B - Email único no sistema</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Perfil</span>
+                  <span class="field-type field-required">Obrigatório</span>
+                </div>
+                <small class="text-muted">Coluna C - Admin, Manager, Vendedor, etc.</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-circle text-info"></i> Campos Opcionais</h6>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Telefone</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna D - Número de telefone</small>
+              </div>
+              <div class="template-field">
+                <div class="field-header">
+                  <span class="field-name">Lojas Acessíveis</span>
+                  <span class="field-type field-optional">Opcional</span>
+                </div>
+                <small class="text-muted">Coluna E - IDs das lojas separados por vírgula</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Regras de Validação -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-shield-alt"></i> Regras de Validação
+        </h5>
+        
+        <div class="config-item">
+          <div class="config-header">
+            <h6 class="config-title">Validação de NUIT</h6>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="validacaoNuit" checked>
+              <label class="form-check-label" for="validacaoNuit">Ativo</label>
+            </div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Formato:</div>
+            <div class="rule-description">Deve conter exatamente 9 dígitos numéricos</div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Unicidade:</div>
+            <div class="rule-description">Não pode existir outro registo com o mesmo NUIT</div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Algoritmo de Verificação:</div>
+            <div class="rule-description">Validação matemática do dígito de controlo</div>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-header">
+            <h6 class="config-title">Validação de Email</h6>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="validacaoEmail" checked>
+              <label class="form-check-label" for="validacaoEmail">Ativo</label>
+            </div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Formato:</div>
+            <div class="rule-description">Deve seguir o padrão RFC 5322 para endereços de email</div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Unicidade:</div>
+            <div class="rule-description">Não pode existir outro registo com o mesmo email</div>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-header">
+            <h6 class="config-title">Validação de Telefone</h6>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="validacaoTelefone" checked>
+              <label class="form-check-label" for="validacaoTelefone">Ativo</label>
+            </div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Formato Moçambique:</div>
+            <div class="rule-description">Deve começar com 8 seguido de 8 dígitos (8XXXXXXXX)</div>
+          </div>
+          <div class="validation-rule">
+            <div class="rule-type">Operadoras Válidas:</div>
+            <div class="rule-description">82, 83, 84, 85, 86, 87 (Vodacom, Tmcel, Movitel)</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Formatos de Exportação -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-file-export"></i> Formatos de Exportação
+        </h5>
+        
+        <div class="format-option active" onclick="toggleFormatoExportacao('excel')">
+          <div class="format-header">
+            <div>
+              <span class="format-name">
+                <i class="fas fa-file-excel text-success"></i> Microsoft Excel
+              </span>
+            </div>
+            <div>
+              <span class="format-extension">.xlsx</span>
+              <div class="form-check form-switch ms-2">
+                <input class="form-check-input" type="checkbox" id="formatoExcel" checked>
+              </div>
+            </div>
+          </div>
+          <div class="format-settings">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="excelCabecalho" class="form-label">Incluir cabeçalho:</label>
+                <select class="form-select" id="excelCabecalho">
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="excelFormatacao" class="form-label">Formatação:</label>
+                <select class="form-select" id="excelFormatacao">
+                  <option value="basica">Básica</option>
+                  <option value="avancada">Avançada</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="format-option active" onclick="toggleFormatoExportacao('csv')">
+          <div class="format-header">
+            <div>
+              <span class="format-name">
+                <i class="fas fa-file-csv text-info"></i> CSV (Comma Separated Values)
+              </span>
+            </div>
+            <div>
+              <span class="format-extension">.csv</span>
+              <div class="form-check form-switch ms-2">
+                <input class="form-check-input" type="checkbox" id="formatoCsv" checked>
+              </div>
+            </div>
+          </div>
+          <div class="format-settings">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="csvSeparador" class="form-label">Separador:</label>
+                <select class="form-select" id="csvSeparador">
+                  <option value="virgula">Vírgula (,)</option>
+                  <option value="pontovirgula">Ponto e vírgula (;)</option>
+                  <option value="tab">Tab</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="csvCodificacao" class="form-label">Codificação:</label>
+                <select class="form-select" id="csvCodificacao">
+                  <option value="utf8">UTF-8</option>
+                  <option value="iso">ISO-8859-1</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="format-option active" onclick="toggleFormatoExportacao('pdf')">
+          <div class="format-header">
+            <div>
+              <span class="format-name">
+                <i class="fas fa-file-pdf text-danger"></i> PDF (Portable Document Format)
+              </span>
+            </div>
+            <div>
+              <span class="format-extension">.pdf</span>
+              <div class="form-check form-switch ms-2">
+                <input class="form-check-input" type="checkbox" id="formatoPdf" checked>
+              </div>
+            </div>
+          </div>
+          <div class="format-settings">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="pdfOrientacao" class="form-label">Orientação:</label>
+                <select class="form-select" id="pdfOrientacao">
+                  <option value="retrato">Retrato</option>
+                  <option value="paisagem">Paisagem</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="pdfTamanho" class="form-label">Tamanho:</label>
+                <select class="form-select" id="pdfTamanho">
+                  <option value="a4">A4</option>
+                  <option value="a3">A3</option>
+                  <option value="letter">Letter</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Coluna Lateral -->
+    <div class="col-lg-4">
+      <!-- Notificações -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-bell"></i> Notificações
+        </h5>
+        
+        <div class="notification-item">
+          <div class="notification-header">
+            <span class="notification-title">Importação Concluída</span>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="notifImportacao" checked>
+            </div>
+          </div>
+          <div class="notification-description">
+            Notificar quando uma importação for concluída com sucesso
+          </div>
+        </div>
+        
+        <div class="notification-item">
+          <div class="notification-header">
+            <span class="notification-title">Erros de Validação</span>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="notifErros" checked>
+            </div>
+          </div>
+          <div class="notification-description">
+            Notificar quando houver erros durante a importação
+          </div>
+        </div>
+        
+        <div class="notification-item">
+          <div class="notification-header">
+            <span class="notification-title">Exportação Pronta</span>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="notifExportacao" checked>
+            </div>
+          </div>
+          <div class="notification-description">
+            Notificar quando uma exportação estiver pronta para download
+          </div>
+        </div>
+        
+        <div class="notification-item">
+          <div class="notification-header">
+            <span class="notification-title">Relatório Semanal</span>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="notifRelatorio">
+            </div>
+          </div>
+          <div class="notification-description">
+            Enviar relatório semanal de importações e exportações
+          </div>
+        </div>
+      </div>
+      
+      <!-- Segurança -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-shield-alt"></i> Segurança
+        </h5>
+        
+        <div class="security-setting">
+          <div class="security-header">
+            <i class="fas fa-file-upload security-icon"></i>
+            <span class="security-title">Tamanho Máximo de Arquivo</span>
+          </div>
+          <div class="security-description">
+            Limite máximo para arquivos de importação
+          </div>
+          <div class="input-group">
+            <input type="number" class="form-control" value="10" min="1" max="100">
+            <span class="input-group-text">MB</span>
+          </div>
+        </div>
+        
+        <div class="security-setting">
+          <div class="security-header">
+            <i class="fas fa-clock security-icon"></i>
+            <span class="security-title">Timeout de Processamento</span>
+          </div>
+          <div class="security-description">
+            Tempo limite para processamento de importações
+          </div>
+          <div class="input-group">
+            <input type="number" class="form-control" value="30" min="5" max="300">
+            <span class="input-group-text">minutos</span>
+          </div>
+        </div>
+        
+        <div class="security-setting">
+          <div class="security-header">
+            <i class="fas fa-users security-icon"></i>
+            <span class="security-title">Permissões de Acesso</span>
+          </div>
+          <div class="security-description">
+            Controlar quem pode importar/exportar dados
+          </div>
+          <select class="form-select">
+            <option value="admin">Apenas Administradores</option>
+            <option value="manager">Administradores e Gestores</option>
+            <option value="all">Todos os utilizadores autorizados</option>
+          </select>
+        </div>
+        
+        <div class="security-setting">
+          <div class="security-header">
+            <i class="fas fa-history security-icon"></i>
+            <span class="security-title">Retenção de Logs</span>
+          </div>
+          <div class="security-description">
+            Tempo de retenção dos logs de importação/exportação
+          </div>
+          <select class="form-select">
+            <option value="30">30 dias</option>
+            <option value="90" selected>90 dias</option>
+            <option value="180">180 dias</option>
+            <option value="365">1 ano</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Backup e Restauração -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-database"></i> Backup e Restauração
+        </h5>
+        
+        <div class="mb-3">
+          <button type="button" class="btn btn-outline-primary w-100 mb-2" onclick="criarBackup()">
+            <i class="fas fa-save"></i> Criar Backup das Configurações
+          </button>
+          <button type="button" class="btn btn-outline-warning w-100" onclick="restaurarBackup()">
+            <i class="fas fa-upload"></i> Restaurar Backup
+          </button>
+        </div>
+        
+        <h6>Backups Disponíveis:</h6>
+        <div class="backup-item">
+          <div class="backup-header">
+            <span class="backup-name">Backup_20241216_143000</span>
+            <span class="backup-date">16/12/2024 14:30</span>
+          </div>
+          <div class="backup-details">
+            Configurações completas - 2.3 KB
+            <button class="btn btn-outline-success btn-sm ms-2" onclick="restaurarBackupEspecifico('20241216_143000')">
+              <i class="fas fa-undo"></i> Restaurar
+            </button>
+          </div>
+        </div>
+        
+        <div class="backup-item">
+          <div class="backup-header">
+            <span class="backup-name">Backup_20241215_090000</span>
+            <span class="backup-date">15/12/2024 09:00</span>
+          </div>
+          <div class="backup-details">
+            Configurações completas - 2.1 KB
+            <button class="btn btn-outline-success btn-sm ms-2" onclick="restaurarBackupEspecifico('20241215_090000')">
+              <i class="fas fa-undo"></i> Restaurar
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Logs do Sistema -->
+      <div class="config-section">
+        <h5 class="section-title">
+          <i class="fas fa-list-alt"></i> Logs Recentes
+        </h5>
+        
+        <div class="log-entry log-success">
+          <span class="log-timestamp">16/12 14:30:15</span>
+          <span class="log-level">INFO</span>
+          Configurações salvas com sucesso
+        </div>
+        
+        <div class="log-entry log-info">
+          <span class="log-timestamp">16/12 10:15:32</span>
+          <span class="log-level">INFO</span>
+          Template de fornecedores baixado
+        </div>
+        
+        <div class="log-entry log-warning">
+          <span class="log-timestamp">15/12 16:45:21</span>
+          <span class="log-level">WARN</span>
+          Tentativa de upload de arquivo muito grande
+        </div>
+        
+        <div class="log-entry log-error">
+          <span class="log-timestamp">15/12 14:20:08</span>
+          <span class="log-level">ERROR</span>
+          Falha na validação de NUIT
+        </div>
+        
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="verLogsCompletos()">
+            <i class="fas fa-list"></i> Ver logs completos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+// Inicialização
+$(document).ready(function() {
+  carregarConfiguracoes();
+});
+
+// Carregar configurações
+function carregarConfiguracoes() {
+  // Simular carregamento das configurações do servidor
+  console.log('Configurações carregadas');
+}
+
+// Salvar configurações
+function salvarConfiguracoes() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Salvando...').prop('disabled', true);
+  
+  // Coletar todas as configurações
+  const configuracoes = {
+    validacao: {
+      nuit: $('#validacaoNuit').is(':checked'),
+      email: $('#validacaoEmail').is(':checked'),
+      telefone: $('#validacaoTelefone').is(':checked')
+    },
+    formatos: {
+      excel: {
+        ativo: $('#formatoExcel').is(':checked'),
+        cabecalho: $('#excelCabecalho').val(),
+        formatacao: $('#excelFormatacao').val()
+      },
+      csv: {
+        ativo: $('#formatoCsv').is(':checked'),
+        separador: $('#csvSeparador').val(),
+        codificacao: $('#csvCodificacao').val()
+      },
+      pdf: {
+        ativo: $('#formatoPdf').is(':checked'),
+        orientacao: $('#pdfOrientacao').val(),
+        tamanho: $('#pdfTamanho').val()
+      }
+    },
+    notificacoes: {
+      importacao: $('#notifImportacao').is(':checked'),
+      erros: $('#notifErros').is(':checked'),
+      exportacao: $('#notifExportacao').is(':checked'),
+      relatorio: $('#notifRelatorio').is(':checked')
+    }
+  };
+  
+  setTimeout(function() {
+    btn.html(originalText).prop('disabled', false);
+    mostrarNotificacao('Configurações salvas com sucesso!', 'success');
+    
+    // Adicionar entrada no log
+    adicionarLogEntry('INFO', 'Configurações salvas com sucesso');
+  }, 2000);
+}
+
+// Restaurar configurações padrão
+function restaurarPadrao() {
+  if (!confirm('Tem certeza que deseja restaurar as configurações padrão? Todas as alterações serão perdidas.')) {
+    return;
+  }
+  
+  // Restaurar valores padrão
+  $('#validacaoNuit').prop('checked', true);
+  $('#validacaoEmail').prop('checked', true);
+  $('#validacaoTelefone').prop('checked', true);
+  
+  $('#formatoExcel').prop('checked', true);
+  $('#formatoCsv').prop('checked', true);
+  $('#formatoPdf').prop('checked', true);
+  
+  $('#excelCabecalho').val('sim');
+  $('#excelFormatacao').val('basica');
+  $('#csvSeparador').val('virgula');
+  $('#csvCodificacao').val('utf8');
+  $('#pdfOrientacao').val('retrato');
+  $('#pdfTamanho').val('a4');
+  
+  $('#notifImportacao').prop('checked', true);
+  $('#notifErros').prop('checked', true);
+  $('#notifExportacao').prop('checked', true);
+  $('#notifRelatorio').prop('checked', false);
+  
+  mostrarNotificacao('Configurações restauradas para os valores padrão', 'info');
+  adicionarLogEntry('INFO', 'Configurações restauradas para padrão');
+}
+
+// Editar template
+function editarTemplate(tipo) {
+  alert(`Editor de template para ${tipo} (funcionalidade em desenvolvimento)`);
+}
+
+// Baixar template
+function baixarTemplate(tipo) {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Baixando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    // Simular download
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = `template_${tipo}.xlsx`;
+    link.click();
+    
+    btn.html(originalText).prop('disabled', false);
+    mostrarNotificacao(`Template de ${tipo} baixado com sucesso!`, 'success');
+    adicionarLogEntry('INFO', `Template de ${tipo} baixado`);
+  }, 1500);
+}
+
+// Toggle formato de exportação
+function toggleFormatoExportacao(formato) {
+  const checkbox = $(`#formato${formato.charAt(0).toUpperCase() + formato.slice(1)}`);
+  checkbox.prop('checked', !checkbox.is(':checked'));
+  
+  const formatOption = $(`.format-option[onclick*="${formato}"]`);
+  if (checkbox.is(':checked')) {
+    formatOption.addClass('active');
+  } else {
+    formatOption.removeClass('active');
+  }
+}
+
+// Criar backup
+function criarBackup() {
+  const btn = $(event.target);
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i> Criando...').prop('disabled', true);
+  
+  setTimeout(function() {
+    btn.html(originalText).prop('disabled', false);
+    mostrarNotificacao('Backup criado com sucesso!', 'success');
+    adicionarLogEntry('INFO', 'Backup das configurações criado');
+    
+    // Adicionar novo backup à lista (simulação)
+    const agora = new Date();
+    const timestamp = agora.toISOString().replace(/[:.]/g, '').split('T');
+    const dataFormatada = agora.toLocaleDateString('pt-PT') + ' ' + agora.toLocaleTimeString('pt-PT');
+    
+    const novoBackup = `
+      <div class="backup-item">
+        <div class="backup-header">
+          <span class="backup-name">Backup_${timestamp[0]}_${timestamp[1].substring(0,6)}</span>
+          <span class="backup-date">${dataFormatada}</span>
+        </div>
+        <div class="backup-details">
+          Configurações completas - 2.4 KB
+          <button class="btn btn-outline-success btn-sm ms-2" onclick="restaurarBackupEspecifico('${timestamp[0]}_${timestamp[1].substring(0,6)}')">
+            <i class="fas fa-undo"></i> Restaurar
+          </button>
+        </div>
+      </div>
+    `;
+    
+    $('.backup-item:first').before(novoBackup);
+  }, 2000);
+}
+
+// Restaurar backup
+function restaurarBackup() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json,.bak';
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      mostrarNotificacao(`Restaurando backup: ${file.name}`, 'info');
+      
+      setTimeout(function() {
+        mostrarNotificacao('Backup restaurado com sucesso!', 'success');
+        adicionarLogEntry('INFO', `Backup restaurado: ${file.name}`);
+      }, 2000);
+    }
+  };
+  input.click();
+}
+
+// Restaurar backup específico
+function restaurarBackupEspecifico(id) {
+  if (!confirm(`Tem certeza que deseja restaurar o backup ${id}? As configurações atuais serão substituídas.`)) {
+    return;
+  }
+  
+  const btn = $(event.target);
+  const originalText = btn.html();
+  
+  btn.html('<i class="fas fa-spinner fa-spin"></i>').prop('disabled', true);
+  
+  setTimeout(function() {
+    btn.html(originalText).prop('disabled', false);
+    mostrarNotificacao(`Backup ${id} restaurado com sucesso!`, 'success');
+    adicionarLogEntry('INFO', `Backup ${id} restaurado`);
+  }, 2000);
+}
+
+// Ver logs completos
+function verLogsCompletos() {
+  alert('Visualizador de logs completos (funcionalidade em desenvolvimento)');
+}
+
+// Adicionar entrada no log
+function adicionarLogEntry(nivel, mensagem) {
+  const agora = new Date();
+  const timestamp = agora.toLocaleDateString('pt-PT').substring(0,5) + ' ' + 
+                   agora.toLocaleTimeString('pt-PT');
+  
+  const classeNivel = {
+    'INFO': 'log-info',
+    'WARN': 'log-warning',
+    'ERROR': 'log-error',
+    'SUCCESS': 'log-success'
+  }[nivel] || 'log-info';
+  
+  const novaEntrada = `
+    <div class="log-entry ${classeNivel}">
+      <span class="log-timestamp">${timestamp}</span>
+      <span class="log-level">${nivel}</span>
+      ${mensagem}
+    </div>
+  `;
+  
+  $('.log-entry:first').before(novaEntrada);
+  
+  // Manter apenas as últimas 10 entradas
+  const logs = $('.log-entry');
+  if (logs.length > 10) {
+    logs.slice(10).remove();
+  }
+}
+
+// Mostrar notificação
+function mostrarNotificacao(mensagem, tipo = 'info') {
+  const notificacao = $(`
+    <div class="alert alert-${tipo} alert-dismissible fade show position-fixed" 
+         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+      ${mensagem}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `);
+  
+  $('body').append(notificacao);
+  
+  setTimeout(function() {
+    notificacao.alert('close');
+  }, 5000);
+}
+</script>
+<% end %>

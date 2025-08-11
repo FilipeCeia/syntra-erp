@@ -1,0 +1,320 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-truck"></i> Guias de Remessa
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/estoque/guias/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Guia
+      </a>
+      <button class="btn btn-info btn-sm" onclick="exportarGuias()">
+        <i class="fas fa-file-excel"></i> Exportar
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-filter"></i> Filtros
+      </h6>
+    </div>
+    <div class="card-body">
+      <form class="row g-3">
+        <div class="col-md-3">
+          <label for="filtroNumero" class="form-label">Número da Guia</label>
+          <input type="text" class="form-control" id="filtroNumero" placeholder="Ex: GR-2024-001">
+        </div>
+        <div class="col-md-3">
+          <label for="filtroStatus" class="form-label">Status</label>
+          <select class="form-control" id="filtroStatus">
+            <option value="">Todos</option>
+            <option value="Pendente">Pendente</option>
+            <option value="Em Trânsito">Em Trânsito</option>
+            <option value="Entregue">Entregue</option>
+            <option value="Cancelada">Cancelada</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="filtroDataInicio" class="form-label">Data Início</label>
+          <input type="date" class="form-control" id="filtroDataInicio">
+        </div>
+        <div class="col-md-3">
+          <label for="filtroDataFim" class="form-label">Data Fim</label>
+          <input type="date" class="form-control" id="filtroDataFim">
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" onclick="aplicarFiltros()">
+            <i class="fas fa-search"></i> Filtrar
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="limparFiltros()">
+            <i class="fas fa-eraser"></i> Limpar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Guias Hoje
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Em Trânsito
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-truck fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Entregues
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">156</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Total do Mês
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">234</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Guias -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Lista de Guias de Remessa
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Data</th>
+              <th>Cliente/Destino</th>
+              <th>Transportadora</th>
+              <th>Status</th>
+              <th>Valor</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GR-2024-001</td>
+              <td>15/01/2024</td>
+              <td>Supermercado Central</td>
+              <td>Transportes Maputo</td>
+              <td><span class="badge badge-success">Entregue</span></td>
+              <td>45.250,00 MT</td>
+              <td>
+                <a href="/estoque/guias/1" class="btn btn-info btn-sm" title="Ver Detalhes">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="imprimirGuia(1)" title="Imprimir">
+                  <i class="fas fa-print"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>GR-2024-002</td>
+              <td>16/01/2024</td>
+              <td>Loja Matola</td>
+              <td>Transportes Rápidos</td>
+              <td><span class="badge badge-warning">Em Trânsito</span></td>
+              <td>32.180,50 MT</td>
+              <td>
+                <a href="/estoque/guias/2" class="btn btn-info btn-sm" title="Ver Detalhes">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="imprimirGuia(2)" title="Imprimir">
+                  <i class="fas fa-print"></i>
+                </button>
+                <button class="btn btn-success btn-sm" onclick="confirmarEntrega(2)" title="Confirmar Entrega">
+                  <i class="fas fa-check"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>GR-2024-003</td>
+              <td>17/01/2024</td>
+              <td>Armazém Beira</td>
+              <td>Logística Central</td>
+              <td><span class="badge badge-info">Pendente</span></td>
+              <td>78.920,00 MT</td>
+              <td>
+                <a href="/estoque/guias/3" class="btn btn-info btn-sm" title="Ver Detalhes">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="imprimirGuia(3)" title="Imprimir">
+                  <i class="fas fa-print"></i>
+                </button>
+                <button class="btn btn-warning btn-sm" onclick="iniciarTransporte(3)" title="Iniciar Transporte">
+                  <i class="fas fa-truck"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>GR-2024-004</td>
+              <td>18/01/2024</td>
+              <td>Cliente Especial Lda</td>
+              <td>Express Delivery</td>
+              <td><span class="badge badge-warning">Em Trânsito</span></td>
+              <td>156.340,75 MT</td>
+              <td>
+                <a href="/estoque/guias/4" class="btn btn-info btn-sm" title="Ver Detalhes">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="imprimirGuia(4)" title="Imprimir">
+                  <i class="fas fa-print"></i>
+                </button>
+                <button class="btn btn-success btn-sm" onclick="confirmarEntrega(4)" title="Confirmar Entrega">
+                  <i class="fas fa-check"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>GR-2024-005</td>
+              <td>19/01/2024</td>
+              <td>Loja Nampula</td>
+              <td>Norte Transportes</td>
+              <td><span class="badge badge-success">Entregue</span></td>
+              <td>89.450,25 MT</td>
+              <td>
+                <a href="/estoque/guias/5" class="btn btn-info btn-sm" title="Ver Detalhes">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="imprimirGuia(5)" title="Imprimir">
+                  <i class="fas fa-print"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('#dataTable').DataTable({
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+    },
+    "order": [[ 1, "desc" ]],
+    "pageLength": 25
+  });
+});
+
+function aplicarFiltros() {
+  // Implementar lógica de filtros
+  toastr.info('Filtros aplicados com sucesso!');
+}
+
+function limparFiltros() {
+  document.getElementById('filtroNumero').value = '';
+  document.getElementById('filtroStatus').value = '';
+  document.getElementById('filtroDataInicio').value = '';
+  document.getElementById('filtroDataFim').value = '';
+  toastr.info('Filtros limpos!');
+}
+
+function exportarGuias() {
+  toastr.success('Exportação iniciada! O arquivo será baixado em breve.');
+}
+
+function imprimirGuia(id) {
+  window.open('/estoque/guias/' + id + '/print', '_blank');
+}
+
+function confirmarEntrega(id) {
+  Swal.fire({
+    title: 'Confirmar Entrega?',
+    text: 'Esta ação marcará a guia como entregue.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sim, confirmar!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Aqui seria feita a requisição para confirmar entrega
+      Swal.fire('Confirmada!', 'A entrega foi confirmada com sucesso.', 'success');
+    }
+  });
+}
+
+function iniciarTransporte(id) {
+  Swal.fire({
+    title: 'Iniciar Transporte?',
+    text: 'Esta ação marcará a guia como em trânsito.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#007bff',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sim, iniciar!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Aqui seria feita a requisição para iniciar transporte
+      Swal.fire('Iniciado!', 'O transporte foi iniciado com sucesso.', 'success');
+    }
+  });
+}
+</script>

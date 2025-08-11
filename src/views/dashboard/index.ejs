@@ -1,0 +1,931 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+          <small class="text-muted ml-2">Visão Geral do Sistema</small>
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item active">
+            <i class="fas fa-home mr-1"></i>Dashboard
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- ===== CARDS DE ESTATÍSTICAS PRINCIPAIS ===== -->
+    <div class="row">
+      <!-- Total de Clientes -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.totalClientes) ? stats.totalClientes : 0 %></span>
+              <% if (typeof stats !== 'undefined' && stats.crescimentoClientes) { %>
+                <sup class="text-success">
+                  <i class="fas fa-arrow-up"></i> +<%= stats.crescimentoClientes %>%
+                </sup>
+              <% } %>
+            </h3>
+            <p class="mb-0">Total de Clientes</p>
+            <small class="text-light opacity-75">
+              <i class="fas fa-calendar mr-1"></i>Este mês
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="small-box-footer-overlay"></div>
+          <a href="/pessoas/clientes" class="small-box-footer d-flex align-items-center justify-content-between">
+            <span>Ver Clientes</span>
+            <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Vendas do Mês -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter">
+                <%= (typeof stats !== 'undefined' && stats.vendasMes) ? 
+                    new Intl.NumberFormat('pt-MZ', { 
+                      style: 'currency', 
+                      currency: 'MZN',
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0
+                    }).format(stats.vendasMes) : '0,00 MT' %>
+              </span>
+              <% if (typeof stats !== 'undefined' && stats.crescimentoVendas) { %>
+                <sup class="text-light">
+                  <i class="fas fa-arrow-up"></i> +<%= stats.crescimentoVendas %>%
+                </sup>
+              <% } %>
+            </h3>
+            <p class="mb-0">Vendas do Mês</p>
+            <small class="text-light opacity-75">
+              <i class="fas fa-chart-line mr-1"></i>
+              <%= (typeof stats !== 'undefined' && stats.totalFacturas) ? stats.totalFacturas : 0 %> facturas
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div class="small-box-footer-overlay"></div>
+          <a href="/vendas/facturas" class="small-box-footer d-flex align-items-center justify-content-between">
+            <span>Ver Vendas</span>
+            <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Total de Produtos -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.totalProdutos) ? stats.totalProdutos : 0 %></span>
+              <% if (typeof stats !== 'undefined' && stats.produtosAtivos) { %>
+                <sup class="text-light">
+                  <i class="fas fa-check-circle"></i> <%= stats.produtosAtivos %> ativos
+                </sup>
+              <% } %>
+            </h3>
+            <p class="mb-0">Produtos Cadastrados</p>
+            <small class="text-dark opacity-75">
+              <i class="fas fa-layer-group mr-1"></i>
+              <%= (typeof stats !== 'undefined' && stats.totalCategorias) ? stats.totalCategorias : 0 %> categorias
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div class="small-box-footer-overlay"></div>
+          <a href="/artigos/produtos" class="small-box-footer d-flex align-items-center justify-content-between">
+            <span>Ver Produtos</span>
+            <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Produtos em Falta -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.produtosEmFalta) ? stats.produtosEmFalta : 0 %></span>
+              <% if (typeof stats !== 'undefined' && stats.produtosCriticos) { %>
+                <sup class="text-light">
+                  <i class="fas fa-exclamation-triangle"></i> <%= stats.produtosCriticos %> críticos
+                </sup>
+              <% } %>
+            </h3>
+            <p class="mb-0">Produtos em Falta</p>
+            <small class="text-light opacity-75">
+              <i class="fas fa-exclamation-circle mr-1"></i>Requer atenção
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="small-box-footer-overlay"></div>
+          <a href="/estoque/resumo?filter=falta" class="small-box-footer d-flex align-items-center justify-content-between">
+            <span>Ver Estoque</span>
+            <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CARDS SECUNDÁRIOS ===== -->
+    <div class="row">
+      <!-- Fornecedores -->
+      <div class="col-lg-2 col-6">
+        <div class="info-box">
+          <span class="info-box-icon bg-purple">
+            <i class="fas fa-truck"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">Fornecedores</span>
+            <span class="info-box-number">
+              <%= (typeof stats !== 'undefined' && stats.totalFornecedores) ? stats.totalFornecedores : 0 %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compras do Mês -->
+      <div class="col-lg-2 col-6">
+        <div class="info-box">
+          <span class="info-box-icon bg-orange">
+            <i class="fas fa-shopping-cart"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">Compras Mês</span>
+            <span class="info-box-number">
+              <%= (typeof stats !== 'undefined' && stats.comprasMes) ? 
+                  new Intl.NumberFormat('pt-MZ', { 
+                    style: 'currency', 
+                    currency: 'MZN',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                    notation: 'compact'
+                  }).format(stats.comprasMes) : '0 MT' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contas a Receber -->
+      <div class="col-lg-2 col-6">
+        <div class="info-box">
+          <span class="info-box-icon bg-green">
+            <i class="fas fa-hand-holding-usd"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">A Receber</span>
+            <span class="info-box-number">
+              <%= (typeof stats !== 'undefined' && stats.contasReceber) ? 
+                  new Intl.NumberFormat('pt-MZ', { 
+                    style: 'currency', 
+                    currency: 'MZN',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                    notation: 'compact'
+                  }).format(stats.contasReceber) : '0 MT' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contas a Pagar -->
+      <div class="col-lg-2 col-6">
+        <div class="info-box">
+          <span class="info-box-icon bg-red">
+            <i class="fas fa-file-invoice-dollar"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">A Pagar</span>
+            <span class="info-box-number">
+              <%= (typeof stats !== 'undefined' && stats.contasPagar) ? 
+                  new Intl.NumberFormat('pt-MZ', { 
+                    style: 'currency', 
+                    currency: 'MZN',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                    notation: 'compact'
+                  }).format(stats.contasPagar) : '0 MT' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Utilizadores -->
+      <div class="col-lg-2 col-6">
+        <div class="info-box">
+          <span class="info-box-icon bg-blue">
+            <i class="fas fa-user-friends"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">Utilizadores</span>
+            <span class="info-box-number">
+              <%= (typeof stats !== 'undefined' && stats.totalUtilizadores) ? stats.totalUtilizadores : 1 %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lojas -->
+      <div class="col-lg-2 col-6">
+        <div class="info-box">
+          <span class="info-box-icon bg-teal">
+            <i class="fas fa-store"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">Lojas</span>
+            <span class="info-box-number">
+              <%= (typeof stats !== 'undefined' && stats.totalLojas) ? stats.totalLojas : 1 %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SEÇÃO PRINCIPAL - GRÁFICOS E DADOS ===== -->
+    <div class="row">
+      
+      <!-- ===== GRÁFICO DE VENDAS ===== -->
+      <div class="col-lg-8">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-chart-line mr-2"></i>
+              Vendas dos Últimos 12 Meses
+            </h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 300px;">
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-sm-3 col-6">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-success">
+                    <i class="fas fa-caret-up"></i> 12%
+                  </span>
+                  <h5 class="description-header">
+                    <%= (typeof stats !== 'undefined' && stats.vendasMes) ? 
+                        new Intl.NumberFormat('pt-MZ', { 
+                          style: 'currency', 
+                          currency: 'MZN',
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                          notation: 'compact'
+                        }).format(stats.vendasMes) : '0 MT' %>
+                  </h5>
+                  <span class="description-text">VENDAS ESTE MÊS</span>
+                </div>
+              </div>
+              <div class="col-sm-3 col-6">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-info">
+                    <i class="fas fa-caret-up"></i> 8%
+                  </span>
+                  <h5 class="description-header">
+                    <%= (typeof stats !== 'undefined' && stats.ticketMedio) ? 
+                        new Intl.NumberFormat('pt-MZ', { 
+                          style: 'currency', 
+                          currency: 'MZN',
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0
+                        }).format(stats.ticketMedio) : '0 MT' %>
+                  </h5>
+                  <span class="description-text">TICKET MÉDIO</span>
+                </div>
+              </div>
+              <div class="col-sm-3 col-6">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-warning">
+                    <i class="fas fa-caret-up"></i> 5%
+                  </span>
+                  <h5 class="description-header">
+                    <%= (typeof stats !== 'undefined' && stats.totalFacturas) ? stats.totalFacturas : 0 %>
+                  </h5>
+                  <span class="description-text">TOTAL FACTURAS</span>
+                </div>
+              </div>
+              <div class="col-sm-3 col-6">
+                <div class="description-block">
+                  <span class="description-percentage text-success">
+                    <i class="fas fa-caret-up"></i> 15%
+                  </span>
+                  <h5 class="description-header">
+                    <%= (typeof stats !== 'undefined' && stats.clientesAtivos) ? stats.clientesAtivos : 0 %>
+                  </h5>
+                  <span class="description-text">CLIENTES ATIVOS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== AÇÕES RÁPIDAS ===== -->
+      <div class="col-lg-4">
+        <div class="card card-success card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-bolt mr-2"></i>
+              Ações Rápidas
+            </h3>
+          </div>
+          <div class="card-body">
+            <!-- Nova Venda -->
+            <a href="/vendas/factura-recibo/nova" class="btn btn-success btn-block mb-3 btn-lg">
+              <i class="fas fa-plus-circle mr-2"></i>
+              Nova Venda
+            </a>
+            
+            <!-- Abrir POS -->
+            <a href="/pos" class="btn btn-warning btn-block mb-3 btn-lg">
+              <i class="fas fa-cash-register mr-2"></i>
+              Abrir POS
+            </a>
+            
+            <!-- Novo Cliente -->
+            <a href="/pessoas/clientes/novo" class="btn btn-primary btn-block mb-3">
+              <i class="fas fa-user-plus mr-2"></i>
+              Novo Cliente
+            </a>
+            
+            <!-- Nova Compra -->
+            <a href="/compras/mercadoria/nova" class="btn btn-info btn-block mb-3">
+              <i class="fas fa-shopping-cart mr-2"></i>
+              Nova Compra
+            </a>
+            
+            <!-- Novo Produto -->
+            <a href="/artigos/produtos/novo" class="btn btn-purple btn-block mb-3">
+              <i class="fas fa-cube mr-2"></i>
+              Novo Produto
+            </a>
+            
+            <!-- Relatórios -->
+            <a href="/relatorios" class="btn btn-secondary btn-block">
+              <i class="fas fa-chart-bar mr-2"></i>
+              Ver Relatórios
+            </a>
+          </div>
+        </div>
+
+        <!-- ===== STATUS DO SISTEMA ===== -->
+        <div class="card card-info card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-info-circle mr-2"></i>
+              Status do Sistema
+            </h3>
+          </div>
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                  <i class="fas fa-database text-success mr-2"></i>
+                  Base de Dados
+                </span>
+                <span class="badge badge-success">Online</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                  <i class="fas fa-sync text-primary mr-2"></i>
+                  Último Backup
+                </span>
+                <span class="badge badge-primary">Hoje</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                  <i class="fas fa-users text-info mr-2"></i>
+                  Utilizadores Online
+                </span>
+                <span class="badge badge-info">
+                  <%= (typeof stats !== 'undefined' && stats.utilizadoresOnline) ? stats.utilizadoresOnline : 1 %>
+                </span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                  <i class="fas fa-chart-line text-warning mr-2"></i>
+                  Performance
+                </span>
+                <span class="badge badge-warning">Boa</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SEÇÃO INFERIOR - TABELAS E LISTAS ===== -->
+    <div class="row">
+      
+      <!-- ===== CLIENTES RECENTES ===== -->
+      <div class="col-lg-6">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-users mr-2"></i>
+              Clientes Recentes
+            </h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Contacto</th>
+                    <th>Última Compra</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (typeof clientesRecentes !== 'undefined' && clientesRecentes && clientesRecentes.length > 0) { %>
+                    <% clientesRecentes.forEach(function(cliente) { %>
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center mr-2">
+                            <i class="fas fa-user text-white"></i>
+                          </div>
+                          <div>
+                            <strong><%= cliente.nome %></strong>
+                            <% if (cliente.nuit) { %>
+                              <br><small class="text-muted">NUIT: <%= cliente.nuit %></small>
+                            <% } %>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <i class="fas fa-phone text-muted mr-1"></i>
+                        <%= cliente.telefone %>
+                        <% if (cliente.email) { %>
+                          <br><i class="fas fa-envelope text-muted mr-1"></i>
+                          <small><%= cliente.email %></small>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (cliente.ultimaCompra) { %>
+                          <%= moment(cliente.ultimaCompra).format('DD/MM/YYYY') %>
+                          <br><small class="text-muted">
+                            <%= moment(cliente.ultimaCompra).fromNow() %>
+                          </small>
+                        <% } else { %>
+                          <span class="text-muted">Nunca</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <span class="badge badge-<%= cliente.status === 1 ? 'success' : 'secondary' %>">
+                          <%= cliente.status === 1 ? 'Ativo' : 'Inativo' %>
+                        </span>
+                      </td>
+                    </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="4" class="text-center py-4">
+                        <div class="empty-state">
+                          <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                          <h5 class="text-muted">Nenhum cliente encontrado</h5>
+                          <p class="text-muted">Comece cadastrando seu primeiro cliente</p>
+                          <a href="/pessoas/clientes/novo" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Adicionar Cliente
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <a href="/pessoas/clientes" class="btn btn-primary btn-sm">
+              <i class="fas fa-eye mr-2"></i>Ver Todos os Clientes
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PRODUTOS EM FALTA ===== -->
+      <div class="col-lg-6">
+        <div class="card card-danger card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              Produtos em Falta
+            </h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Estoque Atual</th>
+                    <th>Estoque Mínimo</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (typeof produtosEmFalta !== 'undefined' && produtosEmFalta && produtosEmFalta.length > 0) { %>
+                    <% produtosEmFalta.forEach(function(produto) { %>
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="avatar-sm bg-warning rounded-circle d-flex align-items-center justify-content-center mr-2">
+                            <i class="fas fa-cube text-white"></i>
+                          </div>
+                          <div>
+                            <strong><%= produto.nome %></strong>
+                            <% if (produto.codigo) { %>
+                              <br><small class="text-muted">Cód: <%= produto.codigo %></small>
+                            <% } %>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="badge badge-danger">
+                          <%= produto.estoqueAtual || 0 %>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge badge-secondary">
+                          <%= produto.estoqueMinimo || 0 %>
+                        </span>
+                      </td>
+                      <td>
+                        <a href="/compras/mercadoria/nova?produto=<%= produto.id %>" 
+                           class="btn btn-sm btn-success" title="Comprar">
+                          <i class="fas fa-shopping-cart"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="4" class="text-center py-4">
+                        <div class="empty-state">
+                          <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                          <h5 class="text-success">Parabéns!</h5>
+                          <p class="text-muted">Todos os produtos estão com estoque adequado</p>
+                        </div>
+                      </td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <a href="/estoque/resumo" class="btn btn-warning btn-sm">
+              <i class="fas fa-boxes mr-2"></i>Ver Estoque Completo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ÚLTIMAS VENDAS ===== -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-success card-outline">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-money-bill-wave mr-2"></i>
+              Últimas Vendas
+            </h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Factura</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (typeof ultimasVendas !== 'undefined' && ultimasVendas && ultimasVendas.length > 0) { %>
+                    <% ultimasVendas.forEach(function(venda) { %>
+                    <tr>
+                      <td>
+                        <strong>#<%= venda.numero || venda.id %></strong>
+                        <br><small class="text-muted">
+                          <%= venda.tipo || 'Factura' %>
+                        </small>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="avatar-sm bg-info rounded-circle d-flex align-items-center justify-content-center mr-2">
+                            <i class="fas fa-user text-white"></i>
+                          </div>
+                          <div>
+                            <%= venda.cliente_nome || 'Cliente Genérico' %>
+                            <% if (venda.cliente_nuit) { %>
+                              <br><small class="text-muted">NUIT: <%= venda.cliente_nuit %></small>
+                            <% } %>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <%= moment(venda.data_venda || venda.createdAt).format('DD/MM/YYYY HH:mm') %>
+                        <br><small class="text-muted">
+                          <%= moment(venda.data_venda || venda.createdAt).fromNow() %>
+                        </small>
+                      </td>
+                      <td>
+                        <strong class="text-success">
+                          <%= new Intl.NumberFormat('pt-MZ', { 
+                            style: 'currency', 
+                            currency: 'MZN',
+                            minimumFractionDigits: 2
+                          }).format(venda.valor_total || 0) %>
+                        </strong>
+                      </td>
+                      <td>
+                        <span class="badge badge-<%= 
+                          venda.status === 'pago' ? 'success' : 
+                          venda.status === 'pendente' ? 'warning' : 
+                          venda.status === 'cancelado' ? 'danger' : 'secondary' %>">
+                          <%= 
+                            venda.status === 'pago' ? 'Pago' : 
+                            venda.status === 'pendente' ? 'Pendente' : 
+                            venda.status === 'cancelado' ? 'Cancelado' : 'Processando' %>
+                        </span>
+                      </td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <a href="/vendas/facturas/<%= venda.id %>" 
+                             class="btn btn-sm btn-outline-primary" title="Ver">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          <a href="/vendas/facturas/<%= venda.id %>/imprimir" 
+                             class="btn btn-sm btn-outline-success" title="Imprimir" target="_blank">
+                            <i class="fas fa-print"></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="6" class="text-center py-4">
+                        <div class="empty-state">
+                          <i class="fas fa-money-bill-wave fa-3x text-muted mb-3"></i>
+                          <h5 class="text-muted">Nenhuma venda encontrada</h5>
+                          <p class="text-muted">Suas vendas aparecerão aqui</p>
+                          <a href="/vendas/factura-recibo/nova" class="btn btn-success">
+                            <i class="fas fa-plus mr-2"></i>Fazer Primeira Venda
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <a href="/vendas/facturas" class="btn btn-success btn-sm">
+              <i class="fas fa-list mr-2"></i>Ver Todas as Vendas
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ESTILOS CUSTOMIZADOS ===== -->
+<style>
+/* Cards com efeitos visuais */
+.small-box {
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.small-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.small-box-footer-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+  pointer-events: none;
+}
+
+.counter {
+  animation: countUp 2s ease-out;
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info boxes melhorados */
+.info-box {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.info-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Avatar pequeno */
+.avatar-sm {
+  width: 35px;
+  height: 35px;
+  font-size: 14px;
+}
+
+/* Cards principais */
+.card {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+/* Estados vazios */
+.empty-state {
+  padding: 40px 20px;
+}
+
+.empty-state i {
+  opacity: 0.5;
+}
+
+/* Botões customizados */
+.btn-purple {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: #59359a;
+  border-color: #59359a;
+  color: white;
+}
+
+/* Tabelas responsivas */
+.table-responsive {
+  border-radius: 10px;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Card outlines customizados */
+.card-outline.card-primary {
+  border-top: 3px solid #007bff;
+}
+
+.card-outline.card-success {
+  border-top: 3px solid #28a745;
+}
+
+.card-outline.card-danger {
+  border-top: 3px solid #dc3545;
+}
+
+.card-outline.card-info {
+  border-top: 3px solid #17a2b8;
+}
+
+/* Responsividade aprimorada */
+@media (max-width: 768px) {
+  .small-box .inner h3 {
+    font-size: 1.5rem;
+  }
+  
+  .avatar-sm {
+    display: none;
+  }
+  
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+  }
+}
+</style>
+
+<!-- ===== SCRIPTS PARA GRÁFICOS ===== -->
+<script>
+$(document).ready(function() {
+
+  
+    
+
+    // ===== ANIMAÇÃO DOS CONTADORES =====
+    $('.counter').each(function() {
+        const $this = $(this);
+        const countTo = parseInt($this.text().replace(/[^\d]/g, '')) || 0;
+        
+        $({ countNum: 0 }).animate({
+            countNum: countTo
+        }, {
+            duration: 2000,
+            easing: 'swing',
+            step: function() {
+                const num = Math.floor(this.countNum);
+                if ($this.text().includes('MT') || $this.text().includes(',')) {
+                    $this.text(new Intl.NumberFormat('pt-MZ').format(num));
+                } else {
+                    $this.text(num);
+                }
+            },
+            complete: function() {
+                if ($this.text().includes('MT')) {
+                    $this.text(new Intl.NumberFormat('pt-MZ', {
+                        style: 'currency',
+                        currency: 'MZN',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(countTo));
+                } else {
+                    $this.text(new Intl.NumberFormat('pt-MZ').format(countTo));
+                }
+            }
+        });
+    });
+
+    // ===== ATUALIZAÇÃO AUTOMÁTICA (OPCIONAL) =====
+    // Atualizar dados a cada 5 minutos
+    setInterval(function() {
+        // Aqui você pode fazer uma requisição AJAX para atualizar os dados
+        console.log('Atualizando dados do dashboard...');
+    }, 300000); // 5 minutos
+});
+</script>

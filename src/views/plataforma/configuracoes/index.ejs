@@ -1,0 +1,810 @@
+<!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Tabs de Configuração -->
+      <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+          <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="custom-tabs-four-sistema-tab" data-toggle="pill" href="#custom-tabs-four-sistema" role="tab" aria-controls="custom-tabs-four-sistema" aria-selected="true">Sistema</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-empresa-tab" data-toggle="pill" href="#custom-tabs-four-empresa" role="tab" aria-controls="custom-tabs-four-empresa" aria-selected="false">Empresa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-utilizadores-tab" data-toggle="pill" href="#custom-tabs-four-utilizadores" role="tab" aria-controls="custom-tabs-four-utilizadores" aria-selected="false">Utilizadores</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-seguranca-tab" data-toggle="pill" href="#custom-tabs-four-seguranca" role="tab" aria-controls="custom-tabs-four-seguranca" aria-selected="false">Segurança</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-notificacoes-tab" data-toggle="pill" href="#custom-tabs-four-notificacoes" role="tab" aria-controls="custom-tabs-four-notificacoes" aria-selected="false">Notificações</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-integracao-tab" data-toggle="pill" href="#custom-tabs-four-integracao" role="tab" aria-controls="custom-tabs-four-integracao" aria-selected="false">Integração</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="custom-tabs-four-tabContent">
+            <!-- Tab Sistema -->
+            <div class="tab-pane fade show active" id="custom-tabs-four-sistema" role="tabpanel" aria-labelledby="custom-tabs-four-sistema-tab">
+              <form>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card card-info">
+                      <div class="card-header">
+                        <h3 class="card-title">Configurações Gerais</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="nome_sistema">Nome do Sistema</label>
+                          <input type="text" class="form-control" id="nome_sistema" placeholder="Syntra ERP" value="Syntra ERP">
+                        </div>
+                        <div class="form-group">
+                          <label for="versao_sistema">Versão do Sistema</label>
+                          <input type="text" class="form-control" id="versao_sistema" placeholder="1.0.0" value="1.0.0" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="idioma_padrao">Idioma Padrão</label>
+                          <select class="form-control" id="idioma_padrao">
+                            <option selected>Português (Moçambique)</option>
+                            <option>Português (Portugal)</option>
+                            <option>Inglês</option>
+                            <option>Espanhol</option>
+                            <option>Francês</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="fuso_horario">Fuso Horário</label>
+                          <select class="form-control" id="fuso_horario">
+                            <option selected>Africa/Maputo (GMT+2)</option>
+                            <option>Europe/Lisbon (GMT+1)</option>
+                            <option>UTC (GMT+0)</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card card-success">
+                      <div class="card-header">
+                        <h3 class="card-title">Configurações de Sessão</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="tempo_sessao">Tempo de Sessão (minutos)</label>
+                          <input type="number" class="form-control" id="tempo_sessao" placeholder="30" value="30">
+                        </div>
+                        <div class="form-group">
+                          <label for="max_tentativas_login">Máximo de Tentativas de Login</label>
+                          <input type="number" class="form-control" id="max_tentativas_login" placeholder="5" value="5">
+                        </div>
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="login_unico" checked>
+                            <label class="custom-control-label" for="login_unico">Permitir apenas um login por utilizador</label>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="autenticacao_dois_factores">
+                            <label class="custom-control-label" for="autenticacao_dois_factores">Activar autenticação de dois factores</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card card-warning">
+                      <div class="card-header">
+                        <h3 class="card-title">Configurações de Manutenção</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="modo_manutencao">
+                            <label class="custom-control-label" for="modo_manutencao">Activar modo de manutenção</label>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="mensagem_manutencao">Mensagem de Manutenção</label>
+                          <textarea class="form-control" id="mensagem_manutencao" rows="3" placeholder="O sistema está em manutenção. Por favor, tente novamente mais tarde.">O sistema está em manutenção. Por favor, tente novamente mais tarde.</textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="horario_manutencao">Horário de Manutenção</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="horario_manutencao" placeholder="22:00 - 23:00" value="22:00 - 23:00">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card card-danger">
+                      <div class="card-header">
+                        <h3 class="card-title">Configurações de Logs</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="nivel_log">Nível de Log</label>
+                          <select class="form-control" id="nivel_log">
+                            <option>Debug</option>
+                            <option selected>Info</option>
+                            <option>Warning</option>
+                            <option>Error</option>
+                            <option>Critical</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="retencao_logs">Retenção de Logs (dias)</label>
+                          <input type="number" class="form-control" id="retencao_logs" placeholder="30" value="30">
+                        </div>
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="log_acesso" checked>
+                            <label class="custom-control-label" for="log_acesso">Registar logs de acesso</label>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="log_alteracoes" checked>
+                            <label class="custom-control-label" for="log_alteracoes">Registar logs de alterações</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary float-right">Guardar Configurações</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+            <!-- Tab Empresa -->
+            <div class="tab-pane fade" id="custom-tabs-four-empresa" role="tabpanel" aria-labelledby="custom-tabs-four-empresa-tab">
+              <form>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card card-primary">
+                      <div class="card-header">
+                        <h3 class="card-title">Informações da Empresa</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="nome_empresa">Nome da Empresa</label>
+                          <input type="text" class="form-control" id="nome_empresa" placeholder="Syntra Tecnologia, Lda">
+                        </div>
+                        <div class="form-group">
+                          <label for="nuit_empresa">NUIT</label>
+                          <input type="text" class="form-control" id="nuit_empresa" placeholder="123456789">
+                        </div>
+                        <div class="form-group">
+                          <label for="endereco_empresa">Endereço</label>
+                          <textarea class="form-control" id="endereco_empresa" rows="3" placeholder="Av. 24 de Julho, 1234, Maputo"></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="telefone_empresa">Telefone</label>
+                          <input type="text" class="form-control" id="telefone_empresa" placeholder="+258 21 123 456">
+                        </div>
+                        <div class="form-group">
+                          <label for="email_empresa">Email</label>
+                          <input type="email" class="form-control" id="email_empresa" placeholder="info@syntra.co.mz">
+                        </div>
+                        <div class="form-group">
+                          <label for="website_empresa">Website</label>
+                          <input type="text" class="form-control" id="website_empresa" placeholder="www.syntra.co.mz">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card card-info">
+                      <div class="card-header">
+                        <h3 class="card-title">Configurações Fiscais</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="regime_fiscal">Regime Fiscal</label>
+                          <select class="form-control" id="regime_fiscal">
+                            <option selected>Regime Geral</option>
+                            <option>Regime Simplificado</option>
+                            <option>Isento</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="taxa_iva_padrao">Taxa de IVA Padrão (%)</label>
+                          <input type="number" class="form-control" id="taxa_iva_padrao" placeholder="17" value="17">
+                        </div>
+                        <div class="form-group">
+                          <label for="moeda_padrao">Moeda Padrão</label>
+                          <select class="form-control" id="moeda_padrao">
+                            <option selected>MZN - Metical Moçambicano</option>
+                            <option>USD - Dólar Americano</option>
+                            <option>EUR - Euro</option>
+                            <option>ZAR - Rand Sul-Africano</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="formato_data">Formato de Data</label>
+                          <select class="form-control" id="formato_data">
+                            <option selected>DD/MM/AAAA</option>
+                            <option>MM/DD/AAAA</option>
+                            <option>AAAA-MM-DD</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="formato_numero">Formato de Número</label>
+                          <select class="form-control" id="formato_numero">
+                            <option selected>1.234,56</option>
+                            <option>1,234.56</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="certificacao_fiscal" checked>
+                            <label class="custom-control-label" for="certificacao_fiscal">Sistema com Certificação Fiscal</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card card-success">
+                      <div class="card-header">
+                        <h3 class="card-title">Logotipo da Empresa</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="exampleInputFile">Carregar Logotipo</label>
+                          <div class="input-group">
+                            <div class="custom-file">
+                              <input type="file" class="custom-file-input" id="exampleInputFile">
+                              <label class="custom-file-label" for="exampleInputFile">Escolher ficheiro</label>
+                            </div>
+                            <div class="input-group-append">
+                              <span class="input-group-text">Carregar</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="text-center">
+                          <img class="img-fluid" src="/img/logo.png" alt="Logotipo da Empresa" style="max-height: 100px;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary float-right">Guardar Configurações</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+            <!-- Tab Utilizadores -->
+            <div class="tab-pane fade" id="custom-tabs-four-utilizadores" role="tabpanel" aria-labelledby="custom-tabs-four-utilizadores-tab">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">Políticas de Senha</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="comprimento_minimo_senha">Comprimento Mínimo da Senha</label>
+                        <input type="number" class="form-control" id="comprimento_minimo_senha" placeholder="8" value="8">
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="exigir_maiusculas" checked>
+                          <label class="custom-control-label" for="exigir_maiusculas">Exigir letras maiúsculas</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="exigir_numeros" checked>
+                          <label class="custom-control-label" for="exigir_numeros">Exigir números</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="exigir_especiais" checked>
+                          <label class="custom-control-label" for="exigir_especiais">Exigir caracteres especiais</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="validade_senha">Validade da Senha (dias)</label>
+                        <input type="number" class="form-control" id="validade_senha" placeholder="90" value="90">
+                      </div>
+                      <div class="form-group">
+                        <label for="historico_senhas">Histórico de Senhas (não repetir últimas X senhas)</label>
+                        <input type="number" class="form-control" id="historico_senhas" placeholder="5" value="5">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card card-info">
+                    <div class="card-header">
+                      <h3 class="card-title">Configurações de Perfil</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="permitir_alteracao_perfil" checked>
+                          <label class="custom-control-label" for="permitir_alteracao_perfil">Permitir que utilizadores alterem informações de perfil</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="permitir_alteracao_senha" checked>
+                          <label class="custom-control-label" for="permitir_alteracao_senha">Permitir que utilizadores alterem senha</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="permitir_alteracao_foto" checked>
+                          <label class="custom-control-label" for="permitir_alteracao_foto">Permitir que utilizadores alterem foto de perfil</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="exigir_email_verificado" checked>
+                          <label class="custom-control-label" for="exigir_email_verificado">Exigir email verificado para login</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card card-warning">
+                    <div class="card-header">
+                      <h3 class="card-title">Configurações de Registo</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="permitir_auto_registo">
+                          <label class="custom-control-label" for="permitir_auto_registo">Permitir auto-registo de utilizadores</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="aprovacao_admin" checked>
+                          <label class="custom-control-label" for="aprovacao_admin">Exigir aprovação do administrador para novos utilizadores</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="perfil_padrao">Perfil Padrão para Novos Utilizadores</label>
+                        <select class="form-control" id="perfil_padrao">
+                          <option selected>Utilizador Básico</option>
+                          <option>Operador</option>
+                          <option>Gestor</option>
+                          <option>Administrador</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary float-right">Guardar Configurações</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tab Segurança -->
+            <div class="tab-pane fade" id="custom-tabs-four-seguranca" role="tabpanel" aria-labelledby="custom-tabs-four-seguranca-tab">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card card-danger">
+                    <div class="card-header">
+                      <h3 class="card-title">Configurações de Segurança</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="forcar_https" checked>
+                          <label class="custom-control-label" for="forcar_https">Forçar HTTPS</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="protecao_csrf" checked>
+                          <label class="custom-control-label" for="protecao_csrf">Protecção CSRF</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="protecao_xss" checked>
+                          <label class="custom-control-label" for="protecao_xss">Protecção XSS</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="protecao_sql_injection" checked>
+                          <label class="custom-control-label" for="protecao_sql_injection">Protecção SQL Injection</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="tempo_bloqueio">Tempo de Bloqueio após Tentativas Falhadas (minutos)</label>
+                        <input type="number" class="form-control" id="tempo_bloqueio" placeholder="30" value="30">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">Configurações de Backup</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="backup_automatico" checked>
+                          <label class="custom-control-label" for="backup_automatico">Backup Automático</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="frequencia_backup">Frequência de Backup</label>
+                        <select class="form-control" id="frequencia_backup">
+                          <option>A cada hora</option>
+                          <option>A cada 6 horas</option>
+                          <option>A cada 12 horas</option>
+                          <option selected>Diário</option>
+                          <option>Semanal</option>
+                          <option>Mensal</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="retencao_backup">Retenção de Backup (dias)</label>
+                        <input type="number" class="form-control" id="retencao_backup" placeholder="30" value="30">
+                      </div>
+                      <div class="form-group">
+                        <label for="local_backup">Local de Armazenamento</label>
+                        <select class="form-control" id="local_backup">
+                          <option selected>Local</option>
+                          <option>Google Drive</option>
+                          <option>Dropbox</option>
+                          <option>Amazon S3</option>
+                          <option>FTP</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card card-success">
+                    <div class="card-header">
+                      <h3 class="card-title">Certificados SSL</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label>Status do Certificado</label>
+                        <div class="alert alert-success">
+                          <i class="icon fas fa-check"></i> Certificado válido até 31/12/2023
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="renovacao_certificado">Renovação Automática</label>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="renovacao_certificado" checked>
+                          <label class="custom-control-label" for="renovacao_certificado">Activar renovação automática</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary float-right">Guardar Configurações</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tab Notificações -->
+            <div class="tab-pane fade" id="custom-tabs-four-notificacoes" role="tabpanel" aria-labelledby="custom-tabs-four-notificacoes-tab">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">Configurações de Email</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="servidor_smtp">Servidor SMTP</label>
+                        <input type="text" class="form-control" id="servidor_smtp" placeholder="smtp.gmail.com">
+                      </div>
+                      <div class="form-group">
+                        <label for="porta_smtp">Porta SMTP</label>
+                        <input type="number" class="form-control" id="porta_smtp" placeholder="587" value="587">
+                      </div>
+                      <div class="form-group">
+                        <label for="email_remetente">Email do Remetente</label>
+                        <input type="email" class="form-control" id="email_remetente" placeholder="noreply@syntra.co.mz">
+                      </div>
+                      <div class="form-group">
+                        <label for="nome_remetente">Nome do Remetente</label>
+                        <input type="text" class="form-control" id="nome_remetente" placeholder="Syntra ERP">
+                      </div>
+                      <div class="form-group">
+                        <label for="usuario_smtp">Utilizador SMTP</label>
+                        <input type="text" class="form-control" id="usuario_smtp" placeholder="usuario@syntra.co.mz">
+                      </div>
+                      <div class="form-group">
+                        <label for="senha_smtp">Senha SMTP</label>
+                        <input type="password" class="form-control" id="senha_smtp" placeholder="********">
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="smtp_seguro" checked>
+                          <label class="custom-control-label" for="smtp_seguro">Usar conexão segura (TLS/SSL)</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <button type="button" class="btn btn-info">Testar Configurações de Email</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card card-success">
+                    <div class="card-header">
+                      <h3 class="card-title">Notificações do Sistema</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label>Notificações para Administradores</label>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_login_falha" checked>
+                          <label class="custom-control-label" for="notif_login_falha">Tentativas de login falhadas</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_novo_usuario" checked>
+                          <label class="custom-control-label" for="notif_novo_usuario">Novos utilizadores registados</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_backup" checked>
+                          <label class="custom-control-label" for="notif_backup">Status de backup</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_erro_sistema" checked>
+                          <label class="custom-control-label" for="notif_erro_sistema">Erros críticos do sistema</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_atualizacao" checked>
+                          <label class="custom-control-label" for="notif_atualizacao">Atualizações disponíveis</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Notificações para Utilizadores</label>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_reset_senha" checked>
+                          <label class="custom-control-label" for="notif_reset_senha">Redefinição de senha</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_alteracao_conta" checked>
+                          <label class="custom-control-label" for="notif_alteracao_conta">Alterações na conta</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_login_novo" checked>
+                          <label class="custom-control-label" for="notif_login_novo">Login em novo dispositivo</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="notif_tarefas" checked>
+                          <label class="custom-control-label" for="notif_tarefas">Atribuição de tarefas</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card card-info">
+                    <div class="card-header">
+                      <h3 class="card-title">Canais de Notificação</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="canal_email" checked>
+                          <label class="custom-control-label" for="canal_email">Email</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="canal_sms">
+                          <label class="custom-control-label" for="canal_sms">SMS</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="canal_app" checked>
+                          <label class="custom-control-label" for="canal_app">Notificações no Aplicativo</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="canal_whatsapp">
+                          <label class="custom-control-label" for="canal_whatsapp">WhatsApp</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary float-right">Guardar Configurações</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tab Integração -->
+            <div class="tab-pane fade" id="custom-tabs-four-integracao" role="tabpanel" aria-labelledby="custom-tabs-four-integracao-tab">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">API e Integrações</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="habilitar_api" checked>
+                          <label class="custom-control-label" for="habilitar_api">Habilitar API</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="versao_api">Versão da API</label>
+                        <select class="form-control" id="versao_api">
+                          <option>v1</option>
+                          <option selected>v2</option>
+                          <option>v3</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="limite_requisicoes">Limite de Requisições (por minuto)</label>
+                        <input type="number" class="form-control" id="limite_requisicoes" placeholder="60" value="60">
+                      </div>
+                      <div class="form-group">
+                        <label for="token_expiracao">Expiração do Token (horas)</label>
+                        <input type="number" class="form-control" id="token_expiracao" placeholder="24" value="24">
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="log_api" checked>
+                          <label class="custom-control-label" for="log_api">Registar logs de API</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card card-warning">
+                    <div class="card-header">
+                      <h3 class="card-title">Webhooks</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="habilitar_webhooks" checked>
+                          <label class="custom-control-label" for="habilitar_webhooks">Habilitar Webhooks</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Eventos Disponíveis</label>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="webhook_cliente" checked>
+                          <label class="custom-control-label" for="webhook_cliente">Cliente criado/atualizado</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="webhook_venda" checked>
+                          <label class="custom-control-label" for="webhook_venda">Venda realizada</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="webhook_pagamento" checked>
+                          <label class="custom-control-label" for="webhook_pagamento">Pagamento recebido</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="webhook_estoque" checked>
+                          <label class="custom-control-label" for="webhook_estoque">Estoque atualizado</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card card-success">
+                    <div class="card-header">
+                      <h3 class="card-title">Integrações de Pagamento</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label>Gateways de Pagamento</label>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="gateway_mpesa" checked>
+                          <label class="custom-control-label" for="gateway_mpesa">M-Pesa</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="gateway_paypal">
+                          <label class="custom-control-label" for="gateway_paypal">PayPal</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="gateway_stripe">
+                          <label class="custom-control-label" for="gateway_stripe">Stripe</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="gateway_emola">
+                          <label class="custom-control-label" for="gateway_emola">e-Mola</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="mpesa_api_key">M-Pesa API Key</label>
+                        <input type="password" class="form-control" id="mpesa_api_key" placeholder="********">
+                      </div>
+                      <div class="form-group">
+                        <label for="mpesa_public_key">M-Pesa Public Key</label>
+                        <textarea class="form-control" id="mpesa_public_key" rows="3" placeholder="Chave pública M-Pesa"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="mpesa_service_provider_code">Código do Provedor de Serviço</label>
+                        <input type="text" class="form-control" id="mpesa_service_provider_code" placeholder="123456">
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="mpesa_sandbox">
+                          <label class="custom-control-label" for="mpesa_sandbox">Usar ambiente de teste (Sandbox)</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card card-info">
+                    <div class="card-header">
+                      <h3 class="card-title">Outras Integrações</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="integracao_at" checked>
+                          <label class="custom-control-label" for="integracao_at">Autoridade Tributária</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="integracao_contabilidade">
+                          <label class="custom-control-label" for="integracao_contabilidade">Sistema de Contabilidade</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="integracao_logistica">
+                          <label class="custom-control-label" for="integracao_logistica">Sistema de Logística</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="integracao_crm">
+                          <label class="custom-control-label" for="integracao_crm">CRM</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary float-right">Guardar Configurações</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+
+  
+<!-- /.content-wrapper -->

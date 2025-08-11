@@ -1,0 +1,357 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Receita da Plataforma</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item">Relatórios Globais</li>
+          <li class="breadcrumb-item active">Receita da Plataforma</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="filtroForm">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Período</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected>Último mês</option>
+                  <option>Últimos 3 meses</option>
+                  <option>Últimos 6 meses</option>
+                  <option>Último ano</option>
+                  <option>Personalizado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Tipo de Cliente</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected>Todos</option>
+                  <option>Plano Básico</option>
+                  <option>Plano Profissional</option>
+                  <option>Plano Enterprise</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Status de Pagamento</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected>Todos</option>
+                  <option>Pagos</option>
+                  <option>Pendentes</option>
+                  <option>Atrasados</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <div class="form-group w-100">
+                <button type="submit" class="btn btn-primary btn-block">Aplicar Filtros</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Estatísticas Rápidas -->
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3>R$ 125.430</h3>
+            <p>Receita Total</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3>R$ 28.750</h3>
+            <p>Receita Mensal</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>42</h3>
+            <p>Clientes Ativos</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>R$ 684</h3>
+            <p>Valor Médio por Cliente</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-user-tag"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráficos -->
+    <div class="row">
+      <!-- Receita Mensal -->
+      <div class="col-md-8">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Receita Mensal</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="receitaMensalChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Distribuição por Plano -->
+      <div class="col-md-4">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Receita por Plano</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="receitaPorPlanoChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabela de Receitas -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Detalhamento de Receitas</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Plano</th>
+              <th>Data de Pagamento</th>
+              <th>Valor</th>
+              <th>Status</th>
+              <th>Próximo Pagamento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Empresa ABC Ltda</td>
+              <td>Profissional</td>
+              <td>15/04/2023</td>
+              <td>R$ 899,00</td>
+              <td><span class="badge bg-success">Pago</span></td>
+              <td>15/05/2023</td>
+            </tr>
+            <tr>
+              <td>Comércio XYZ</td>
+              <td>Básico</td>
+              <td>10/04/2023</td>
+              <td>R$ 399,00</td>
+              <td><span class="badge bg-success">Pago</span></td>
+              <td>10/05/2023</td>
+            </tr>
+            <tr>
+              <td>Indústria 123</td>
+              <td>Enterprise</td>
+              <td>05/04/2023</td>
+              <td>R$ 1.499,00</td>
+              <td><span class="badge bg-success">Pago</span></td>
+              <td>05/05/2023</td>
+            </tr>
+            <tr>
+              <td>Consultoria QWE</td>
+              <td>Profissional</td>
+              <td>01/04/2023</td>
+              <td>R$ 899,00</td>
+              <td><span class="badge bg-warning">Pendente</span></td>
+              <td>01/05/2023</td>
+            </tr>
+            <tr>
+              <td>Serviços ZXC</td>
+              <td>Básico</td>
+              <td>25/03/2023</td>
+              <td>R$ 399,00</td>
+              <td><span class="badge bg-danger">Atrasado</span></td>
+              <td>25/04/2023</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer clearfix">
+        <ul class="pagination pagination-sm m-0 float-right">
+          <li class="page-item"><a class="page-link" href="#">«</a></li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">»</a></li>
+        </ul>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Scripts específicos para esta página -->
+<script>
+  $(function () {
+    // Inicializa Select2
+    $('.select2').select2();
+    
+    // Dados para o gráfico de receita mensal
+    var receitaMensalData = {
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [
+        {
+          label: 'Receita 2023',
+          backgroundColor: 'rgba(60,141,188,0.9)',
+          borderColor: 'rgba(60,141,188,0.8)',
+          pointRadius: 3,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(60,141,188,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data: [18500, 19250, 21000, 22750, 24500, 26000, 27500, 28750, 30000, 31250, 32500, 33750]
+        },
+        {
+          label: 'Receita 2022',
+          backgroundColor: 'rgba(210, 214, 222, 1)',
+          borderColor: 'rgba(210, 214, 222, 1)',
+          pointRadius: 3,
+          pointColor: 'rgba(210, 214, 222, 1)',
+          pointStrokeColor: '#c1c7d1',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: [12000, 13500, 14750, 16000, 17250, 18500, 19750, 21000, 22250, 23500, 24750, 26000]
+        }
+      ]
+    };
+
+    // Configuração do gráfico de receita mensal
+    var receitaMensalOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return 'R$ ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+          }
+        }
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            return data.datasets[tooltipItem.datasetIndex].label + ': R$ ' + 
+                   tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          }
+        }
+      }
+    };
+
+    // Cria o gráfico de receita mensal
+    var receitaMensalCanvas = $('#receitaMensalChart').get(0).getContext('2d');
+    new Chart(receitaMensalCanvas, {
+      type: 'line',
+      data: receitaMensalData,
+      options: receitaMensalOptions
+    });
+
+    // Dados para o gráfico de receita por plano
+    var receitaPorPlanoData = {
+      labels: ['Básico', 'Profissional', 'Enterprise'],
+      datasets: [{
+        data: [25, 45, 30],
+        backgroundColor: ['#f56954', '#00a65a', '#f39c12']
+      }]
+    };
+
+    // Configuração do gráfico de receita por plano
+    var receitaPorPlanoOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'right'
+        }
+      }
+    };
+
+    // Cria o gráfico de receita por plano
+    var receitaPorPlanoCanvas = $('#receitaPorPlanoChart').get(0).getContext('2d');
+    new Chart(receitaPorPlanoCanvas, {
+      type: 'doughnut',
+      data: receitaPorPlanoData,
+      options: receitaPorPlanoOptions
+    });
+  });
+</script>

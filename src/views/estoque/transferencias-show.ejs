@@ -1,0 +1,183 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-exchange-alt"></i> Detalhes da Transferência #<%= transferencia.numero %>
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/estoque/transferencias" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button class="btn btn-primary btn-sm" onclick="window.print()">
+        <i class="fas fa-print"></i> Imprimir
+      </button>
+      <% if (transferencia.status === 'Pendente') { %>
+      <button class="btn btn-success btn-sm" onclick="aprovarTransferencia(<%= transferencia.id %>)">
+        <i class="fas fa-check"></i> Aprovar
+      </button>
+      <button class="btn btn-danger btn-sm" onclick="cancelarTransferencia(<%= transferencia.id %>)">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Informações da Transferência -->
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-info-circle"></i> Informações da Transferência
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Número:</strong> <%= transferencia.numero %></p>
+              <p><strong>Data:</strong> <%= new Date(transferencia.data).toLocaleDateString('pt-PT') %></p>
+              <p><strong>Loja Origem:</strong> <%= transferencia.lojaOrigem %></p>
+              <p><strong>Loja Destino:</strong> <%= transferencia.lojaDestino %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Status:</strong> 
+                <span class="badge badge-<%= transferencia.status === 'Pendente' ? 'warning' : transferencia.status === 'Aprovada' ? 'success' : transferencia.status === 'Em Trânsito' ? 'info' : transferencia.status === 'Concluída' ? 'success' : 'danger' %>">
+                  <%= transferencia.status %>
+                </span>
+              </p>
+              <p><strong>Tipo:</strong> <%= transferencia.tipo %></p>
+              <p><strong>Responsável:</strong> <%= transferencia.responsavel %></p>
+              <p><strong>Data Prevista:</strong> <%= new Date(transferencia.dataPrevista).toLocaleDateString('pt-PT') %></p>
+            </div>
+          </div>
+          <% if (transferencia.observacoes) { %>
+          <div class="row mt-3">
+            <div class="col-12">
+              <p><strong>Observações:</strong></p>
+              <p class="text-muted"><%= transferencia.observacoes %></p>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-success">
+            <i class="fas fa-chart-pie"></i> Resumo
+          </h6>
+        </div>
+        <div class="card-body">
+          <p><strong>Total de Itens:</strong> <%= transferencia.totalItens %></p>
+          <p><strong>Valor Estimado:</strong> <%= transferencia.valorEstimado.toLocaleString('pt-PT') %> MT</p>
+          <p><strong>Peso Total:</strong> <%= transferencia.pesoTotal %> kg</p>
+        </div>
+      </div>
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-info">
+            <i class="fas fa-history"></i> Histórico
+          </h6>
+        </div>
+        <div class="card-body">
+          <% transferencia.historico.forEach(function(evento) { %>
+          <div class="mb-2">
+            <small class="text-muted"><%= new Date(evento.data).toLocaleDateString('pt-PT') %></small>
+            <p class="mb-1"><%= evento.descricao %></p>
+            <small class="text-info">Por: <%= evento.usuario %></small>
+            <hr class="my-2">
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Itens da Transferência -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Itens da Transferência
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Artigo</th>
+              <th>Qtd. Solicitada</th>
+              <th>Qtd. Disponível</th>
+              <th>Qtd. Transferida</th>
+              <th>Unidade</th>
+              <th>Valor Unit.</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% transferencia.itens.forEach(function(item) { %>
+            <tr>
+              <td><%= item.codigo %></td>
+              <td><%= item.nome %></td>
+              <td class="text-center"><%= item.qtdSolicitada %></td>
+              <td class="text-center"><%= item.qtdDisponivel %></td>
+              <td class="text-center"><%= item.qtdTransferida %></td>
+              <td><%= item.unidade %></td>
+              <td class="text-right"><%= item.valorUnitario.toLocaleString('pt-PT') %> MT</td>
+              <td class="text-right"><%= item.total.toLocaleString('pt-PT') %> MT</td>
+            </tr>
+            <% }); %>
+          </tbody>
+          <tfoot>
+            <tr class="font-weight-bold">
+              <td colspan="7" class="text-right">Valor Total:</td>
+              <td class="text-right"><%= transferencia.valorEstimado.toLocaleString('pt-PT') %> MT</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function aprovarTransferencia(id) {
+  Swal.fire({
+    title: 'Aprovar Transferência?',
+    text: 'Esta ação não pode ser desfeita.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sim, aprovar!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Aqui seria feita a requisição para aprovar
+      Swal.fire('Aprovada!', 'A transferência foi aprovada com sucesso.', 'success');
+    }
+  });
+}
+
+function cancelarTransferencia(id) {
+  Swal.fire({
+    title: 'Cancelar Transferência?',
+    text: 'Esta ação não pode ser desfeita.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sim, cancelar!',
+    cancelButtonText: 'Não'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Aqui seria feita a requisição para cancelar
+      Swal.fire('Cancelada!', 'A transferência foi cancelada.', 'success');
+    }
+  });
+}
+</script>

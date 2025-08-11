@@ -1,0 +1,135 @@
+
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="GET">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Data Início</label>
+                <input type="date" class="form-control" name="data_inicio" value="<%= filtros.data_inicio %>">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Data Fim</label>
+                <input type="date" class="form-control" name="data_fim" value="<%= filtros.data_fim %>">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Cliente</label>
+                <select class="form-control" name="cliente_id">
+                  <option value="">Todos os Clientes</option>
+                  <option value="1" <%= filtros.cliente_id === '1' ? 'selected' : '' %>>João Silva</option>
+                  <option value="2" <%= filtros.cliente_id === '2' ? 'selected' : '' %>>Maria Costa</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row">
+      <div class="col-lg-4 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3><%= vendasClientes.resumo.total_clientes %></h3>
+            <p>Total de Clientes</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3><%= formatCurrency(vendasClientes.resumo.total_vendas) %></h3>
+            <p>Total de Vendas</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3><%= formatCurrency(vendasClientes.resumo.ticket_medio) %></h3>
+            <p>Ticket Médio</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Clientes -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Top Clientes - <%= vendasClientes.periodo %></h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-sm btn-success">
+            <i class="fas fa-download"></i> Exportar
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>NUIT</th>
+                <th class="text-center">Documentos</th>
+                <th class="text-right">Total Vendas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% vendasClientes.top_clientes.forEach(function(cliente, index) { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= cliente.nome %></td>
+                  <td><%= cliente.nuit %></td>
+                  <td class="text-center">
+                    <span class="badge badge-info"><%= cliente.total_documentos %></span>
+                  </td>
+                  <td class="text-right">
+                    <strong><%= formatCurrency(cliente.total_vendas) %></strong>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,749 @@
+<%
+// Título da página
+const pageTitle = 'Gestão de Clientes - SYNTRA ERP';
+%>
+<style>
+  .stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    margin-bottom: 20px;
+  }
+  .stats-card.success {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  .stats-card.warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+  .stats-card.info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  .stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .stats-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  .filter-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .table-actions {
+    white-space: nowrap;
+  }
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .import-progress {
+    display: none;
+  }
+  .cliente-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .saldo-positivo {
+    color: #28a745;
+    font-weight: bold;
+  }
+  .saldo-negativo {
+    color: #dc3545;
+    font-weight: bold;
+  }
+  .limite-credito {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+</style>
+</style>
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Gestão de Clientes</h1>
+      <p class="mb-0 text-muted">Registo e manutenção de dados de clientes</p>
+    </div>
+    <div>
+      <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">
+        <i class="fas fa-file-import"></i> Importar
+      </button>
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="fas fa-download"></i> Exportar
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="exportarExcel()"><i class="fas fa-file-excel"></i> Excel</a></li>
+          <li><a class="dropdown-item" href="#" onclick="exportarPDF()"><i class="fas fa-file-pdf"></i> PDF</a></li>
+          <li><a class="dropdown-item" href="#" onclick="exportarCSV()"><i class="fas fa-file-csv"></i> CSV</a></li>
+        </ul>
+      </div>
+      <a href="/pessoas/clientes/create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Novo Cliente
+      </a>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="row mb-4">
+    <div class="col-lg-3 col-md-6">
+      <div class="stats-card">
+        <div class="stats-number" id="totalClientes">0</div>
+        <div class="stats-label">Total de Clientes</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stats-card success">
+        <div class="stats-number" id="clientesActivos">0</div>
+        <div class="stats-label">Clientes Activos</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stats-card warning">
+        <div class="stats-number" id="clientesBloqueados">0</div>
+        <div class="stats-label">Clientes Bloqueados</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stats-card info">
+        <div class="stats-number" id="vendasMes">MT 0</div>
+        <div class="stats-label">Vendas Este Mês</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filter-section">
+    <h5 class="mb-3"><i class="fas fa-filter"></i> Filtros</h5>
+    <form id="filtrosForm">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="form-label">Pesquisar</label>
+          <input type="text" class="form-control" id="pesquisar" placeholder="Nome, código, NUIT...">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" id="filtroTipo">
+            <option value="">Todos</option>
+            <option value="particular">Particular</option>
+            <option value="empresa">Empresa</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="filtroEstado">
+            <option value="">Todos</option>
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+            <option value="2">Bloqueado</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Regime Tributário</label>
+          <select class="form-select" id="filtroRegime">
+            <option value="">Todos</option>
+            <option value="geral">Geral</option>
+            <option value="simplificado">Simplificado</option>
+            <option value="isento">Isento</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Período de Registo</label>
+          <div class="input-group">
+            <input type="date" class="form-control" id="dataInicio">
+            <span class="input-group-text">até</span>
+            <input type="date" class="form-control" id="dataFim">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <button type="button" class="btn btn-primary" onclick="aplicarFiltros()">
+            <i class="fas fa-search"></i> Pesquisar
+          </button>
+          <button type="button" class="btn btn-outline-secondary" onclick="limparFiltros()">
+            <i class="fas fa-eraser"></i> Limpar
+          </button>
+          <button type="button" class="btn btn-outline-info" onclick="filtrosAvancados()">
+            <i class="fas fa-cog"></i> Filtros Avançados
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabela de Clientes -->
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title mb-0">
+        <i class="fas fa-users"></i> Lista de Clientes
+        <span class="badge bg-primary ms-2" id="totalRegistos">0</span>
+      </h5>
+      <div class="card-tools">
+        <div class="input-group input-group-sm" style="width: 200px;">
+          <input type="text" class="form-control" placeholder="Pesquisa rápida..." id="pesquisaRapida">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover" id="tabelaClientes">
+          <thead class="table-dark">
+            <tr>
+              <th>
+                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+              </th>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>NUIT</th>
+              <th>Contacto</th>
+              <th>Email</th>
+              <th>Saldo/Limite</th>
+              <th>Estado</th>
+              <th>Última Venda</th>
+              <th>Acções</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dados serão carregados via AJAX -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="dataTables_info">
+            Mostrando <span id="registosInicio">0</span> a <span id="registosFim">0</span> de <span id="totalRegistosInfo">0</span> registos
+          </div>
+        </div>
+        <div class="col-md-6">
+          <nav aria-label="Paginação">
+            <ul class="pagination pagination-sm justify-content-end" id="paginacao">
+              <!-- Paginação será gerada via JavaScript -->
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acções em Lote -->
+  <div class="card mt-3" id="accoesLote" style="display: none;">
+    <div class="card-body">
+      <h6><i class="fas fa-tasks"></i> Acções em Lote (<span id="seleccionados">0</span> seleccionados)</h6>
+      <button class="btn btn-sm btn-success" onclick="activarSeleccionados()">
+        <i class="fas fa-check"></i> Activar
+      </button>
+      <button class="btn btn-sm btn-warning" onclick="desactivarSeleccionados()">
+        <i class="fas fa-times"></i> Desactivar
+      </button>
+      <button class="btn btn-sm btn-danger" onclick="bloquearSeleccionados()">
+        <i class="fas fa-ban"></i> Bloquear
+      </button>
+      <button class="btn btn-sm btn-info" onclick="exportarSeleccionados()">
+        <i class="fas fa-download"></i> Exportar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Importação -->
+<div class="modal fade" id="importModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-file-import"></i> Importar Clientes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>1. Baixar Template</h6>
+            <p class="text-muted">Baixe o template Excel com o formato correcto:</p>
+            <button class="btn btn-outline-success" onclick="baixarTemplate()">
+              <i class="fas fa-download"></i> Baixar Template Excel
+            </button>
+          </div>
+          <div class="col-md-6">
+            <h6>2. Seleccionar Arquivo</h6>
+            <p class="text-muted">Seleccione o arquivo Excel preenchido:</p>
+            <input type="file" class="form-control" id="arquivoImport" accept=".xlsx,.xls,.csv">
+          </div>
+        </div>
+        
+        <hr>
+        
+        <div class="row">
+          <div class="col-md-12">
+            <h6>3. Opções de Importação</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="actualizarExistentes">
+              <label class="form-check-label" for="actualizarExistentes">
+                Actualizar clientes existentes (baseado no NUIT)
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="validarNUIT" checked>
+              <label class="form-check-label" for="validarNUIT">
+                Validar NUIT automaticamente
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="enviarEmail">
+              <label class="form-check-label" for="enviarEmail">
+                Enviar email de boas-vindas aos novos clientes
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Progresso da Importação -->
+        <div class="import-progress mt-3">
+          <h6>Progresso da Importação</h6>
+          <div class="progress mb-2">
+            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+          </div>
+          <div class="import-status"></div>
+        </div>
+        
+        <!-- Resultados da Importação -->
+        <div class="import-results mt-3" style="display: none;">
+          <h6>Resultados da Importação</h6>
+          <div class="alert alert-info">
+            <strong>Resumo:</strong>
+            <ul class="mb-0">
+              <li>Total de registos processados: <span id="totalProcessados">0</span></li>
+              <li>Clientes criados: <span id="clientesCriados">0</span></li>
+              <li>Clientes actualizados: <span id="clientesActualizados">0</span></li>
+              <li>Erros encontrados: <span id="errosEncontrados">0</span></li>
+            </ul>
+          </div>
+          <div class="import-errors" style="display: none;">
+            <h6 class="text-danger">Erros Encontrados:</h6>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <thead>
+                  <tr>
+                    <th>Linha</th>
+                    <th>Campo</th>
+                    <th>Erro</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelaErros">
+                  <!-- Erros serão listados aqui -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" onclick="iniciarImportacao()" id="btnImportar">
+          <i class="fas fa-upload"></i> Importar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+<script>
+let paginaActual = 1;
+let registosPorPagina = 25;
+let totalPaginas = 1;
+let clientesSeleccionados = [];
+
+// Inicialização
+$(document).ready(function() {
+  carregarEstatisticas();
+  carregarClientes();
+  
+  // Pesquisa rápida
+  $('#pesquisaRapida').on('keyup', debounce(function() {
+    carregarClientes();
+  }, 500));
+  
+  // Auto-refresh a cada 30 segundos
+  setInterval(function() {
+    carregarEstatisticas();
+  }, 30000);
+});
+
+// Carregar estatísticas
+function carregarEstatisticas() {
+  $.ajax({
+    url: '/api/pessoas/clientes/estatisticas',
+    type: 'GET',
+    success: function(data) {
+      $('#totalClientes').text(data.total || 0);
+      $('#clientesActivos').text(data.activos || 0);
+      $('#clientesBloqueados').text(data.bloqueados || 0);
+      $('#vendasMes').text('MT ' + (data.vendasMes || 0).toLocaleString());
+    },
+    error: function() {
+      console.log('Erro ao carregar estatísticas');
+    }
+  });
+}
+
+// Carregar clientes
+function carregarClientes() {
+  const filtros = {
+    pesquisar: $('#pesquisar').val() || $('#pesquisaRapida').val(),
+    tipo: $('#filtroTipo').val(),
+    estado: $('#filtroEstado').val(),
+    regime: $('#filtroRegime').val(),
+    dataInicio: $('#dataInicio').val(),
+    dataFim: $('#dataFim').val(),
+    pagina: paginaActual,
+    limite: registosPorPagina
+  };
+  
+  $.ajax({
+    url: '/api/pessoas/clientes',
+    type: 'GET',
+    data: filtros,
+    success: function(response) {
+      preencherTabela(response.clientes);
+      actualizarPaginacao(response.total);
+      $('#totalRegistos').text(response.total);
+      $('#totalRegistosInfo').text(response.total);
+    },
+    error: function() {
+      $('#tabelaClientes tbody').html('<tr><td colspan="10" class="text-center text-danger">Erro ao carregar clientes</td></tr>');
+    }
+  });
+}
+
+// Preencher tabela
+function preencherTabela(clientes) {
+  let html = '';
+  
+  if (clientes.length === 0) {
+    html = '<tr><td colspan="10" class="text-center"><div class="py-4"><i class="fas fa-users fa-3x text-muted mb-3"></i><h5 class="text-muted">Nenhum cliente encontrado</h5><p class="text-muted">Ajuste os filtros ou crie um novo cliente</p></div></td></tr>';
+  } else {
+    clientes.forEach(function(cliente) {
+      const avatar = cliente.nome.charAt(0).toUpperCase();
+      const tipoClass = cliente.tipo === 'particular' ? 'info' : 'warning';
+      const tipoTexto = cliente.tipo === 'particular' ? 'Particular' : 'Empresa';
+      const estadoClass = cliente.status === 1 ? 'success' : (cliente.status === 2 ? 'danger' : 'secondary');
+      const estadoTexto = cliente.status === 1 ? 'Activo' : (cliente.status === 2 ? 'Bloqueado' : 'Inactivo');
+      const saldoClass = cliente.saldo_conta >= 0 ? 'saldo-positivo' : 'saldo-negativo';
+      
+      html += `
+        <tr>
+          <td><input type="checkbox" class="cliente-checkbox" value="${cliente.id}" onchange="toggleClienteSeleccionado(${cliente.id})"></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <div class="cliente-avatar">${avatar}</div>
+              <div>
+                <strong>${cliente.nome}</strong><br>
+                <small class="text-muted">${cliente.codigo}</small>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge bg-${tipoClass}">${tipoTexto}</span></td>
+          <td>${cliente.nuit || '-'}</td>
+          <td>
+            <a href="tel:${cliente.telefone}">${cliente.telefone}</a>
+          </td>
+          <td>
+            ${cliente.email ? `<a href="mailto:${cliente.email}">${cliente.email}</a>` : '-'}
+          </td>
+          <td>
+            <div class="${saldoClass}">MT ${cliente.saldo_conta.toLocaleString()}</div>
+            <div class="limite-credito">Limite: MT ${cliente.limite_credito.toLocaleString()}</div>
+          </td>
+          <td><span class="badge bg-${estadoClass} status-badge">${estadoTexto}</span></td>
+          <td>${cliente.ultima_venda || '-'}</td>
+          <td class="table-actions">
+            <div class="btn-group btn-group-sm">
+              <a href="/pessoas/clientes/${cliente.id}" class="btn btn-outline-info" title="Ver">
+                <i class="fas fa-eye"></i>
+              </a>
+              <a href="/pessoas/clientes/${cliente.id}/edit" class="btn btn-outline-warning" title="Editar">
+                <i class="fas fa-edit"></i>
+              </a>
+              <button class="btn btn-outline-success" onclick="novaVenda(${cliente.id})" title="Nova Venda">
+                <i class="fas fa-shopping-cart"></i>
+              </button>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" title="Mais">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" onclick="enviarEmail(${cliente.id})"><i class="fas fa-envelope"></i> Enviar Email</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="verHistorico(${cliente.id})"><i class="fas fa-history"></i> Histórico</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="duplicarCliente(${cliente.id})"><i class="fas fa-copy"></i> Duplicar</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="#" onclick="bloquearCliente(${cliente.id})"><i class="fas fa-ban"></i> Bloquear</a></li>
+                </ul>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+  }
+  
+  $('#tabelaClientes tbody').html(html);
+  
+  // Actualizar informações de registos
+  const inicio = (paginaActual - 1) * registosPorPagina + 1;
+  const fim = Math.min(paginaActual * registosPorPagina, clientes.length);
+  $('#registosInicio').text(inicio);
+  $('#registosFim').text(fim);
+}
+
+// Aplicar filtros
+function aplicarFiltros() {
+  paginaActual = 1;
+  carregarClientes();
+}
+
+// Limpar filtros
+function limparFiltros() {
+  $('#filtrosForm')[0].reset();
+  $('#pesquisaRapida').val('');
+  paginaActual = 1;
+  carregarClientes();
+}
+
+// Exportar funções
+function exportarExcel() {
+  window.open('/pessoas/clientes/export/excel?' + $.param(obterFiltros()), '_blank');
+}
+
+function exportarPDF() {
+  window.open('/pessoas/clientes/export/pdf?' + $.param(obterFiltros()), '_blank');
+}
+
+function exportarCSV() {
+  window.open('/pessoas/clientes/export/csv?' + $.param(obterFiltros()), '_blank');
+}
+
+// Importação
+function baixarTemplate() {
+  window.open('/pessoas/clientes/template/excel', '_blank');
+}
+
+function iniciarImportacao() {
+  const arquivo = $('#arquivoImport')[0].files[0];
+  if (!arquivo) {
+    alert('Por favor, seleccione um arquivo.');
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('arquivo', arquivo);
+  formData.append('actualizarExistentes', $('#actualizarExistentes').is(':checked'));
+  formData.append('validarNUIT', $('#validarNUIT').is(':checked'));
+  formData.append('enviarEmail', $('#enviarEmail').is(':checked'));
+  
+  $('.import-progress').show();
+  $('#btnImportar').prop('disabled', true);
+  
+  $.ajax({
+    url: '/pessoas/clientes/import',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    xhr: function() {
+      const xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener('progress', function(evt) {
+        if (evt.lengthComputable) {
+          const percentComplete = evt.loaded / evt.total * 100;
+          $('.progress-bar').css('width', percentComplete + '%');
+        }
+      }, false);
+      return xhr;
+    },
+    success: function(response) {
+      $('.import-results').show();
+      $('#totalProcessados').text(response.totalProcessados);
+      $('#clientesCriados').text(response.clientesCriados);
+      $('#clientesActualizados').text(response.clientesActualizados);
+      $('#errosEncontrados').text(response.erros.length);
+      
+      if (response.erros.length > 0) {
+        $('.import-errors').show();
+        let errosHtml = '';
+        response.erros.forEach(function(erro) {
+          errosHtml += `<tr><td>${erro.linha}</td><td>${erro.campo}</td><td>${erro.mensagem}</td></tr>`;
+        });
+        $('#tabelaErros').html(errosHtml);
+      }
+      
+      carregarClientes();
+      carregarEstatisticas();
+    },
+    error: function() {
+      alert('Erro ao importar arquivo.');
+    },
+    complete: function() {
+      $('#btnImportar').prop('disabled', false);
+    }
+  });
+}
+
+// Selecção múltipla
+function toggleSelectAll() {
+  const selectAll = $('#selectAll').is(':checked');
+  $('.cliente-checkbox').prop('checked', selectAll);
+  
+  if (selectAll) {
+    clientesSeleccionados = $('.cliente-checkbox').map(function() {
+      return parseInt($(this).val());
+    }).get();
+  } else {
+    clientesSeleccionados = [];
+  }
+  
+  actualizarAccoesLote();
+}
+
+function toggleClienteSeleccionado(clienteId) {
+  const index = clientesSeleccionados.indexOf(clienteId);
+  if (index > -1) {
+    clientesSeleccionados.splice(index, 1);
+  } else {
+    clientesSeleccionados.push(clienteId);
+  }
+  
+  actualizarAccoesLote();
+}
+
+function actualizarAccoesLote() {
+  const total = clientesSeleccionados.length;
+  $('#seleccionados').text(total);
+  
+  if (total > 0) {
+    $('#accoesLote').show();
+  } else {
+    $('#accoesLote').hide();
+  }
+}
+
+// Acções individuais
+function novaVenda(clienteId) {
+  window.location.href = '/vendas/nova?cliente=' + clienteId;
+}
+
+function enviarEmail(clienteId) {
+  window.location.href = '/pessoas/clientes/' + clienteId + '/email';
+}
+
+function verHistorico(clienteId) {
+  window.location.href = '/pessoas/clientes/' + clienteId + '/historico';
+}
+
+function duplicarCliente(clienteId) {
+  if (confirm('Deseja duplicar este cliente?')) {
+    $.ajax({
+      url: '/pessoas/clientes/' + clienteId + '/duplicar',
+      type: 'POST',
+      success: function() {
+        alert('Cliente duplicado com sucesso!');
+        carregarClientes();
+      },
+      error: function() {
+        alert('Erro ao duplicar cliente.');
+      }
+    });
+  }
+}
+
+function bloquearCliente(clienteId) {
+  if (confirm('Deseja bloquear este cliente?')) {
+    $.ajax({
+      url: '/pessoas/clientes/' + clienteId + '/bloquear',
+      type: 'POST',
+      success: function() {
+        alert('Cliente bloqueado com sucesso!');
+        carregarClientes();
+      },
+      error: function() {
+        alert('Erro ao bloquear cliente.');
+      }
+    });
+  }
+}
+
+// Utilitários
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+function obterFiltros() {
+  return {
+    pesquisar: $('#pesquisar').val() || $('#pesquisaRapida').val(),
+    tipo: $('#filtroTipo').val(),
+    estado: $('#filtroEstado').val(),
+    regime: $('#filtroRegime').val(),
+    dataInicio: $('#dataInicio').val(),
+    dataFim: $('#dataFim').val()
+  };
+}
+
+function actualizarPaginacao(total) {
+  totalPaginas = Math.ceil(total / registosPorPagina);
+  let html = '';
+  
+  // Botão anterior
+  html += `<li class="page-item ${paginaActual === 1 ? 'disabled' : ''}">`;
+  html += `<a class="page-link" href="#" onclick="irParaPagina(${paginaActual - 1})">Anterior</a>`;
+  html += `</li>`;
+  
+  // Páginas
+  for (let i = Math.max(1, paginaActual - 2); i <= Math.min(totalPaginas, paginaActual + 2); i++) {
+    html += `<li class="page-item ${i === paginaActual ? 'active' : ''}">`;
+    html += `<a class="page-link" href="#" onclick="irParaPagina(${i})">${i}</a>`;
+    html += `</li>`;
+  }
+  
+  // Botão próximo
+  html += `<li class="page-item ${paginaActual === totalPaginas ? 'disabled' : ''}">`;
+  html += `<a class="page-link" href="#" onclick="irParaPagina(${paginaActual + 1})">Próximo</a>`;
+  html += `</li>`;
+  
+  $('#paginacao').html(html);
+}
+
+function irParaPagina(pagina) {
+  if (pagina >= 1 && pagina <= totalPaginas) {
+    paginaActual = pagina;
+    carregarClientes();
+  }
+}
+</script>
+</script>

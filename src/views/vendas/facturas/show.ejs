@@ -1,0 +1,551 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-file-invoice"></i> Factura <%= factura.numero %>
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/vendas/facturas" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      
+      <!-- Editar (apenas se não estiver paga ou cancelada) -->
+      <% if (factura.status !== 'Paga' && factura.status !== 'Cancelada') { %>
+        <a href="/vendas/facturas/<%= factura.id %>/edit" class="btn btn-warning btn-sm">
+          <i class="fas fa-edit"></i> Editar
+        </a>
+      <% } %>
+      
+      <!-- Emitir (apenas se for rascunho) -->
+      <% if (factura.status === 'Rascunho') { %>
+        <form method="POST" action="/vendas/facturas/<%= factura.id %>/emitir" style="display: inline;">
+          <button type="submit" class="btn btn-success btn-sm"
+                  onclick="return confirm('Tem certeza que deseja emitir esta factura?')">
+            <i class="fas fa-paper-plane"></i> Emitir
+          </button>
+        </form>
+      <% } %>
+      
+      <!-- Imprimir -->
+      <a href="/vendas/facturas/<%= factura.id %>/imprimir" class="btn btn-info btn-sm" target="_blank">
+        <i class="fas fa-print"></i> Imprimir
+      </a>
+      
+      <!-- Duplicar -->
+      <a href="/vendas/facturas/create?duplicar=<%= factura.id %>" class="btn btn-outline-primary btn-sm">
+        <i class="fas fa-copy"></i> Duplicar
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Coluna Principal -->
+    <div class="col-lg-8">
+      <!-- Dados da Factura -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-file-invoice"></i> Informações da Factura
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong>Número:</strong></td>
+                  <td><%= factura.numero %></td>
+                </tr>
+                <tr>
+                  <td><strong>Série:</strong></td>
+                  <td><%= factura.serie %></td>
+                </tr>
+                <tr>
+                  <td><strong>Sequência:</strong></td>
+                  <td><%= factura.sequencia %></td>
+                </tr>
+                <tr>
+                  <td><strong>Tipo:</strong></td>
+                  <td>
+                    <% if (factura.tipo === 'Factura-Recibo') { %>
+                      <span class="badge badge-info">Factura-Recibo</span>
+                    <% } else { %>
+                      <span class="badge badge-primary">Factura</span>
+                    <% } %>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Status:</strong></td>
+                  <td>
+                    <% if (factura.status === 'Rascunho') { %>
+                      <span class="badge badge-secondary">Rascunho</span>
+                    <% } else if (factura.status === 'Emitida') { %>
+                      <span class="badge badge-info">Emitida</span>
+                    <% } else if (factura.status === 'Paga') { %>
+                      <span class="badge badge-success">Paga</span>
+                    <% } else if (factura.status === 'Pendente') { %>
+                      <span class="badge badge-warning">Pendente</span>
+                    <% } else if (factura.status === 'Cancelada') { %>
+                      <span class="badge badge-danger">Cancelada</span>
+                    <% } %>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong>Data de Emissão:</strong></td>
+                  <td><%= factura.data_emissao.toLocaleDateString('pt-MZ') %></td>
+                </tr>
+                <tr>
+                  <td><strong>Data de Vencimento:</strong></td>
+                  <td>
+                    <%= factura.data_vencimento.toLocaleDateString('pt-MZ') %>
+                    <% 
+                      const hoje = new Date();
+                      const vencimento = new Date(factura.data_vencimento);
+                      const diasRestantes = Math.ceil((vencimento - hoje) / (1000 * 60 * 60 * 24));
+                    %>
+                    <% if (diasRestantes < 0 && factura.status !== 'Paga') { %>
+                      <br><small class="text-danger">Vencida há <%= Math.abs(diasRestantes) %> dias</small>
+                    <% } else if (diasRestantes <= 7 && diasRestantes >= 0 && factura.status !== 'Paga') { %>
+                      <br><small class="text-warning">Vence em <%= diasRestantes %> dias</small>
+                    <% } %>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Condições de Pagamento:</strong></td>
+                  <td><%= factura.condicoes_pagamento %></td>
+                </tr>
+                <tr>
+                  <td><strong>Criado em:</strong></td>
+                  <td><%= factura.created_at.toLocaleString('pt-MZ') %></td>
+                </tr>
+                <tr>
+                  <td><strong>Última atualização:</strong></td>
+                  <td><%= factura.updated_at.toLocaleString('pt-MZ') %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          
+          <% if (factura.observacoes) { %>
+          <div class="row mt-3">
+            <div class="col-12">
+              <strong>Observações:</strong>
+              <p class="mt-2 p-3 bg-light border-left border-primary">
+                <%= factura.observacoes %>
+              </p>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Dados do Cliente -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-user"></i> Dados do Cliente
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong>Nome:</strong></td>
+                  <td><%= factura.cliente.nome %></td>
+                </tr>
+                <tr>
+                  <td><strong>NUIT:</strong></td>
+                  <td><%= factura.cliente.nuit %></td>
+                </tr>
+                <tr>
+                  <td><strong>Endereço Fiscal:</strong></td>
+                  <td><%= factura.cliente.endereco_fiscal %></td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong>Telefone:</strong></td>
+                  <td><%= factura.cliente.telefone || 'Não informado' %></td>
+                </tr>
+                <tr>
+                  <td><strong>Email:</strong></td>
+                  <td><%= factura.cliente.email || 'Não informado' %></td>
+                </tr>
+                <tr>
+                  <td><strong>Cidade:</strong></td>
+                  <td><%= factura.cliente.cidade || 'Não informado' %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artigos da Factura -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-shopping-cart"></i> Artigos
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>Artigo</th>
+                  <th class="text-center">Qtd</th>
+                  <th class="text-right">Preço Unit.</th>
+                  <th class="text-center">Desc. %</th>
+                  <th class="text-center">IVA %</th>
+                  <th class="text-right">Subtotal</th>
+                  <th class="text-right">IVA</th>
+                  <th class="text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% factura.artigos.forEach(artigo => { %>
+                  <% 
+                    const subtotal = artigo.quantidade * artigo.preco_unitario * (1 - artigo.desconto_percentual / 100);
+                    const valorIVA = subtotal * (artigo.taxa_iva / 100);
+                    const total = subtotal + valorIVA;
+                  %>
+                  <tr>
+                    <td>
+                      <strong><%= artigo.nome %></strong>
+                      <% if (artigo.codigo) { %>
+                        <br><small class="text-muted">Código: <%= artigo.codigo %></small>
+                      <% } %>
+                    </td>
+                    <td class="text-center"><%= artigo.quantidade %></td>
+                    <td class="text-right">
+                      <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(artigo.preco_unitario) %>
+                    </td>
+                    <td class="text-center">
+                      <% if (artigo.desconto_percentual > 0) { %>
+                        <span class="text-danger"><%= artigo.desconto_percentual %>%</span>
+                      <% } else { %>
+                        -
+                      <% } %>
+                    </td>
+                    <td class="text-center"><%= artigo.taxa_iva %>%</td>
+                    <td class="text-right">
+                      <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(subtotal) %>
+                    </td>
+                    <td class="text-right">
+                      <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(valorIVA) %>
+                    </td>
+                    <td class="text-right">
+                      <strong><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(total) %></strong>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+              <tfoot class="thead-light">
+                <tr>
+                  <td colspan="5" class="text-right font-weight-bold">Subtotal:</td>
+                  <td class="text-right font-weight-bold">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_liquido) %>
+                  </td>
+                  <td class="text-right font-weight-bold">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_iva) %>
+                  </td>
+                  <td class="text-right font-weight-bold">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_total) %>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna Lateral -->
+    <div class="col-lg-4">
+      <!-- Resumo Financeiro -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-success">
+            <i class="fas fa-calculator"></i> Resumo Financeiro
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-6">Subtotal:</div>
+            <div class="col-6 text-right">
+              <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_liquido) %>
+            </div>
+          </div>
+          
+          <% if (factura.desconto_geral > 0) { %>
+          <div class="row mb-2">
+            <div class="col-6">Desconto (<%= factura.desconto_geral %>%):</div>
+            <div class="col-6 text-right text-danger">
+              -<%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_desconto) %>
+            </div>
+          </div>
+          <% } %>
+          
+          <div class="row mb-2">
+            <div class="col-6">IVA (17%):</div>
+            <div class="col-6 text-right">
+              <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_iva) %>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="row">
+            <div class="col-6"><strong>Total Geral:</strong></div>
+            <div class="col-6 text-right">
+              <strong class="h5 text-success">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(factura.valor_total) %>
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QR Code Fiscal -->
+      <% if (factura.status !== 'Rascunho') { %>
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-info">
+            <i class="fas fa-qrcode"></i> Código QR Fiscal
+          </h6>
+        </div>
+        <div class="card-body text-center">
+          <div class="qr-code-placeholder bg-light border p-4">
+            <i class="fas fa-qrcode fa-5x text-muted"></i>
+            <br>
+            <small class="text-muted mt-2 d-block">QR Code será gerado automaticamente</small>
+          </div>
+          <div class="mt-3">
+            <small class="text-muted">
+              <strong>Hash:</strong> <%= factura.hash_fiscal || 'Será gerado na emissão' %>
+            </small>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- Histórico de Status -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-warning">
+            <i class="fas fa-history"></i> Histórico
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <% factura.historico.forEach(evento => { %>
+            <div class="timeline-item mb-3">
+              <div class="timeline-marker">
+                <% if (evento.tipo === 'criacao') { %>
+                  <i class="fas fa-plus text-primary"></i>
+                <% } else if (evento.tipo === 'emissao') { %>
+                  <i class="fas fa-paper-plane text-success"></i>
+                <% } else if (evento.tipo === 'pagamento') { %>
+                  <i class="fas fa-check text-success"></i>
+                <% } else if (evento.tipo === 'cancelamento') { %>
+                  <i class="fas fa-times text-danger"></i>
+                <% } else { %>
+                  <i class="fas fa-edit text-warning"></i>
+                <% } %>
+              </div>
+              <div class="timeline-content">
+                <h6 class="mb-1"><%= evento.descricao %></h6>
+                <small class="text-muted">
+                  <%= evento.data.toLocaleString('pt-MZ') %>
+                  <% if (evento.usuario) { %>
+                    - por <%= evento.usuario %>
+                  <% } %>
+                </small>
+                <% if (evento.observacoes) { %>
+                  <p class="mb-0 mt-1"><small><%= evento.observacoes %></small></p>
+                <% } %>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações Rápidas -->
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-dark">
+            <i class="fas fa-bolt"></i> Ações Rápidas
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <!-- Enviar por Email -->
+            <button type="button" class="btn btn-outline-primary btn-block mb-2" onclick="enviarEmail()">
+              <i class="fas fa-envelope"></i> Enviar por Email
+            </button>
+            
+            <!-- Gerar PDF -->
+            <a href="/vendas/facturas/<%= factura.id %>/pdf" class="btn btn-outline-secondary btn-block mb-2" target="_blank">
+              <i class="fas fa-file-pdf"></i> Gerar PDF
+            </a>
+            
+            <!-- Converter em Cotação (se aplicável) -->
+            <% if (factura.status === 'Rascunho') { %>
+              <button type="button" class="btn btn-outline-info btn-block mb-2" onclick="converterCotacao()">
+                <i class="fas fa-exchange-alt"></i> Converter em Cotação
+              </button>
+            <% } %>
+            
+            <!-- Cancelar (se aplicável) -->
+            <% if (factura.status !== 'Paga' && factura.status !== 'Cancelada') { %>
+              <button type="button" class="btn btn-outline-danger btn-block" onclick="cancelarFactura()">
+                <i class="fas fa-times"></i> Cancelar Factura
+              </button>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cancelamento -->
+<div class="modal fade" id="cancelarModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-times text-danger"></i> Cancelar Factura
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="/vendas/facturas/<%= factura.id %>/cancelar">
+        <div class="modal-body">
+          <p>Tem certeza que deseja cancelar a factura <strong><%= factura.numero %></strong>?</p>
+          <div class="form-group">
+            <label for="motivo">Motivo do cancelamento:</label>
+            <textarea class="form-control" id="motivo" name="motivo" rows="3" required
+                      placeholder="Descreva o motivo do cancelamento..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-check"></i> Confirmar Cancelamento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Envio por Email -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-envelope text-primary"></i> Enviar por Email
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="/vendas/facturas/<%= factura.id %>/enviar-email">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="email_destinatario">Email do destinatário:</label>
+            <input type="email" class="form-control" id="email_destinatario" name="email_destinatario" 
+                   value="<%= factura.cliente.email %>" required>
+          </div>
+          <div class="form-group">
+            <label for="assunto">Assunto:</label>
+            <input type="text" class="form-control" id="assunto" name="assunto" 
+                   value="Factura <%= factura.numero %> - <%= factura.cliente.nome %>" required>
+          </div>
+          <div class="form-group">
+            <label for="mensagem">Mensagem:</label>
+            <textarea class="form-control" id="mensagem" name="mensagem" rows="4"
+                      placeholder="Mensagem personalizada (opcional)..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Enviar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.timeline {
+  position: relative;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 30px;
+  bottom: -15px;
+  width: 2px;
+  background: #dee2e6;
+}
+
+.qr-code-placeholder {
+  border-radius: 8px;
+}
+</style>
+
+<script>
+function cancelarFactura() {
+  $('#cancelarModal').modal('show');
+}
+
+function enviarEmail() {
+  $('#emailModal').modal('show');
+}
+
+function converterCotacao() {
+  if (confirm('Deseja converter esta factura em cotação?')) {
+    window.location.href = '/vendas/cotacoes/create?factura=<%= factura.id %>';
+  }
+}
+</script>

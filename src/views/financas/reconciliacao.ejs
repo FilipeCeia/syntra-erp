@@ -1,0 +1,284 @@
+
+
+
+<!-- Filtros -->
+<div class="row mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <form method="GET" class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Banco</label>
+            <select name="banco" class="form-control">
+              <option value="">Todos os Bancos</option>
+              <option value="bci">BCI</option>
+              <option value="standard">Standard Bank</option>
+              <option value="bim">Millennium BIM</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Data Início</label>
+            <input type="date" name="data_inicio" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Data Fim</label>
+            <input type="date" name="data_fim" class="form-control">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-control">
+              <option value="">Todos</option>
+              <option value="conciliado">Conciliado</option>
+              <option value="pendente">Pendente</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <div>
+              <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Resumo da Reconciliação -->
+<div class="row mb-3">
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3>15</h3>
+        <p>Movimentos Banco</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-university"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3>12</h3>
+        <p>Conciliados</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-check"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3>3</h3>
+        <p>Pendentes</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-clock"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>0</h3>
+        <p>Divergências</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabelas de Reconciliação -->
+<div class="row">
+  <!-- Extratos do Banco -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Extratos do Banco</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-striped">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllBanco"></th>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (typeof extratosBanco !== 'undefined') { %>
+                <% extratosBanco.forEach(function(extrato, index) { %>
+                  <tr>
+                    <td>
+                      <input type="checkbox" class="movimento-banco" 
+                             value="<%= index %>" 
+                             <%= extrato.conciliado ? 'checked disabled' : '' %>>
+                    </td>
+                    <td><%= extrato.data %></td>
+                    <td><%= extrato.descricao %></td>
+                    <td class="<%= extrato.tipo === 'credito' ? 'text-success' : 'text-danger' %>">
+                      <%= extrato.tipo === 'credito' ? '+' : '-' %><%= formatCurrency(extrato.valor) %>
+                    </td>
+                    <td>
+                      <% if (extrato.conciliado) { %>
+                        <span class="badge badge-success">Conciliado</span>
+                      <% } else { %>
+                        <span class="badge badge-warning">Pendente</span>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td><input type="checkbox" class="movimento-banco" value="0"></td>
+                  <td>22/01/2024</td>
+                  <td>Depósito Cliente ABC</td>
+                  <td class="text-success">+15.000,00 MT</td>
+                  <td><span class="badge badge-warning">Pendente</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="movimento-banco" value="1" checked disabled></td>
+                  <td>21/01/2024</td>
+                  <td>TPA - Venda 001</td>
+                  <td class="text-success">+8.500,00 MT</td>
+                  <td><span class="badge badge-success">Conciliado</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="movimento-banco" value="2"></td>
+                  <td>20/01/2024</td>
+                  <td>Pagamento Fornecedor XYZ</td>
+                  <td class="text-danger">-12.000,00 MT</td>
+                  <td><span class="badge badge-warning">Pendente</span></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movimentos do ERP -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Movimentos do ERP</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-striped">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllERP"></th>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (typeof movimentosERP !== 'undefined') { %>
+                <% movimentosERP.forEach(function(movimento, index) { %>
+                  <tr>
+                    <td><input type="checkbox" class="movimento-erp" value="<%= index %>"></td>
+                    <td><%= movimento.data %></td>
+                    <td><%= movimento.descricao %></td>
+                    <td class="<%= movimento.tipo === 'entrada' ? 'text-success' : 'text-danger' %>">
+                      <%= movimento.tipo === 'entrada' ? '+' : '-' %><%= formatCurrency(movimento.valor) %>
+                    </td>
+                    <td>
+                      <span class="badge badge-<%= movimento.tipo === 'entrada' ? 'success' : 'danger' %>">
+                        <%= movimento.tipo === 'entrada' ? 'Entrada' : 'Saída' %>
+                      </span>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td><input type="checkbox" class="movimento-erp" value="0"></td>
+                  <td>22/01/2024</td>
+                  <td>Recebimento - Fatura #001</td>
+                  <td class="text-success">+15.000,00 MT</td>
+                  <td><span class="badge badge-success">Entrada</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="movimento-erp" value="1"></td>
+                  <td>21/01/2024</td>
+                  <td>Venda POS #001</td>
+                  <td class="text-success">+8.500,00 MT</td>
+                  <td><span class="badge badge-success">Entrada</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="movimento-erp" value="2"></td>
+                  <td>20/01/2024</td>
+                  <td>Pagamento - Fornecedor XYZ</td>
+                  <td class="text-danger">-12.000,00 MT</td>
+                  <td><span class="badge badge-danger">Saída</span></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Selecionar todos os movimentos do banco
+  $('#selectAllBanco').change(function() {
+    $('.movimento-banco:not(:disabled)').prop('checked', this.checked);
+  });
+
+  // Selecionar todos os movimentos do ERP
+  $('#selectAllERP').change(function() {
+    $('.movimento-erp').prop('checked', this.checked);
+  });
+});
+
+function processarReconciliacao() {
+  const movimentosBanco = [];
+  const movimentosERP = [];
+  
+  $('.movimento-banco:checked').each(function() {
+    movimentosBanco.push($(this).val());
+  });
+  
+  $('.movimento-erp:checked').each(function() {
+    movimentosERP.push($(this).val());
+  });
+  
+  if (movimentosBanco.length === 0 || movimentosERP.length === 0) {
+    toastr.warning('Selecione pelo menos um movimento de cada lado para reconciliar');
+    return;
+  }
+  
+  $.ajax({
+    url: '/financas/reconciliacao/processar',
+    method: 'POST',
+    data: {
+      movimentos_banco: movimentosBanco,
+      movimentos_erp: movimentosERP
+    },
+    success: function(response) {
+      if (response.success) {
+        toastr.success('Reconciliação processada com sucesso!');
+        location.reload();
+      } else {
+        toastr.error(response.message || 'Erro ao processar reconciliação');
+      }
+    },
+    error: function() {
+      toastr.error('Erro ao processar reconciliação');
+    }
+  });
+}
+</script>

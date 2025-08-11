@@ -1,0 +1,440 @@
+<!-- Transferências entre Lojas -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Transferências entre Lojas</h1>
+      <p class="mb-0 text-muted">Gerir transferências de produtos e funcionários</p>
+    </div>
+    <div>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novaTransferenciaModal">
+        <i class="fas fa-plus"></i> Nova Transferência
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/lojas/transferencias/index">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Pesquisar</label>
+              <input type="text" class="form-control" name="search" value="<%= filters.search %>" placeholder="Código, loja origem/destino...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select class="form-select" name="status">
+                <option value="">Todos os status</option>
+                <option value="Pendente" <%= filters.status === 'Pendente' ? 'selected' : '' %>>Pendente</option>
+                <option value="Aprovada" <%= filters.status === 'Aprovada' ? 'selected' : '' %>>Aprovada</option>
+                <option value="Concluída" <%= filters.status === 'Concluída' ? 'selected' : '' %>>Concluída</option>
+                <option value="Cancelada" <%= filters.status === 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Itens por página</label>
+              <select class="form-select" name="limit">
+                <option value="10" <%= pagination.limit == 10 ? 'selected' : '' %>>10</option>
+                <option value="25" <%= pagination.limit == 25 ? 'selected' : '' %>>25</option>
+                <option value="50" <%= pagination.limit == 50 ? 'selected' : '' %>>50</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">&nbsp;</label>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total Transferências
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= pagination.totalItems %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= transferencias.filter(t => t.status === 'Pendente').length %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Concluídas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= transferencias.filter(t => t.status === 'Concluída').length %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Valor Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% const valorTotal = transferencias.filter(t => t.valor_total).reduce((acc, t) => acc + t.valor_total, 0); %>
+                <%= valorTotal.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Transferências -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Transferências (<%= pagination.totalItems %>)</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Tipo</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Detalhes</th>
+              <th>Solicitante</th>
+              <th>Data Solicitação</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (transferencias.length > 0) { %>
+              <% transferencias.forEach(transferencia => { %>
+              <tr>
+                <td><strong><%= transferencia.codigo %></strong></td>
+                <td>
+                  <span class="badge badge-<%= transferencia.tipo === 'Produtos' ? 'primary' : 'success' %>">
+                    <i class="fas fa-<%= transferencia.tipo === 'Produtos' ? 'boxes' : 'user' %>"></i>
+                    <%= transferencia.tipo %>
+                  </span>
+                </td>
+                <td><%= transferencia.loja_origem %></td>
+                <td><%= transferencia.loja_destino %></td>
+                <td>
+                  <% if (transferencia.tipo === 'Produtos') { %>
+                    <strong><%= transferencia.total_itens %> itens</strong><br>
+                    <small class="text-muted"><%= transferencia.valor_total.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></small>
+                  <% } else { %>
+                    <strong><%= transferencia.funcionario %></strong>
+                  <% } %>
+                </td>
+                <td><%= transferencia.solicitante %></td>
+                <td><%= transferencia.data_solicitacao.toLocaleDateString('pt-PT') %></td>
+                <td>
+                  <% if (transferencia.status === 'Pendente') { %>
+                    <span class="badge badge-warning">Pendente</span>
+                  <% } else if (transferencia.status === 'Aprovada') { %>
+                    <span class="badge badge-info">Aprovada</span>
+                  <% } else if (transferencia.status === 'Concluída') { %>
+                    <span class="badge badge-success">Concluída</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">Cancelada</span>
+                  <% } %>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes(<%= transferencia.id %>)" title="Ver detalhes">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <% if (transferencia.status === 'Pendente') { %>
+                      <button class="btn btn-sm btn-outline-success" onclick="aprovarTransferencia(<%= transferencia.id %>)" title="Aprovar">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="cancelarTransferencia(<%= transferencia.id %>)" title="Cancelar">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    <% } else if (transferencia.status === 'Aprovada') { %>
+                      <button class="btn btn-sm btn-outline-info" onclick="concluirTransferencia(<%= transferencia.id %>)" title="Concluir">
+                        <i class="fas fa-check-double"></i>
+                      </button>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="9" class="text-center py-4">
+                  <i class="fas fa-exchange-alt fa-3x text-gray-300 mb-3"></i><br>
+                  <span class="text-muted">Nenhuma transferência encontrada</span>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pagination.totalPages > 1) { %>
+      <nav aria-label="Paginação">
+        <ul class="pagination justify-content-center">
+          <li class="page-item <%= pagination.currentPage <= 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&limit=<%= pagination.limit %>">
+              Anterior
+            </a>
+          </li>
+          
+          <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+            <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>&search=<%= filters.search %>&status=<%= filters.status %>&limit=<%= pagination.limit %>">
+                <%= i %>
+              </a>
+            </li>
+          <% } %>
+          
+          <li class="page-item <%= pagination.currentPage >= pagination.totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&limit=<%= pagination.limit %>">
+              Próximo
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nova Transferência -->
+<div class="modal fade" id="novaTransferenciaModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nova Transferência</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="novaTransferenciaForm">
+          <div class="mb-3">
+            <label class="form-label">Tipo de Transferência</label>
+            <select class="form-select" name="tipo" onchange="alterarTipoTransferencia()" required>
+              <option value="">Selecionar tipo...</option>
+              <option value="Produtos">Produtos</option>
+              <option value="Funcionário">Funcionário</option>
+            </select>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Loja Origem</label>
+                <select class="form-select" name="loja_origem_id" required>
+                  <option value="">Selecionar loja origem...</option>
+                  <% lojas.forEach(loja => { %>
+                    <option value="<%= loja.id %>"><%= loja.nome %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Loja Destino</label>
+                <select class="form-select" name="loja_destino_id" required>
+                  <option value="">Selecionar loja destino...</option>
+                  <% lojas.forEach(loja => { %>
+                    <option value="<%= loja.id %>"><%= loja.nome %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campos para Transferência de Produtos -->
+          <div id="camposProdutos" style="display: none;">
+            <div class="mb-3">
+              <label class="form-label">Produtos a Transferir</label>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Produto</th>
+                      <th>Quantidade</th>
+                      <th>Valor Unitário</th>
+                      <th>Total</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabelaProdutos">
+                    <tr>
+                      <td>
+                        <select class="form-select form-select-sm" name="produtos[0][id]">
+                          <option value="">Selecionar produto...</option>
+                          <option value="1">Smartphone Samsung A54</option>
+                          <option value="2">Notebook Dell Inspiron</option>
+                          <option value="3">Fones Bluetooth</option>
+                        </select>
+                      </td>
+                      <td><input type="number" class="form-control form-control-sm" name="produtos[0][quantidade]" min="1"></td>
+                      <td><input type="number" class="form-control form-control-sm" name="produtos[0][valor_unitario]" step="0.01"></td>
+                      <td><span class="total-produto">0.00 MT</span></td>
+                      <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="removerProduto(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="adicionarProduto()">Adicionar Produto</button>
+            </div>
+          </div>
+
+          <!-- Campos para Transferência de Funcionário -->
+          <div id="camposFuncionario" style="display: none;">
+            <div class="mb-3">
+              <label class="form-label">Funcionário</label>
+              <select class="form-select" name="funcionario_id">
+                <option value="">Selecionar funcionário...</option>
+                <option value="1">João Silva - Gerente</option>
+                <option value="2">Maria Costa - Vendedor</option>
+                <option value="3">Pedro Langa - Caixa</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Observações</label>
+            <textarea class="form-control" name="observacoes" rows="3" placeholder="Informações adicionais sobre a transferência..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="criarTransferencia()">Criar Transferência</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function alterarTipoTransferencia() {
+  const tipo = document.querySelector('select[name="tipo"]').value;
+  const camposProdutos = document.getElementById('camposProdutos');
+  const camposFuncionario = document.getElementById('camposFuncionario');
+  
+  if (tipo === 'Produtos') {
+    camposProdutos.style.display = 'block';
+    camposFuncionario.style.display = 'none';
+  } else if (tipo === 'Funcionário') {
+    camposProdutos.style.display = 'none';
+    camposFuncionario.style.display = 'block';
+  } else {
+    camposProdutos.style.display = 'none';
+    camposFuncionario.style.display = 'none';
+  }
+}
+
+function adicionarProduto() {
+  const tabela = document.getElementById('tabelaProdutos');
+  const novaLinha = tabela.rows[0].cloneNode(true);
+  const index = tabela.rows.length;
+  
+  // Atualizar nomes dos campos
+  novaLinha.querySelectorAll('select, input').forEach(campo => {
+    const name = campo.name.replace(/\[\d+\]/, `[${index}]`);
+    campo.name = name;
+    campo.value = '';
+  });
+  
+  tabela.appendChild(novaLinha);
+}
+
+function removerProduto(botao) {
+  const tabela = document.getElementById('tabelaProdutos');
+  if (tabela.rows.length > 1) {
+    botao.closest('tr').remove();
+  }
+}
+
+function criarTransferencia() {
+  // Simular criação de transferência
+  alert('Transferência criada com sucesso!');
+  $('#novaTransferenciaModal').modal('hide');
+  location.reload();
+}
+
+function verDetalhes(id) {
+  alert('Funcionalidade de detalhes em desenvolvimento');
+}
+
+function aprovarTransferencia(id) {
+  if (confirm('Aprovar esta transferência?')) {
+    alert('Transferência aprovada com sucesso!');
+    location.reload();
+  }
+}
+
+function cancelarTransferencia(id) {
+  if (confirm('Cancelar esta transferência?')) {
+    alert('Transferência cancelada!');
+    location.reload();
+  }
+}
+
+function concluirTransferencia(id) {
+  if (confirm('Marcar esta transferência como concluída?')) {
+    alert('Transferência concluída com sucesso!');
+    location.reload();
+  }
+}
+</script>

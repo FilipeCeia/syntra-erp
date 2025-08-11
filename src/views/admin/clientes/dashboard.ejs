@@ -1,0 +1,237 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">
+          <i class="fas fa-building mr-2"></i>Dashboard de Clientes/Empresas
+          <small class="text-muted ml-2">Visão Geral</small>
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
+          <li class="breadcrumb-item active">Gestão de Clientes/Empresas</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- ===== CARDS DE ESTATÍSTICAS PRINCIPAIS ===== -->
+    <div class="row">
+      <!-- Total de Clientes -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.totalClientes) ? stats.totalClientes : 0 %></span>
+            </h3>
+            <p class="mb-0">Total de Clientes/Empresas</p>
+            <small class="text-light opacity-75">
+              Todos os registros no sistema
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <a href="/admin-clientes" class="small-box-footer">
+            Ver todos <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Clientes Ativos -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.clientesAtivos) ? stats.clientesAtivos : 0 %></span>
+            </h3>
+            <p class="mb-0">Clientes Ativos</p>
+            <small class="text-light opacity-75">
+              Clientes com status ativo
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <a href="/admin-clientes?status=1" class="small-box-footer">
+            Ver ativos <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Clientes Inativos -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.clientesInativos) ? stats.clientesInativos : 0 %></span>
+            </h3>
+            <p class="mb-0">Clientes Inativos</p>
+            <small class="text-light opacity-75">
+              Clientes com status inativo
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-user-slash"></i>
+          </div>
+          <a href="/admin-clientes?status=0" class="small-box-footer">
+            Ver inativos <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Empresas -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger position-relative overflow-hidden">
+          <div class="inner">
+            <h3>
+              <span class="counter"><%= (typeof stats !== 'undefined' && stats.empresas) ? stats.empresas : 0 %></span>
+            </h3>
+            <p class="mb-0">Empresas</p>
+            <small class="text-light opacity-75">
+              Clientes do tipo empresa
+            </small>
+          </div>
+          <div class="icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <a href="/admin-clientes?tipo=2" class="small-box-footer">
+            Ver empresas <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Clientes Recentes -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Clientes/Empresas Recentes</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <ul class="products-list product-list-in-card pl-2 pr-2">
+              <% if (clientesRecentes && clientesRecentes.length > 0) { %>
+                <% clientesRecentes.forEach(cliente => { %>
+                  <li class="item">
+                    <div class="product-img">
+                      <i class="fas fa-<%= cliente.tipo === 2 ? 'building' : 'user' %> fa-2x text-<%= cliente.tipo === 2 ? 'info' : 'primary' %>"></i>
+                    </div>
+                    <div class="product-info">
+                      <a href="/admin-clientes/<%= cliente.id %>" class="product-title">
+                        <%= cliente.nome %>
+                        <span class="badge badge-<%= cliente.status === 1 ? 'success' : 'warning' %> float-right">
+                          <%= cliente.status === 1 ? 'Ativo' : 'Inativo' %>
+                        </span>
+                      </a>
+                      <span class="product-description">
+                        <% if (cliente.nuit) { %>
+                          NUIT: <%= cliente.nuit %> | 
+                        <% } %>
+                        Tel: <%= cliente.telefone %>
+                        <% if (cliente.email) { %>
+                          | Email: <%= cliente.email %>
+                        <% } %>
+                      </span>
+                    </div>
+                  </li>
+                <% }); %>
+              <% } else { %>
+                <li class="item">
+                  <div class="product-info text-center py-3">
+                    <span class="text-muted">Nenhum cliente cadastrado recentemente</span>
+                  </div>
+                </li>
+              <% } %>
+            </ul>
+          </div>
+          <div class="card-footer text-center">
+            <a href="/admin-clientes" class="uppercase">Ver Todos</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações Rápidas -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Ações Rápidas</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <a href="/admin-clientes/create" class="btn btn-primary btn-block mb-3">
+                  <i class="fas fa-plus mr-2"></i> Novo Cliente/Empresa
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a href="/admin-clientes" class="btn btn-info btn-block mb-3">
+                  <i class="fas fa-list mr-2"></i> Listar Todos
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a href="/modalidades" class="btn btn-warning btn-block mb-3">
+                  <i class="fas fa-money-bill-wave mr-2"></i> Modalidades de Pagamento
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a href="/admin-clientes/relatorios" class="btn btn-success btn-block mb-3">
+                  <i class="fas fa-chart-bar mr-2"></i> Relatórios
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações do Sistema -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Informações do Sistema</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-striped">
+              <tr>
+                <td><i class="fas fa-database mr-2"></i> Banco de Dados</td>
+                <td><span class="badge badge-success">Conectado</span></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-server mr-2"></i> Servidor</td>
+                <td><span class="badge badge-success">Online</span></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-clock mr-2"></i> Última Atualização</td>
+                <td><%= moment().format('DD/MM/YYYY HH:mm:ss') %></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-user-shield mr-2"></i> Usuário</td>
+                <td><%= user ? user.nome : 'Não autenticado' %></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

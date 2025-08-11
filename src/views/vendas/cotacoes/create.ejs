@@ -1,0 +1,687 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-plus"></i> Nova Cotação
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/vendas/cotacoes" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button type="button" class="btn btn-info btn-sm" onclick="previewCotacao()">
+        <i class="fas fa-eye"></i> Pré-visualizar
+      </button>
+    </div>
+  </div>
+
+  <form id="cotacaoForm" method="POST" action="/vendas/cotacoes">
+    <div class="row">
+      <!-- Coluna Principal -->
+      <div class="col-lg-8">
+        <!-- Dados do Cliente -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-user"></i> Dados do Cliente
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="cliente_id">Cliente *</label>
+                  <div class="input-group">
+                    <select class="form-control" id="cliente_id" name="cliente_id" required onchange="carregarDadosCliente()">
+                      <option value="">Selecione um cliente...</option>
+                      <% clientes.forEach(cliente => { %>
+                        <option value="<%= cliente.id %>" 
+                                data-nome="<%= cliente.nome %>"
+                                data-nuit="<%= cliente.nuit %>"
+                                data-endereco="<%= cliente.endereco_fiscal %>"
+                                data-telefone="<%= cliente.telefone %>"
+                                data-email="<%= cliente.email %>">
+                          <%= cliente.nome %> - <%= cliente.nuit %>
+                        </option>
+                      <% }); %>
+                    </select>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary" onclick="novoCliente()">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="cliente_nuit">NUIT</label>
+                  <input type="text" class="form-control" id="cliente_nuit" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="cliente_endereco">Endereço Fiscal</label>
+                  <input type="text" class="form-control" id="cliente_endereco" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="cliente_telefone">Telefone</label>
+                  <input type="text" class="form-control" id="cliente_telefone" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="cliente_email">Email</label>
+                  <input type="email" class="form-control" id="cliente_email" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Artigos da Cotação -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-shopping-cart"></i> Artigos
+            </h6>
+            <button type="button" class="btn btn-primary btn-sm" onclick="adicionarArtigo()">
+              <i class="fas fa-plus"></i> Adicionar Artigo
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="artigosTable">
+                <thead>
+                  <tr>
+                    <th width="30%">Artigo</th>
+                    <th width="10%">Qtd</th>
+                    <th width="15%">Preço Unit.</th>
+                    <th width="10%">Desc. %</th>
+                    <th width="10%">IVA %</th>
+                    <th width="15%">Subtotal</th>
+                    <th width="10%">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="artigosBody">
+                  <!-- Artigos serão adicionados dinamicamente -->
+                </tbody>
+                <tfoot>
+                  <tr class="table-info">
+                    <td colspan="5" class="text-right font-weight-bold">Subtotal:</td>
+                    <td class="text-right font-weight-bold" id="subtotalGeral">0,00 MT</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <!-- Mensagem quando não há artigos -->
+            <div id="semArtigos" class="text-center text-muted py-4">
+              <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+              <br>
+              Nenhum artigo adicionado.
+              <br>
+              <button type="button" class="btn btn-primary btn-sm mt-2" onclick="adicionarArtigo()">
+                <i class="fas fa-plus"></i> Adicionar primeiro artigo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Lateral -->
+      <div class="col-lg-4">
+        <!-- Dados da Cotação -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-file-contract"></i> Dados da Cotação
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="serie">Série *</label>
+              <select class="form-control" id="serie" name="serie" required>
+                <option value="CT">CT - Cotação</option>
+                <option value="OR">OR - Orçamento</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="data_criacao">Data de Criação *</label>
+              <input type="date" class="form-control" id="data_criacao" name="data_criacao" 
+                     value="<%= new Date().toISOString().split('T')[0] %>" required>
+            </div>
+
+            <div class="form-group">
+              <label for="dias_validade">Validade (dias) *</label>
+              <select class="form-control" id="dias_validade" name="dias_validade" required onchange="calcularDataValidade()">
+                <option value="15">15 dias</option>
+                <option value="30" selected>30 dias</option>
+                <option value="45">45 dias</option>
+                <option value="60">60 dias</option>
+                <option value="90">90 dias</option>
+                <option value="personalizado">Personalizado</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="validadePersonalizada" style="display: none;">
+              <label for="dias_validade_custom">Dias de validade:</label>
+              <input type="number" class="form-control" id="dias_validade_custom" min="1" max="365" onchange="calcularDataValidade()">
+            </div>
+
+            <div class="form-group">
+              <label for="data_validade">Data de Validade *</label>
+              <input type="date" class="form-control" id="data_validade" name="data_validade" required readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="condicoes_comerciais">Condições Comerciais</label>
+              <textarea class="form-control" id="condicoes_comerciais" name="condicoes_comerciais" rows="3"
+                        placeholder="Ex: Preços válidos por 30 dias, entrega em 15 dias úteis..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea class="form-control" id="observacoes" name="observacoes" rows="3"
+                        placeholder="Observações adicionais..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumo Financeiro -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-success">
+              <i class="fas fa-calculator"></i> Resumo Financeiro
+            </h6>
+          </div>
+          <div class="card-body">
+            <!-- Desconto Geral -->
+            <div class="form-group">
+              <label for="desconto_geral">Desconto Geral (%)</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="desconto_geral" name="desconto_geral" 
+                       min="0" max="100" step="0.01" value="0" onchange="calcularTotais()">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- Valores Calculados -->
+            <div class="row mb-2">
+              <div class="col-6">Subtotal:</div>
+              <div class="col-6 text-right" id="resumoSubtotal">0,00 MT</div>
+            </div>
+            
+            <div class="row mb-2">
+              <div class="col-6">Desconto:</div>
+              <div class="col-6 text-right text-danger" id="resumoDesconto">0,00 MT</div>
+            </div>
+            
+            <div class="row mb-2">
+              <div class="col-6">Valor Líquido:</div>
+              <div class="col-6 text-right" id="resumoLiquido">0,00 MT</div>
+            </div>
+            
+            <div class="row mb-2">
+              <div class="col-6">IVA (17%):</div>
+              <div class="col-6 text-right" id="resumoIVA">0,00 MT</div>
+            </div>
+            
+            <hr>
+            
+            <div class="row">
+              <div class="col-6"><strong>Total Geral:</strong></div>
+              <div class="col-6 text-right"><strong id="resumoTotal">0,00 MT</strong></div>
+            </div>
+
+            <!-- Campos ocultos para envio -->
+            <input type="hidden" id="valor_liquido" name="valor_liquido" value="0">
+            <input type="hidden" id="valor_iva" name="valor_iva" value="0">
+            <input type="hidden" id="valor_total" name="valor_total" value="0">
+            <input type="hidden" id="artigos_json" name="artigos" value="[]">
+          </div>
+        </div>
+
+        <!-- Configurações de Envio -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-info">
+              <i class="fas fa-cog"></i> Configurações
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="enviar_automaticamente" name="enviar_automaticamente">
+              <label class="form-check-label" for="enviar_automaticamente">
+                Enviar automaticamente por email
+              </label>
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="notificar_vencimento" name="notificar_vencimento" checked>
+              <label class="form-check-label" for="notificar_vencimento">
+                Notificar próximo ao vencimento
+              </label>
+            </div>
+            
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="permitir_conversao_automatica" name="permitir_conversao_automatica">
+              <label class="form-check-label" for="permitir_conversao_automatica">
+                Permitir conversão automática em factura
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="card shadow">
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button type="submit" name="action" value="rascunho" class="btn btn-secondary btn-block mb-2">
+                <i class="fas fa-save"></i> Salvar como Rascunho
+              </button>
+              <button type="submit" name="action" value="enviar" class="btn btn-primary btn-block mb-2">
+                <i class="fas fa-paper-plane"></i> Criar e Enviar
+              </button>
+              <a href="/vendas/cotacoes" class="btn btn-outline-secondary btn-block">
+                <i class="fas fa-times"></i> Cancelar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Modal para Adicionar Artigo -->
+<div class="modal fade" id="artigoModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-plus"></i> Adicionar Artigo
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="artigo_select">Artigo *</label>
+          <select class="form-control" id="artigo_select" onchange="carregarDadosArtigo()">
+            <option value="">Selecione um artigo...</option>
+            <% artigos.forEach(artigo => { %>
+              <option value="<%= artigo.id %>" 
+                      data-nome="<%= artigo.nome %>"
+                      data-preco="<%= artigo.preco_venda %>"
+                      data-iva="<%= artigo.taxa_iva %>"
+                      data-stock="<%= artigo.stock_atual %>">
+                <%= artigo.codigo %> - <%= artigo.nome %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="artigo_quantidade">Quantidade *</label>
+              <input type="number" class="form-control" id="artigo_quantidade" 
+                     min="1" step="1" value="1" onchange="calcularSubtotalArtigo()">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="artigo_preco">Preço Unitário *</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="artigo_preco" 
+                       min="0" step="0.01" onchange="calcularSubtotalArtigo()">
+                <div class="input-group-append">
+                  <span class="input-group-text">MT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="artigo_desconto">Desconto (%)</label>
+              <input type="number" class="form-control" id="artigo_desconto" 
+                     min="0" max="100" step="0.01" value="0" onchange="calcularSubtotalArtigo()">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="artigo_iva">Taxa IVA (%)</label>
+              <input type="number" class="form-control" id="artigo_iva" 
+                     min="0" max="100" step="0.01" value="17" readonly>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="artigo_observacoes">Observações do Artigo</label>
+          <textarea class="form-control" id="artigo_observacoes" rows="2"
+                    placeholder="Especificações técnicas, condições especiais..."></textarea>
+        </div>
+        
+        <div class="alert alert-info">
+          <strong>Subtotal: </strong><span id="subtotalArtigo">0,00 MT</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="confirmarArtigo()">
+          <i class="fas fa-check"></i> Adicionar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let artigos = [];
+let artigoEditando = -1;
+
+// Carregar dados do cliente selecionado
+function carregarDadosCliente() {
+  const select = document.getElementById('cliente_id');
+  const option = select.options[select.selectedIndex];
+  
+  if (option.value) {
+    document.getElementById('cliente_nuit').value = option.dataset.nuit || '';
+    document.getElementById('cliente_endereco').value = option.dataset.endereco || '';
+    document.getElementById('cliente_telefone').value = option.dataset.telefone || '';
+    document.getElementById('cliente_email').value = option.dataset.email || '';
+  } else {
+    document.getElementById('cliente_nuit').value = '';
+    document.getElementById('cliente_endereco').value = '';
+    document.getElementById('cliente_telefone').value = '';
+    document.getElementById('cliente_email').value = '';
+  }
+}
+
+// Calcular data de validade
+function calcularDataValidade() {
+  const dataCriacao = new Date(document.getElementById('data_criacao').value);
+  const diasValidade = document.getElementById('dias_validade').value;
+  const validadePersonalizada = document.getElementById('validadePersonalizada');
+  
+  let dias;
+  
+  if (diasValidade === 'personalizado') {
+    validadePersonalizada.style.display = 'block';
+    dias = parseInt(document.getElementById('dias_validade_custom').value) || 30;
+  } else {
+    validadePersonalizada.style.display = 'none';
+    dias = parseInt(diasValidade);
+  }
+  
+  const dataValidade = new Date(dataCriacao);
+  dataValidade.setDate(dataValidade.getDate() + dias);
+  
+  document.getElementById('data_validade').value = dataValidade.toISOString().split('T')[0];
+}
+
+// Adicionar artigo
+function adicionarArtigo() {
+  artigoEditando = -1;
+  limparModalArtigo();
+  $('#artigoModal').modal('show');
+}
+
+// Editar artigo
+function editarArtigo(index) {
+  artigoEditando = index;
+  const artigo = artigos[index];
+  
+  document.getElementById('artigo_select').value = artigo.id;
+  document.getElementById('artigo_quantidade').value = artigo.quantidade;
+  document.getElementById('artigo_preco').value = artigo.preco_unitario;
+  document.getElementById('artigo_desconto').value = artigo.desconto_percentual;
+  document.getElementById('artigo_iva').value = artigo.taxa_iva;
+  document.getElementById('artigo_observacoes').value = artigo.observacoes || '';
+  
+  calcularSubtotalArtigo();
+  $('#artigoModal').modal('show');
+}
+
+// Remover artigo
+function removerArtigo(index) {
+  if (confirm('Tem certeza que deseja remover este artigo?')) {
+    artigos.splice(index, 1);
+    atualizarTabelaArtigos();
+    calcularTotais();
+  }
+}
+
+// Carregar dados do artigo selecionado
+function carregarDadosArtigo() {
+  const select = document.getElementById('artigo_select');
+  const option = select.options[select.selectedIndex];
+  
+  if (option.value) {
+    document.getElementById('artigo_preco').value = option.dataset.preco || 0;
+    document.getElementById('artigo_iva').value = option.dataset.iva || 17;
+    calcularSubtotalArtigo();
+  }
+}
+
+// Calcular subtotal do artigo
+function calcularSubtotalArtigo() {
+  const quantidade = parseFloat(document.getElementById('artigo_quantidade').value) || 0;
+  const preco = parseFloat(document.getElementById('artigo_preco').value) || 0;
+  const desconto = parseFloat(document.getElementById('artigo_desconto').value) || 0;
+  
+  const subtotal = quantidade * preco * (1 - desconto / 100);
+  document.getElementById('subtotalArtigo').textContent = formatarMoeda(subtotal);
+}
+
+// Confirmar adição/edição do artigo
+function confirmarArtigo() {
+  const select = document.getElementById('artigo_select');
+  const option = select.options[select.selectedIndex];
+  
+  if (!option.value) {
+    alert('Selecione um artigo.');
+    return;
+  }
+  
+  const quantidade = parseFloat(document.getElementById('artigo_quantidade').value);
+  const preco = parseFloat(document.getElementById('artigo_preco').value);
+  
+  if (!quantidade || quantidade <= 0) {
+    alert('Informe uma quantidade válida.');
+    return;
+  }
+  
+  if (!preco || preco <= 0) {
+    alert('Informe um preço válido.');
+    return;
+  }
+  
+  const artigo = {
+    id: option.value,
+    nome: option.dataset.nome,
+    quantidade: quantidade,
+    preco_unitario: preco,
+    desconto_percentual: parseFloat(document.getElementById('artigo_desconto').value) || 0,
+    taxa_iva: parseFloat(document.getElementById('artigo_iva').value) || 17,
+    observacoes: document.getElementById('artigo_observacoes').value
+  };
+  
+  if (artigoEditando >= 0) {
+    artigos[artigoEditando] = artigo;
+  } else {
+    artigos.push(artigo);
+  }
+  
+  atualizarTabelaArtigos();
+  calcularTotais();
+  $('#artigoModal').modal('hide');
+}
+
+// Limpar modal do artigo
+function limparModalArtigo() {
+  document.getElementById('artigo_select').value = '';
+  document.getElementById('artigo_quantidade').value = 1;
+  document.getElementById('artigo_preco').value = '';
+  document.getElementById('artigo_desconto').value = 0;
+  document.getElementById('artigo_iva').value = 17;
+  document.getElementById('artigo_observacoes').value = '';
+  document.getElementById('subtotalArtigo').textContent = '0,00 MT';
+}
+
+// Atualizar tabela de artigos
+function atualizarTabelaArtigos() {
+  const tbody = document.getElementById('artigosBody');
+  const semArtigos = document.getElementById('semArtigos');
+  const table = document.getElementById('artigosTable');
+  
+  if (artigos.length === 0) {
+    table.style.display = 'none';
+    semArtigos.style.display = 'block';
+    return;
+  }
+  
+  table.style.display = 'table';
+  semArtigos.style.display = 'none';
+  
+  tbody.innerHTML = '';
+  
+  artigos.forEach((artigo, index) => {
+    const subtotal = artigo.quantidade * artigo.preco_unitario * (1 - artigo.desconto_percentual / 100);
+    
+    const row = `
+      <tr>
+        <td>
+          ${artigo.nome}
+          ${artigo.observacoes ? '<br><small class="text-muted">' + artigo.observacoes + '</small>' : ''}
+        </td>
+        <td class="text-center">${artigo.quantidade}</td>
+        <td class="text-right">${formatarMoeda(artigo.preco_unitario)}</td>
+        <td class="text-center">${artigo.desconto_percentual}%</td>
+        <td class="text-center">${artigo.taxa_iva}%</td>
+        <td class="text-right">${formatarMoeda(subtotal)}</td>
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-outline-warning" onclick="editarArtigo(${index})" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-danger" onclick="removerArtigo(${index})" title="Remover">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+    
+    tbody.innerHTML += row;
+  });
+}
+
+// Calcular totais
+function calcularTotais() {
+  let subtotal = 0;
+  
+  artigos.forEach(artigo => {
+    subtotal += artigo.quantidade * artigo.preco_unitario * (1 - artigo.desconto_percentual / 100);
+  });
+  
+  const descontoGeral = parseFloat(document.getElementById('desconto_geral').value) || 0;
+  const valorDesconto = subtotal * (descontoGeral / 100);
+  const valorLiquido = subtotal - valorDesconto;
+  
+  let valorIVA = 0;
+  artigos.forEach(artigo => {
+    const subtotalArtigo = artigo.quantidade * artigo.preco_unitario * (1 - artigo.desconto_percentual / 100);
+    const subtotalComDesconto = subtotalArtigo * (1 - descontoGeral / 100);
+    valorIVA += subtotalComDesconto * (artigo.taxa_iva / 100);
+  });
+  
+  const valorTotal = valorLiquido + valorIVA;
+  
+  // Atualizar interface
+  document.getElementById('subtotalGeral').textContent = formatarMoeda(subtotal);
+  document.getElementById('resumoSubtotal').textContent = formatarMoeda(subtotal);
+  document.getElementById('resumoDesconto').textContent = formatarMoeda(valorDesconto);
+  document.getElementById('resumoLiquido').textContent = formatarMoeda(valorLiquido);
+  document.getElementById('resumoIVA').textContent = formatarMoeda(valorIVA);
+  document.getElementById('resumoTotal').textContent = formatarMoeda(valorTotal);
+  
+  // Atualizar campos ocultos
+  document.getElementById('valor_liquido').value = valorLiquido.toFixed(2);
+  document.getElementById('valor_iva').value = valorIVA.toFixed(2);
+  document.getElementById('valor_total').value = valorTotal.toFixed(2);
+  document.getElementById('artigos_json').value = JSON.stringify(artigos);
+}
+
+// Formatar moeda
+function formatarMoeda(valor) {
+  return new Intl.NumberFormat('pt-MZ', {
+    style: 'currency',
+    currency: 'MZN'
+  }).format(valor);
+}
+
+// Pré-visualizar cotação
+function previewCotacao() {
+  if (artigos.length === 0) {
+    alert('Adicione pelo menos um artigo para pré-visualizar.');
+    return;
+  }
+  
+  // Implementar pré-visualização
+  alert('Funcionalidade de pré-visualização será implementada.');
+}
+
+// Novo cliente
+function novoCliente() {
+  // Implementar modal para novo cliente
+  alert('Funcionalidade de novo cliente será implementada.');
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+  // Calcular validade inicial
+  calcularDataValidade();
+  
+  // Atualizar tabela inicial
+  atualizarTabelaArtigos();
+  
+  // Event listeners
+  document.getElementById('dias_validade').addEventListener('change', calcularDataValidade);
+  document.getElementById('data_criacao').addEventListener('change', calcularDataValidade);
+  
+  // Validação do formulário
+  document.getElementById('cotacaoForm').addEventListener('submit', function(e) {
+    if (artigos.length === 0) {
+      e.preventDefault();
+      alert('Adicione pelo menos um artigo à cotação.');
+      return false;
+    }
+    
+    if (!document.getElementById('cliente_id').value) {
+      e.preventDefault();
+      alert('Selecione um cliente.');
+      return false;
+    }
+  });
+});
+</script>
+
+<%- include('../../partials/footer') %>

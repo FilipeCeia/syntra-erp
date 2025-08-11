@@ -1,0 +1,328 @@
+
+
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Estatísticas -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3><%= estatisticas.total_backups %></h3>
+            <p>Total de Backups</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-database"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3><%= estatisticas.espaco_utilizado %></h3>
+            <p>Espaço Utilizado</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-hdd"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3><%= moment(estatisticas.ultimo_backup).format('DD/MM') %></h3>
+            <p>Último Backup</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-clock"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3><%= moment(estatisticas.proximo_backup).format('DD/MM') %></h3>
+            <p>Próximo Backup</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <!-- Configurações de Backup -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-cogs"></i> Configurações de Backup
+            </h3>
+          </div>
+          <div class="card-body">
+            <form action="/sistema/configuracoes" method="POST">
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="backup_automatico" 
+                         name="backup_automatico" <%= configuracoes.backup_automatico ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="backup_automatico">
+                    Backup Automático
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="frequencia_backup">Frequência</label>
+                <select class="form-control" id="frequencia_backup" name="frequencia_backup">
+                  <option value="diario" <%= configuracoes.frequencia_backup === 'diario' ? 'selected' : '' %>>Diário</option>
+                  <option value="semanal" <%= configuracoes.frequencia_backup === 'semanal' ? 'selected' : '' %>>Semanal</option>
+                  <option value="mensal" <%= configuracoes.frequencia_backup === 'mensal' ? 'selected' : '' %>>Mensal</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="horario_backup">Horário</label>
+                <input type="time" class="form-control" id="horario_backup" name="horario_backup" 
+                       value="<%= configuracoes.horario_backup %>">
+              </div>
+              
+              <div class="form-group">
+                <label for="retencao_dias">Retenção (dias)</label>
+                <input type="number" class="form-control" id="retencao_dias" name="retencao_dias" 
+                       value="<%= configuracoes.retencao_dias %>" min="1" max="365">
+              </div>
+              
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="compressao" 
+                         name="compressao" <%= configuracoes.compressao ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="compressao">
+                    Compressão
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="notificacao_email" 
+                         name="notificacao_email" <%= configuracoes.notificacao_email ? 'checked' : '' %>>
+                  <label class="custom-control-label" for="notificacao_email">
+                    Notificação por Email
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="email_notificacao">Email para Notificações</label>
+                <input type="email" class="form-control" id="email_notificacao" name="email_notificacao" 
+                       value="<%= configuracoes.email_notificacao %>">
+              </div>
+              
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Salvar Configurações
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Ações Rápidas -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-bolt"></i> Ações Rápidas
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <form action="/sistema/backup" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-success btn-block mb-3">
+                  <i class="fas fa-plus"></i> Criar Backup Manual
+                </button>
+              </form>
+              
+              <button type="button" class="btn btn-warning btn-block mb-3" data-toggle="modal" data-target="#modalRestaurar">
+                <i class="fas fa-undo"></i> Restaurar Backup
+              </button>
+              
+              <button type="button" class="btn btn-info btn-block mb-3" onclick="verificarIntegridade()">
+                <i class="fas fa-check"></i> Verificar Integridade
+              </button>
+              
+              <button type="button" class="btn btn-secondary btn-block" onclick="limparBackupsAntigos()">
+                <i class="fas fa-trash"></i> Limpar Backups Antigos
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Status do Sistema -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-heartbeat"></i> Status do Sistema
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-success">
+                    <i class="fas fa-check"></i>
+                  </span>
+                  <h5 class="description-header">Online</h5>
+                  <span class="description-text">Base de Dados</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="description-block">
+                  <span class="description-percentage text-success">
+                    <i class="fas fa-check"></i>
+                  </span>
+                  <h5 class="description-header">Ativo</h5>
+                  <span class="description-text">Backup Automático</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de Backups -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-list"></i> Histórico de Backups
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Nome do Arquivo</th>
+                    <th>Data/Hora</th>
+                    <th>Tamanho</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% backups.forEach(function(backup) { %>
+                    <tr>
+                      <td><%= backup.nome %></td>
+                      <td><%= moment(backup.data).format('DD/MM/YYYY HH:mm') %></td>
+                      <td><%= backup.tamanho %></td>
+                      <td>
+                        <% if (backup.tipo === 'Completo') { %>
+                          <span class="badge badge-primary"><%= backup.tipo %></span>
+                        <% } else { %>
+                          <span class="badge badge-secondary"><%= backup.tipo %></span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (backup.status === 'Concluído') { %>
+                          <span class="badge badge-success"><%= backup.status %></span>
+                        <% } else { %>
+                          <span class="badge badge-warning"><%= backup.status %></span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-info" onclick="downloadBackup(<%= backup.id %>)">
+                          <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning" onclick="restaurarBackup(<%= backup.id %>)">
+                          <i class="fas fa-undo"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="excluirBackup(<%= backup.id %>)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal Restaurar Backup -->
+<div class="modal fade" id="modalRestaurar" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Restaurar Backup</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form action="/sistema/restaurar" method="POST">
+        <div class="modal-body">
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Atenção!</strong> Esta operação irá substituir todos os dados atuais.
+          </div>
+          <div class="form-group">
+            <label for="backup_id">Selecionar Backup</label>
+            <select class="form-control" id="backup_id" name="backup_id" required>
+              <option value="">Selecione um backup...</option>
+              <% backups.forEach(function(backup) { %>
+                <option value="<%= backup.id %>"><%= backup.nome %> - <%= moment(backup.data).format('DD/MM/YYYY HH:mm') %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-warning">Restaurar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function downloadBackup(id) {
+  window.location.href = '/sistema/download/' + id;
+}
+
+function restaurarBackup(id) {
+  if (confirm('Tem certeza que deseja restaurar este backup? Esta ação não pode ser desfeita.')) {
+    // Lógica para restaurar backup específico
+    console.log('Restaurando backup ID:', id);
+  }
+}
+
+function excluirBackup(id) {
+  if (confirm('Tem certeza que deseja excluir este backup?')) {
+    // Lógica para excluir backup
+    console.log('Excluindo backup ID:', id);
+  }
+}
+
+function verificarIntegridade() {
+  // Lógica para verificar integridade dos backups
+  alert('Verificação de integridade iniciada...');
+}
+
+function limparBackupsAntigos() {
+  if (confirm('Tem certeza que deseja limpar backups antigos?')) {
+    // Lógica para limpar backups antigos
+    console.log('Limpando backups antigos...');
+  }
+}
+</script>

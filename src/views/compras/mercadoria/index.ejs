@@ -1,0 +1,211 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-shopping-cart"></i> Compras de Mercadoria
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/compras/mercadoria/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Compra
+      </a>
+      <a href="/compras/mercadoria" class="btn btn-secondary btn-sm">
+        <i class="fas fa-sync"></i> Atualizar
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-filter"></i> Filtros
+      </h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/compras/mercadoria">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="search">Buscar</label>
+              <input type="text" class="form-control" id="search" name="search" 
+                     placeholder="Número, fornecedor, NUIT...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select class="form-control" id="status" name="status">
+                <option value="">Todos</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Pago">Pago</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="fornecedor">Fornecedor</label>
+              <select class="form-control" id="fornecedor" name="fornecedor">
+                <option value="">Todos</option>
+                <option value="1">Fornecedor ABC Lda</option>
+                <option value="2">Tech Solutions Lda</option>
+                <option value="3">Distribuidora XYZ</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+                <a href="/compras/mercadoria" class="btn btn-secondary">
+                  <i class="fas fa-times"></i> Limpar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela de Compras -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Lista de Compras de Mercadoria
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Fornecedor</th>
+              <th>NUIT</th>
+              <th>Data Compra</th>
+              <th>Data Vencimento</th>
+              <th>Valor Líquido</th>
+              <th>IVA</th>
+              <th>Valor Total</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CMP-2024-001</td>
+              <td>Fornecedor ABC Lda</td>
+              <td>400123456</td>
+              <td>15/01/2024</td>
+              <td>15/02/2024</td>
+              <td>21.500,00 MT</td>
+              <td>3.950,00 MT</td>
+              <td>25.450,00 MT</td>
+              <td><span class="badge badge-success">Pago</span></td>
+              <td>
+                <div class="btn-group" role="group">
+                  <a href="#" class="btn btn-sm btn-info" title="Ver">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>CMP-2024-002</td>
+              <td>Tech Solutions Lda</td>
+              <td>400234567</td>
+              <td>14/01/2024</td>
+              <td>14/02/2024</td>
+              <td>7.400,00 MT</td>
+              <td>1.350,00 MT</td>
+              <td>8.750,00 MT</td>
+              <td><span class="badge badge-warning">Pendente</span></td>
+              <td>
+                <div class="btn-group" role="group">
+                  <a href="#" class="btn btn-sm btn-info" title="Ver">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>CMP-2024-003</td>
+              <td>Distribuidora XYZ</td>
+              <td>400345678</td>
+              <td>13/01/2024</td>
+              <td>13/03/2024</td>
+              <td>38.200,00 MT</td>
+              <td>7.000,00 MT</td>
+              <td>45.200,00 MT</td>
+              <td><span class="badge badge-success">Pago</span></td>
+              <td>
+                <div class="btn-group" role="group">
+                  <a href="#" class="btn btn-sm btn-info" title="Ver">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>CMP-2024-004</td>
+              <td>Importadora Sul</td>
+              <td>400456789</td>
+              <td>12/01/2024</td>
+              <td>12/02/2024</td>
+              <td>15.600,00 MT</td>
+              <td>2.850,00 MT</td>
+              <td>18.450,00 MT</td>
+              <td><span class="badge badge-warning">Pendente</span></td>
+              <td>
+                <div class="btn-group" role="group">
+                  <a href="#" class="btn btn-sm btn-info" title="Ver">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('#dataTable').DataTable({
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+    },
+    "order": [[ 3, "desc" ]]
+  });
+});
+</script>

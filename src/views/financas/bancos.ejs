@@ -1,0 +1,167 @@
+
+
+<!-- Lista de Bancos -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Contas Bancárias</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped" id="bancosTable">
+            <thead>
+              <tr>
+                <th>Banco</th>
+                <th>Código</th>
+                <th>Conta</th>
+                <th>Saldo Atual</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (typeof bancos !== 'undefined') { %>
+                <% bancos.forEach(function(banco) { %>
+                  <tr>
+                    <td><%= banco.nome %></td>
+                    <td><%= banco.codigo %></td>
+                    <td><%= banco.conta %></td>
+                    <td><%= formatCurrency(banco.saldo) %></td>
+                    <td>
+                      <% if (banco.ativo) { %>
+                        <span class="badge badge-success">Ativo</span>
+                      <% } else { %>
+                        <span class="badge badge-secondary">Inativo</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <a href="/financas/bancos/<%= banco.id %>/extratos" class="btn btn-sm btn-info" title="Ver Extratos">
+                        <i class="fas fa-list"></i>
+                      </a>
+                      <button class="btn btn-sm btn-warning" onclick="editarBanco(<%= banco.id %>)" title="Editar">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <% if (banco.ativo) { %>
+                        <button class="btn btn-sm btn-secondary" onclick="toggleStatus(<%= banco.id %>, false)" title="Desativar">
+                          <i class="fas fa-pause"></i>
+                        </button>
+                      <% } else { %>
+                        <button class="btn btn-sm btn-success" onclick="toggleStatus(<%= banco.id %>, true)" title="Ativar">
+                          <i class="fas fa-play"></i>
+                        </button>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td>Banco Comercial e de Investimentos</td>
+                  <td>BCI</td>
+                  <td>1234567890</td>
+                  <td>125.000,00 MT</td>
+                  <td><span class="badge badge-success">Ativo</span></td>
+                  <td>
+                    <a href="/financas/bancos/1/extratos" class="btn btn-sm btn-info" title="Ver Extratos">
+                      <i class="fas fa-list"></i>
+                    </a>
+                    <button class="btn btn-sm btn-warning" onclick="editarBanco(1)" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="toggleStatus(1, false)" title="Desativar">
+                      <i class="fas fa-pause"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Standard Bank</td>
+                  <td>SB</td>
+                  <td>0987654321</td>
+                  <td>85.000,00 MT</td>
+                  <td><span class="badge badge-success">Ativo</span></td>
+                  <td>
+                    <a href="/financas/bancos/2/extratos" class="btn btn-sm btn-info" title="Ver Extratos">
+                      <i class="fas fa-list"></i>
+                    </a>
+                    <button class="btn btn-sm btn-warning" onclick="editarBanco(2)" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="toggleStatus(2, false)" title="Desativar">
+                      <i class="fas fa-pause"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Millennium BIM</td>
+                  <td>BIM</td>
+                  <td>1122334455</td>
+                  <td>45.000,00 MT</td>
+                  <td><span class="badge badge-secondary">Inativo</span></td>
+                  <td>
+                    <a href="/financas/bancos/3/extratos" class="btn btn-sm btn-info" title="Ver Extratos">
+                      <i class="fas fa-list"></i>
+                    </a>
+                    <button class="btn btn-sm btn-warning" onclick="editarBanco(3)" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-success" onclick="toggleStatus(3, true)" title="Ativar">
+                      <i class="fas fa-play"></i>
+                    </button>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('#bancosTable').DataTable({
+    language: {
+      url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json'
+    },
+    responsive: true,
+    order: [[0, 'asc']]
+  });
+});
+
+function editarBanco(id) {
+  window.location.href = '/financas/bancos/' + id + '/edit';
+}
+
+function toggleStatus(id, ativo) {
+  const acao = ativo ? 'ativar' : 'desativar';
+  
+  Swal.fire({
+    title: 'Confirmar Ação',
+    text: `Deseja ${acao} este banco?`,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: '/financas/bancos/' + id + '/toggle-status',
+        method: 'POST',
+        data: { ativo: ativo },
+        success: function(response) {
+          if (response.success) {
+            toastr.success(`Banco ${acao} com sucesso!`);
+            location.reload();
+          } else {
+            toastr.error(response.message || `Erro ao ${acao} banco`);
+          }
+        },
+        error: function() {
+          toastr.error(`Erro ao ${acao} banco`);
+        }
+      });
+    }
+  });
+}
+</script>

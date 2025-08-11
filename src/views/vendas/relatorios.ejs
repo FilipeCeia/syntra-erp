@@ -1,0 +1,745 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-chart-line"></i> Relatórios de Vendas
+    </h1>
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-primary btn-sm" onclick="exportarRelatorio()">
+        <i class="fas fa-download"></i> Exportar
+      </button>
+      <button type="button" class="btn btn-info btn-sm" onclick="imprimirRelatorio()">
+        <i class="fas fa-print"></i> Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-filter"></i> Filtros
+      </h6>
+    </div>
+    <div class="card-body">
+      <form id="filtrosForm" method="GET">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="data_inicio">Data Início:</label>
+              <input type="date" class="form-control" id="data_inicio" name="data_inicio" 
+                     value="<%= filtros.data_inicio || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0] %>">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="data_fim">Data Fim:</label>
+              <input type="date" class="form-control" id="data_fim" name="data_fim" 
+                     value="<%= filtros.data_fim || new Date().toISOString().split('T')[0] %>">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="tipo_documento">Tipo:</label>
+              <select class="form-control" id="tipo_documento" name="tipo_documento">
+                <option value="">Todos</option>
+                <option value="Factura" <%= filtros.tipo_documento === 'Factura' ? 'selected' : '' %>>Facturas</option>
+                <option value="Factura-Recibo" <%= filtros.tipo_documento === 'Factura-Recibo' ? 'selected' : '' %>>Factura-Recibo</option>
+                <option value="Cotacao" <%= filtros.tipo_documento === 'Cotacao' ? 'selected' : '' %>>Cotações</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select class="form-control" id="status" name="status">
+                <option value="">Todos</option>
+                <option value="Emitida" <%= filtros.status === 'Emitida' ? 'selected' : '' %>>Emitida</option>
+                <option value="Paga" <%= filtros.status === 'Paga' ? 'selected' : '' %>>Paga</option>
+                <option value="Pendente" <%= filtros.status === 'Pendente' ? 'selected' : '' %>>Pendente</option>
+                <option value="Cancelada" <%= filtros.status === 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div>
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total de Vendas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumo.total_vendas) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Número de Documentos
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= resumo.total_documentos %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Ticket Médio
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumo.ticket_medio) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calculator fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Total IVA
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumo.total_iva) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-percentage fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Gráfico de Vendas por Mês -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-chart-area"></i> Evolução das Vendas
+          </h6>
+          <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown">
+              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow">
+              <div class="dropdown-header">Opções:</div>
+              <a class="dropdown-item" href="#" onclick="alterarTipoGrafico('line')">Linha</a>
+              <a class="dropdown-item" href="#" onclick="alterarTipoGrafico('bar')">Barras</a>
+              <a class="dropdown-item" href="#" onclick="alterarTipoGrafico('area')">Área</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="vendasChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de Vendas por Tipo -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-chart-pie"></i> Vendas por Tipo
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-pie pt-4 pb-2">
+            <canvas id="tipoChart"></canvas>
+          </div>
+          <div class="mt-4 text-center small">
+            <% vendas_por_tipo.forEach(tipo => { %>
+              <span class="mr-2">
+                <i class="fas fa-circle" style="color: <%= tipo.cor %>"></i> <%= tipo.tipo %>
+              </span>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Top Clientes -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-users"></i> Top 10 Clientes
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Cliente</th>
+                  <th>NUIT</th>
+                  <th class="text-center">Docs</th>
+                  <th class="text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% top_clientes.forEach((cliente, index) => { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= cliente.nome %></td>
+                    <td><%= cliente.nuit %></td>
+                    <td class="text-center"><%= cliente.total_documentos %></td>
+                    <td class="text-right">
+                      <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cliente.total_vendas) %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Artigos -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-box"></i> Top 10 Artigos
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Artigo</th>
+                  <th class="text-center">Qtd</th>
+                  <th class="text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% top_artigos.forEach((artigo, index) => { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= artigo.nome %></td>
+                    <td class="text-center"><%= artigo.quantidade_vendida %></td>
+                    <td class="text-right">
+                      <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(artigo.total_vendas) %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relatório Detalhado -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-table"></i> Relatório Detalhado
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="relatorioTable">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Documento</th>
+              <th>Tipo</th>
+              <th>Cliente</th>
+              <th>NUIT</th>
+              <th class="text-right">Valor Líquido</th>
+              <th class="text-right">IVA</th>
+              <th class="text-right">Total</th>
+              <th class="text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% vendas_detalhadas.forEach(venda => { %>
+              <tr>
+                <td><%= new Date(venda.data_emissao).toLocaleDateString('pt-BR') %></td>
+                <td>
+                  <a href="/vendas/<%= venda.tipo.toLowerCase() %>s/<%= venda.id %>">
+                    <%= venda.numero %>
+                  </a>
+                </td>
+                <td>
+                  <span class="badge badge-<%= venda.tipo === 'Factura' ? 'primary' : venda.tipo === 'Factura-Recibo' ? 'success' : 'info' %>">
+                    <%= venda.tipo %>
+                  </span>
+                </td>
+                <td><%= venda.cliente_nome %></td>
+                <td><%= venda.cliente_nuit %></td>
+                <td class="text-right">
+                  <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_liquido) %>
+                </td>
+                <td class="text-right">
+                  <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_iva) %>
+                </td>
+                <td class="text-right">
+                  <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_total) %>
+                </td>
+                <td class="text-center">
+                  <span class="badge badge-<%= venda.status === 'Paga' ? 'success' : venda.status === 'Pendente' ? 'warning' : venda.status === 'Cancelada' ? 'danger' : 'primary' %>">
+                    <%= venda.status %>
+                  </span>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+          <tfoot>
+            <tr class="table-info">
+              <th colspan="5" class="text-right">Totais:</th>
+              <th class="text-right">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumo.total_liquido) %>
+              </th>
+              <th class="text-right">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumo.total_iva) %>
+              </th>
+              <th class="text-right">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumo.total_vendas) %>
+              </th>
+              <th></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      
+      <!-- Paginação -->
+      <% if (paginacao.total_paginas > 1) { %>
+        <nav aria-label="Paginação">
+          <ul class="pagination justify-content-center">
+            <% if (paginacao.pagina_atual > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="?<%= new URLSearchParams({...filtros, pagina: paginacao.pagina_atual - 1}).toString() %>">
+                  <i class="fas fa-chevron-left"></i>
+                </a>
+              </li>
+            <% } %>
+            
+            <% for (let i = Math.max(1, paginacao.pagina_atual - 2); i <= Math.min(paginacao.total_paginas, paginacao.pagina_atual + 2); i++) { %>
+              <li class="page-item <%= i === paginacao.pagina_atual ? 'active' : '' %>">
+                <a class="page-link" href="?<%= new URLSearchParams({...filtros, pagina: i}).toString() %>">
+                  <%= i %>
+                </a>
+              </li>
+            <% } %>
+            
+            <% if (paginacao.pagina_atual < paginacao.total_paginas) { %>
+              <li class="page-item">
+                <a class="page-link" href="?<%= new URLSearchParams({...filtros, pagina: paginacao.pagina_atual + 1}).toString() %>">
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Análise de Cotações -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-warning">
+        <i class="fas fa-chart-bar"></i> Análise de Cotações
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card border-left-info h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                    Total Cotações
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    <%= analise_cotacoes.total_cotacoes %>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-file-contract fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card border-left-success h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                    Convertidas
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    <%= analise_cotacoes.cotacoes_convertidas %>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card border-left-warning h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                    Taxa Conversão
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    <%= analise_cotacoes.taxa_conversao %>%
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-percentage fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card border-left-danger h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                    Não Convertidas
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    <%= analise_cotacoes.cotacoes_nao_convertidas %>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-times-circle fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <h6 class="font-weight-bold text-primary mb-3">
+            <i class="fas fa-exclamation-triangle"></i> Cotações Próximas ao Vencimento
+          </h6>
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Cliente</th>
+                  <th>Validade</th>
+                  <th class="text-right">Valor</th>
+                  <th class="text-center">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% cotacoes_vencimento.forEach(cotacao => { %>
+                  <tr>
+                    <td>
+                      <a href="/vendas/cotacoes/<%= cotacao.id %>">
+                        <%= cotacao.numero %>
+                      </a>
+                    </td>
+                    <td><%= cotacao.cliente_nome %></td>
+                    <td>
+                      <span class="text-warning">
+                        <%= new Date(cotacao.data_validade).toLocaleDateString('pt-BR') %>
+                      </span>
+                    </td>
+                    <td class="text-right">
+                      <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_total) %>
+                    </td>
+                    <td class="text-center">
+                      <button class="btn btn-sm btn-warning" onclick="renovarCotacao(<%= cotacao.id %>)" title="Renovar">
+                        <i class="fas fa-redo"></i>
+                      </button>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <h6 class="font-weight-bold text-primary mb-3">
+            <i class="fas fa-chart-line"></i> Motivos de Não Conversão
+          </h6>
+          <div class="chart-pie">
+            <canvas id="motivosChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Dados para os gráficos
+const vendasMensais = <%- JSON.stringify(vendas_mensais) %>;
+const vendasPorTipo = <%- JSON.stringify(vendas_por_tipo) %>;
+const motivosNaoConversao = <%- JSON.stringify(motivos_nao_conversao) %>;
+
+// Gráfico de Vendas Mensais
+const ctxVendas = document.getElementById('vendasChart').getContext('2d');
+const vendasChart = new Chart(ctxVendas, {
+  type: 'line',
+  data: {
+    labels: vendasMensais.map(v => v.mes),
+    datasets: [{
+      label: 'Vendas (MT)',
+      data: vendasMensais.map(v => v.total),
+      borderColor: '#4e73df',
+      backgroundColor: 'rgba(78, 115, 223, 0.1)',
+      borderWidth: 2,
+      fill: true,
+      tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return new Intl.NumberFormat('pt-MZ', {
+              style: 'currency',
+              currency: 'MZN',
+              minimumFractionDigits: 0
+            }).format(value);
+          }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return 'Vendas: ' + new Intl.NumberFormat('pt-MZ', {
+              style: 'currency',
+              currency: 'MZN'
+            }).format(context.parsed.y);
+          }
+        }
+      }
+    }
+  }
+});
+
+// Gráfico de Vendas por Tipo
+const ctxTipo = document.getElementById('tipoChart').getContext('2d');
+const tipoChart = new Chart(ctxTipo, {
+  type: 'doughnut',
+  data: {
+    labels: vendasPorTipo.map(v => v.tipo),
+    datasets: [{
+      data: vendasPorTipo.map(v => v.total),
+      backgroundColor: vendasPorTipo.map(v => v.cor),
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((context.parsed / total) * 100).toFixed(1);
+            return context.label + ': ' + new Intl.NumberFormat('pt-MZ', {
+              style: 'currency',
+              currency: 'MZN'
+            }).format(context.parsed) + ' (' + percentage + '%)';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Gráfico de Motivos de Não Conversão
+const ctxMotivos = document.getElementById('motivosChart').getContext('2d');
+const motivosChart = new Chart(ctxMotivos, {
+  type: 'pie',
+  data: {
+    labels: motivosNaoConversao.map(m => m.motivo),
+    datasets: [{
+      data: motivosNaoConversao.map(m => m.quantidade),
+      backgroundColor: [
+        '#e74a3b',
+        '#f39c12',
+        '#3498db',
+        '#2ecc71',
+        '#9b59b6',
+        '#1abc9c'
+      ],
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom'
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((context.parsed / total) * 100).toFixed(1);
+            return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Funções
+function alterarTipoGrafico(tipo) {
+  vendasChart.config.type = tipo;
+  vendasChart.update();
+}
+
+function exportarRelatorio() {
+  const params = new URLSearchParams(window.location.search);
+  params.set('export', 'excel');
+  window.location.href = '/vendas/relatorios?' + params.toString();
+}
+
+function imprimirRelatorio() {
+  window.print();
+}
+
+function renovarCotacao(id) {
+  if (confirm('Deseja renovar a validade desta cotação?')) {
+    window.location.href = '/vendas/cotacoes/' + id + '/renovar';
+  }
+}
+
+// Inicialização da DataTable
+$(document).ready(function() {
+  $('#relatorioTable').DataTable({
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+    },
+    "pageLength": 25,
+    "order": [[0, "desc"]],
+    "columnDefs": [
+      { "orderable": false, "targets": [8] }
+    ]
+  });
+});
+</script>
+
+<style>
+@media print {
+  .btn, .dropdown, .pagination {
+    display: none !important;
+  }
+  
+  .card {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+  
+  .table {
+    font-size: 12px;
+  }
+}
+
+.chart-area {
+  position: relative;
+  height: 400px;
+}
+
+.chart-pie {
+  position: relative;
+  height: 300px;
+}
+</style>

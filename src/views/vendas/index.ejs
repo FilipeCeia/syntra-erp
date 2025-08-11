@@ -1,0 +1,322 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-shopping-cart"></i> Vendas
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/vendas/facturas/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Factura
+      </a>
+      <a href="/vendas/cotacoes/create" class="btn btn-info btn-sm">
+        <i class="fas fa-file-alt"></i> Nova Cotação
+      </a>
+      <a href="/vendas/relatorios" class="btn btn-secondary btn-sm">
+        <i class="fas fa-chart-bar"></i> Relatórios
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-filter"></i> Filtros
+      </h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/vendas">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="search">Buscar</label>
+              <input type="text" class="form-control" id="search" name="search" 
+                     value="<%= filters.search %>" placeholder="Número, cliente...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select class="form-control" id="status" name="status">
+                <option value="">Todos</option>
+                <option value="Paga" <%= filters.status === 'Paga' ? 'selected' : '' %>>Paga</option>
+                <option value="Pendente" <%= filters.status === 'Pendente' ? 'selected' : '' %>>Pendente</option>
+                <option value="Emitida" <%= filters.status === 'Emitida' ? 'selected' : '' %>>Emitida</option>
+                <option value="Cancelada" <%= filters.status === 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="tipo">Tipo</label>
+              <select class="form-control" id="tipo" name="tipo">
+                <option value="">Todos</option>
+                <option value="Factura" <%= filters.tipo === 'Factura' ? 'selected' : '' %>>Factura</option>
+                <option value="Factura-Recibo" <%= filters.tipo === 'Factura-Recibo' ? 'selected' : '' %>>Factura-Recibo</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-search"></i> Filtrar
+                </button>
+                <a href="/vendas" class="btn btn-secondary">
+                  <i class="fas fa-times"></i> Limpar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela de Vendas -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list"></i> Lista de Vendas
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Cliente</th>
+              <th>NUIT</th>
+              <th>Tipo</th>
+              <th>Data Emissão</th>
+              <th>Data Vencimento</th>
+              <th>Valor Total</th>
+              <th>IVA</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (vendas && vendas.length > 0) { %>
+              <% vendas.forEach(venda => { %>
+              <tr>
+                <td>
+                  <strong><%= venda.numero %></strong>
+                </td>
+                <td><%= venda.cliente.nome %></td>
+                <td><%= venda.cliente.nuit %></td>
+                <td>
+                  <% if (venda.tipo === 'Factura') { %>
+                    <span class="badge badge-primary">Factura</span>
+                  <% } else if (venda.tipo === 'Factura-Recibo') { %>
+                    <span class="badge badge-success">Factura-Recibo</span>
+                  <% } %>
+                </td>
+                <td><%= venda.data_emissao.toLocaleDateString('pt-MZ') %></td>
+                <td><%= venda.data_vencimento.toLocaleDateString('pt-MZ') %></td>
+                <td class="text-right">
+                  <strong><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_total) %></strong>
+                </td>
+                <td class="text-right">
+                  <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(venda.valor_iva) %>
+                </td>
+                <td>
+                  <% if (venda.status === 'Paga') { %>
+                    <span class="badge badge-success">Paga</span>
+                  <% } else if (venda.status === 'Pendente') { %>
+                    <span class="badge badge-warning">Pendente</span>
+                  <% } else if (venda.status === 'Emitida') { %>
+                    <span class="badge badge-info">Emitida</span>
+                  <% } else if (venda.status === 'Cancelada') { %>
+                    <span class="badge badge-danger">Cancelada</span>
+                  <% } else { %>
+                    <span class="badge badge-secondary"><%= venda.status %></span>
+                  <% } %>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <a href="/vendas/facturas/<%= venda.id %>" class="btn btn-sm btn-outline-primary" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <% if (venda.status !== 'Cancelada' && venda.status !== 'Paga') { %>
+                      <a href="/vendas/facturas/<%= venda.id %>/edit" class="btn btn-sm btn-outline-warning" title="Editar">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                    <% } %>
+                    <a href="/vendas/facturas/<%= venda.id %>/imprimir" class="btn btn-sm btn-outline-secondary" title="Imprimir" target="_blank">
+                      <i class="fas fa-print"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="10" class="text-center text-muted py-4">
+                  <i class="fas fa-inbox fa-3x mb-3"></i>
+                  <br>
+                  Nenhuma venda encontrada.
+                  <br>
+                  <a href="/vendas/facturas/create" class="btn btn-primary btn-sm mt-2">
+                    <i class="fas fa-plus"></i> Criar primeira factura
+                  </a>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pagination && pagination.totalPages > 1) { %>
+      <nav aria-label="Paginação">
+        <ul class="pagination justify-content-center">
+          <!-- Página Anterior -->
+          <% if (pagination.hasPrev) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&tipo=<%= filters.tipo %>">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </span>
+            </li>
+          <% } %>
+
+          <!-- Números das Páginas -->
+          <% for (let i = Math.max(1, pagination.currentPage - 2); i <= Math.min(pagination.totalPages, pagination.currentPage + 2); i++) { %>
+            <% if (i === pagination.currentPage) { %>
+              <li class="page-item active">
+                <span class="page-link"><%= i %></span>
+              </li>
+            <% } else { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= i %>&search=<%= filters.search %>&status=<%= filters.status %>&tipo=<%= filters.tipo %>">
+                  <%= i %>
+                </a>
+              </li>
+            <% } %>
+          <% } %>
+
+          <!-- Próxima Página -->
+          <% if (pagination.hasNext) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>&search=<%= filters.search %>&status=<%= filters.status %>&tipo=<%= filters.tipo %>">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </span>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+
+      <!-- Informações da Paginação -->
+      <div class="text-center text-muted">
+        Mostrando <%= Math.min(10, pagination.totalItems) %> de <%= pagination.totalItems %> registros
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Resumo Estatístico -->
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total de Vendas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <%= pagination ? pagination.totalItems : 0 %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Valor Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const valorTotal = vendas ? vendas.reduce((sum, v) => sum + v.valor_total, 0) : 0;
+                %>
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(valorTotal) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const pendentes = vendas ? vendas.filter(v => v.status === 'Pendente').length : 0;
+                %>
+                <%= pendentes %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Ticket Médio
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <% 
+                  const ticketMedio = vendas && vendas.length > 0 ? valorTotal / vendas.length : 0;
+                %>
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(ticketMedio) %>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calculator fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

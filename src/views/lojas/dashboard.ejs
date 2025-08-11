@@ -1,0 +1,302 @@
+<!-- Dashboard Multi-loja -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Dashboard Multi-loja</h1>
+      <p class="mb-0 text-muted">Visão geral de todas as lojas</p>
+    </div>
+    <div>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novaLojaModal">
+        <i class="fas fa-plus"></i> Nova Loja
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total de Lojas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.totalLojas %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-store fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Lojas Ativas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.lojasAtivas %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Total Funcionários
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.totalFuncionarios %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-users fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Vendas Hoje
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.vendasHoje.total.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></div>
+              <div class="text-xs text-muted"><%= dashboardData.vendasHoje.transacoes %> transações</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos e Tabelas -->
+  <div class="row">
+    <!-- Top Lojas -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Performance das Lojas</h6>
+          <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow">
+              <a class="dropdown-item" href="#">Exportar Relatório</a>
+              <a class="dropdown-item" href="#">Ver Detalhes</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Loja</th>
+                  <th>Vendas do Mês</th>
+                  <th>Transações</th>
+                  <th>Crescimento</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% dashboardData.topLojas.forEach(loja => { %>
+                <tr>
+                  <td><%= loja.nome %></td>
+                  <td><%= loja.vendas.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></td>
+                  <td><%= loja.transacoes %></td>
+                  <td>
+                    <span class="badge badge-<%= loja.crescimento > 0 ? 'success' : 'danger' %>">
+                      <%= loja.crescimento > 0 ? '+' : '' %><%= loja.crescimento %>%
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge badge-success">Ativa</span>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas e Notificações -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Alertas e Notificações</h6>
+        </div>
+        <div class="card-body">
+          <% dashboardData.alertas.forEach(alerta => { %>
+          <div class="alert alert-<%= alerta.tipo === 'warning' ? 'warning' : 'info' %> alert-dismissible fade show" role="alert">
+            <strong><%= alerta.loja %>:</strong> <%= alerta.mensagem %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <% }); %>
+          
+          <div class="text-center">
+            <a href="/lojas/transferencias/index" class="btn btn-primary btn-sm">
+              Ver Todas as Transferências
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vendas do Mês -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Vendas do Mês</h6>
+        </div>
+        <div class="card-body">
+          <div class="text-center">
+            <div class="h4 mb-0 font-weight-bold text-primary">
+              <%= dashboardData.vendasMes.total.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %>
+            </div>
+            <div class="text-muted"><%= dashboardData.vendasMes.transacoes %> transações</div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-6 text-center">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Meta</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800">400.000 MT</div>
+            </div>
+            <div class="col-6 text-center">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Atingido</div>
+              <div class="h6 mb-0 font-weight-bold text-gray-800">85.5%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações Rápidas -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Ações Rápidas</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <a href="/lojas" class="btn btn-outline-primary btn-block">
+                <i class="fas fa-store"></i><br>
+                Gestão de Lojas
+              </a>
+            </div>
+            <div class="col-md-3 mb-3">
+              <a href="/lojas/funcionarios/index" class="btn btn-outline-success btn-block">
+                <i class="fas fa-users"></i><br>
+                Funcionários
+              </a>
+            </div>
+            <div class="col-md-3 mb-3">
+              <a href="/lojas/transferencias/index" class="btn btn-outline-warning btn-block">
+                <i class="fas fa-exchange-alt"></i><br>
+                Transferências
+              </a>
+            </div>
+            <div class="col-md-3 mb-3">
+              <a href="/lojas/relatorios/index" class="btn btn-outline-info btn-block">
+                <i class="fas fa-chart-bar"></i><br>
+                Relatórios
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nova Loja -->
+<div class="modal fade" id="novaLojaModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nova Loja</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="novaLojaForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Nome da Loja</label>
+                <input type="text" class="form-control" name="nome" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Código</label>
+                <input type="text" class="form-control" name="codigo" required>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Endereço</label>
+            <input type="text" class="form-control" name="endereco" required>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Telefone</label>
+                <input type="tel" class="form-control" name="telefone">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Gerente</label>
+            <select class="form-select" name="gerente_id">
+              <option value="">Selecionar gerente...</option>
+              <option value="1">João Silva</option>
+              <option value="2">Maria Santos</option>
+              <option value="3">Carlos Mondlane</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="criarLoja()">Criar Loja</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function criarLoja() {
+  // Simular criação de loja
+  alert('Loja criada com sucesso!');
+  $('#novaLojaModal').modal('hide');
+  location.reload();
+}
+</script>

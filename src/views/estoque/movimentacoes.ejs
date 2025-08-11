@@ -1,0 +1,196 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-exchange-alt"></i> Movimentações de Estoque
+    </h1>
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#filtroModal">
+        <i class="fas fa-filter"></i> Filtros
+      </button>
+      <a href="#" class="btn btn-success btn-sm">
+        <i class="fas fa-file-excel"></i> Exportar
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtros Rápidos -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="dataInicio">Data Início:</label>
+              <input type="date" class="form-control" id="dataInicio" value="2024-01-01">
+            </div>
+            <div class="col-md-3">
+              <label for="dataFim">Data Fim:</label>
+              <input type="date" class="form-control" id="dataFim" value="2024-01-31">
+            </div>
+            <div class="col-md-3">
+              <label for="tipoMovimento">Tipo de Movimento:</label>
+              <select class="form-control" id="tipoMovimento">
+                <option value="">Todos</option>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+                <option value="transferencia">Transferência</option>
+                <option value="ajuste">Ajuste</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="loja">Loja:</label>
+              <select class="form-control" id="loja">
+                <option value="">Todas</option>
+                <option value="1">Loja Central</option>
+                <option value="2">Loja Norte</option>
+                <option value="3">Loja Sul</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Movimentações -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-list"></i> Histórico de Movimentações
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Data/Hora</th>
+                  <th>Produto</th>
+                  <th>Tipo</th>
+                  <th>Quantidade</th>
+                  <th>Loja</th>
+                  <th>Usuário</th>
+                  <th>Observações</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>15/01/2024 14:30</td>
+                  <td>Arroz Carolino 5kg</td>
+                  <td><span class="badge badge-success">Entrada</span></td>
+                  <td>+50</td>
+                  <td>Loja Central</td>
+                  <td>João Silva</td>
+                  <td>Compra #CP001</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>15/01/2024 10:15</td>
+                  <td>Óleo de Cozinha 1L</td>
+                  <td><span class="badge badge-danger">Saída</span></td>
+                  <td>-25</td>
+                  <td>Loja Norte</td>
+                  <td>Maria Santos</td>
+                  <td>Venda #VD045</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>14/01/2024 16:45</td>
+                  <td>Açúcar Cristal 2kg</td>
+                  <td><span class="badge badge-warning">Transferência</span></td>
+                  <td>-10</td>
+                  <td>Loja Central → Loja Sul</td>
+                  <td>Pedro Costa</td>
+                  <td>Transferência #TR012</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>14/01/2024 09:20</td>
+                  <td>Farinha de Trigo 1kg</td>
+                  <td><span class="badge badge-info">Ajuste</span></td>
+                  <td>+5</td>
+                  <td>Loja Norte</td>
+                  <td>Ana Pereira</td>
+                  <td>Correção de inventário</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>13/01/2024 15:30</td>
+                  <td>Feijão Manteiga 1kg</td>
+                  <td><span class="badge badge-success">Entrada</span></td>
+                  <td>+30</td>
+                  <td>Loja Sul</td>
+                  <td>Carlos Mendes</td>
+                  <td>Compra #CP002</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Filtros -->
+<div class="modal fade" id="filtroModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filtros Avançados</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="produto">Produto:</label>
+          <select class="form-control" id="produto">
+            <option value="">Todos os produtos</option>
+            <option value="1">Arroz Carolino 5kg</option>
+            <option value="2">Óleo de Cozinha 1L</option>
+            <option value="3">Açúcar Cristal 2kg</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="usuario">Usuário:</label>
+          <select class="form-control" id="usuario">
+            <option value="">Todos os usuários</option>
+            <option value="1">João Silva</option>
+            <option value="2">Maria Santos</option>
+            <option value="3">Pedro Costa</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Aplicar Filtros</button>
+      </div>
+    </div>
+  </div>
+</div>

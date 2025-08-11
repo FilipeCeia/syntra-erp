@@ -1,0 +1,888 @@
+
+
+<style>
+  .stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .filter-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .user-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+  }
+  .user-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-color: #007bff;
+  }
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+  }
+  .status-activo {
+    background-color: #d1edff;
+    color: #0c5460;
+  }
+  .status-inactivo {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  .status-bloqueado {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  .perfil-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-right: 5px;
+  }
+  .perfil-admin {
+    background-color: #dc3545;
+    color: white;
+  }
+  .perfil-vendedor {
+    background-color: #28a745;
+    color: white;
+  }
+  .perfil-caixa {
+    background-color: #007bff;
+    color: white;
+  }
+  .perfil-gerente {
+    background-color: #fd7e14;
+    color: white;
+  }
+  .perfil-operador {
+    background-color: #6c757d;
+    color: white;
+  }
+  .import-modal .modal-body {
+    padding: 30px;
+  }
+  .upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .upload-area:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+  }
+  .upload-area.dragover {
+    border-color: #007bff;
+    background-color: #e3f2fd;
+  }
+  .progress-container {
+    margin-top: 20px;
+    display: none;
+  }
+  .last-login {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  .permissions-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .permission-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #f8f9fa;
+  }
+  .permission-item:last-child {
+    border-bottom: none;
+  }
+  .loja-badge {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 8px;
+    background-color: #e9ecef;
+    color: #495057;
+    margin-right: 3px;
+  }
+  .activity-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  .activity-online {
+    background-color: #28a745;
+  }
+  .activity-offline {
+    background-color: #6c757d;
+  }
+  .activity-away {
+    background-color: #ffc107;
+  }
+</style>
+
+
+
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Gestão de Utilizadores</h1>
+      <p class="mb-0 text-muted">Controlo de utilizadores e perfis de acesso</p>
+    </div>
+    <div>
+      <button class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#importModal">
+        <i class="fas fa-upload"></i> Importar
+      </button>
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="fas fa-download"></i> Exportar
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="exportarPDF()"><i class="fas fa-file-pdf"></i> PDF</a></li>
+          <li><a class="dropdown-item" href="#" onclick="exportarExcel()"><i class="fas fa-file-excel"></i> Excel</a></li>
+          <li><a class="dropdown-item" href="#" onclick="exportarCSV()"><i class="fas fa-file-csv"></i> CSV</a></li>
+        </ul>
+      </div>
+      <a href="/pessoas/utilizadores/create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Novo Utilizador
+      </a>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="stats-card">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-users fa-2x opacity-75"></i>
+          </div>
+          <div>
+            <div class="h4 mb-0" id="totalUtilizadores">24</div>
+            <div class="small opacity-75">Total de Utilizadores</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-user-check fa-2x opacity-75"></i>
+          </div>
+          <div>
+            <div class="h4 mb-0" id="utilizadoresActivos">18</div>
+            <div class="small opacity-75">Utilizadores Activos</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-circle fa-2x opacity-75 text-success"></i>
+          </div>
+          <div>
+            <div class="h4 mb-0" id="utilizadoresOnline">7</div>
+            <div class="small opacity-75">Online Agora</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <i class="fas fa-shield-alt fa-2x opacity-75"></i>
+          </div>
+          <div>
+            <div class="h4 mb-0" id="perfisAtivos">5</div>
+            <div class="small opacity-75">Perfis Configurados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filter-card">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="form-label">Pesquisar</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+          <input type="text" class="form-control" id="filtroNome" placeholder="Nome, email ou código...">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Perfil</label>
+        <select class="form-select" id="filtroPerfil">
+          <option value="">Todos os Perfis</option>
+          <option value="admin">Administrador</option>
+          <option value="gerente">Gerente</option>
+          <option value="vendedor">Vendedor</option>
+          <option value="caixa">Operador de Caixa</option>
+          <option value="operador">Operador</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Estado</label>
+        <select class="form-select" id="filtroEstado">
+          <option value="">Todos os Estados</option>
+          <option value="activo">Activo</option>
+          <option value="inactivo">Inactivo</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Loja</label>
+        <select class="form-select" id="filtroLoja">
+          <option value="">Todas as Lojas</option>
+          <option value="1">Loja Principal</option>
+          <option value="2">Loja Secundária</option>
+          <option value="3">Armazém</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Actividade</label>
+        <select class="form-select" id="filtroActividade">
+          <option value="">Todas</option>
+          <option value="online">Online</option>
+          <option value="offline">Offline</option>
+          <option value="away">Ausente</option>
+        </select>
+      </div>
+      <div class="col-md-1">
+        <label class="form-label">&nbsp;</label>
+        <button class="btn btn-outline-secondary w-100" onclick="limparFiltros()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Utilizadores -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-users"></i> Lista de Utilizadores
+            <span class="badge bg-primary ms-2" id="contadorUtilizadores">24</span>
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover" id="utilizadoresTable">
+              <thead>
+                <tr>
+                  <th>Utilizador</th>
+                  <th>Perfil</th>
+                  <th>Lojas</th>
+                  <th>Estado</th>
+                  <th>Última Actividade</th>
+                  <th>Acções</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Os dados serão carregados via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Importação -->
+<div class="modal fade" id="importModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-upload"></i> Importar Utilizadores
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6><i class="fas fa-file-download"></i> 1. Baixar Template</h6>
+            <p class="text-muted">Baixe o template padrão para importação de utilizadores.</p>
+            <div class="d-grid gap-2">
+              <a href="/templates/utilizadores.xlsx" class="btn btn-outline-primary">
+                <i class="fas fa-file-excel"></i> Template Excel
+              </a>
+              <a href="/templates/utilizadores.csv" class="btn btn-outline-secondary">
+                <i class="fas fa-file-csv"></i> Template CSV
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h6><i class="fas fa-upload"></i> 2. Carregar Arquivo</h6>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+              <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+              <p class="mb-2">Clique aqui ou arraste o arquivo</p>
+              <p class="text-muted small">Formatos: .xlsx, .csv (máx. 5MB)</p>
+              <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;" onchange="processarArquivo(this)">
+            </div>
+            
+            <div class="progress-container">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small">Processando...</span>
+                <span class="small" id="progressText">0%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4">
+          <h6><i class="fas fa-info-circle"></i> Informações Importantes</h6>
+          <ul class="text-muted small">
+            <li>O arquivo deve conter as colunas: Nome, Email, Perfil, Lojas, Estado</li>
+            <li>Emails duplicados serão ignorados</li>
+            <li>Perfis inválidos serão definidos como "Operador"</li>
+            <li>Utilizadores importados receberão senha temporária por email</li>
+            <li>Máximo de 100 utilizadores por importação</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnImportar" onclick="iniciarImportacao()" disabled>
+          <i class="fas fa-upload"></i> Importar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Detalhes do Utilizador -->
+<div class="modal fade" id="detalhesModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-user"></i> Detalhes do Utilizador
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="detalhesContent">
+        <!-- Conteúdo será carregado dinamicamente -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-warning" onclick="editarUtilizador()">Editar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+// Dados mock dos utilizadores
+let utilizadores = [
+  {
+    id: 1,
+    nome: 'João Silva',
+    email: 'joao.silva@empresa.com',
+    codigo: 'USR001',
+    perfil: 'admin',
+    lojas: ['Loja Principal', 'Loja Secundária'],
+    estado: 'activo',
+    actividade: 'online',
+    ultimaActividade: '2024-11-29 14:30',
+    ultimoLogin: '2024-11-29 08:00',
+    totalLogins: 245,
+    permissoes: ['vendas', 'compras', 'financas', 'relatorios', 'configuracoes']
+  },
+  {
+    id: 2,
+    nome: 'Maria Santos',
+    email: 'maria.santos@empresa.com',
+    codigo: 'USR002',
+    perfil: 'gerente',
+    lojas: ['Loja Principal'],
+    estado: 'activo',
+    actividade: 'online',
+    ultimaActividade: '2024-11-29 14:15',
+    ultimoLogin: '2024-11-29 07:45',
+    totalLogins: 189,
+    permissoes: ['vendas', 'compras', 'relatorios']
+  },
+  {
+    id: 3,
+    nome: 'Pedro Costa',
+    email: 'pedro.costa@empresa.com',
+    codigo: 'USR003',
+    perfil: 'vendedor',
+    lojas: ['Loja Principal'],
+    estado: 'activo',
+    actividade: 'away',
+    ultimaActividade: '2024-11-29 13:45',
+    ultimoLogin: '2024-11-29 08:30',
+    totalLogins: 156,
+    permissoes: ['vendas']
+  },
+  {
+    id: 4,
+    nome: 'Ana Ferreira',
+    email: 'ana.ferreira@empresa.com',
+    codigo: 'USR004',
+    perfil: 'caixa',
+    lojas: ['Loja Secundária'],
+    estado: 'activo',
+    actividade: 'online',
+    ultimaActividade: '2024-11-29 14:20',
+    ultimoLogin: '2024-11-29 09:00',
+    totalLogins: 98,
+    permissoes: ['vendas', 'pos']
+  },
+  {
+    id: 5,
+    nome: 'Carlos Oliveira',
+    email: 'carlos.oliveira@empresa.com',
+    codigo: 'USR005',
+    perfil: 'operador',
+    lojas: ['Armazém'],
+    estado: 'inactivo',
+    actividade: 'offline',
+    ultimaActividade: '2024-11-28 17:30',
+    ultimoLogin: '2024-11-28 08:00',
+    totalLogins: 67,
+    permissoes: ['stock']
+  }
+];
+
+// Inicialização
+$(document).ready(function() {
+  // Inicializar DataTable
+  inicializarDataTable();
+  
+  // Carregar estatísticas
+  carregarEstatisticas();
+  
+  // Configurar filtros
+  configurarFiltros();
+  
+  // Configurar drag and drop
+  configurarUpload();
+});
+
+// Inicializar DataTable
+function inicializarDataTable() {
+  $('#utilizadoresTable').DataTable({
+    data: utilizadores,
+    columns: [
+      {
+        data: null,
+        render: function(data, type, row) {
+          const iniciais = row.nome.split(' ').map(n => n[0]).join('').toUpperCase();
+          const activityClass = `activity-${row.actividade}`;
+          
+          return `
+            <div class="d-flex align-items-center">
+              <div class="user-avatar me-3">${iniciais}</div>
+              <div>
+                <div class="fw-bold">${row.nome}</div>
+                <div class="small text-muted">${row.email}</div>
+                <div class="small text-muted">
+                  <span class="activity-indicator ${activityClass}"></span>
+                  ${row.codigo}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      },
+      {
+        data: 'perfil',
+        render: function(data, type, row) {
+          const perfilClass = `perfil-${data}`;
+          const perfilNome = {
+            'admin': 'Administrador',
+            'gerente': 'Gerente',
+            'vendedor': 'Vendedor',
+            'caixa': 'Operador de Caixa',
+            'operador': 'Operador'
+          }[data] || data;
+          
+          return `<span class="perfil-badge ${perfilClass}">${perfilNome}</span>`;
+        }
+      },
+      {
+        data: 'lojas',
+        render: function(data, type, row) {
+          return data.map(loja => `<span class="loja-badge">${loja}</span>`).join('');
+        }
+      },
+      {
+        data: 'estado',
+        render: function(data, type, row) {
+          const statusClass = `status-${data}`;
+          const statusNome = {
+            'activo': 'ACTIVO',
+            'inactivo': 'INACTIVO',
+            'bloqueado': 'BLOQUEADO'
+          }[data] || data.toUpperCase();
+          
+          return `<span class="status-badge ${statusClass}">${statusNome}</span>`;
+        }
+      },
+      {
+        data: 'ultimaActividade',
+        render: function(data, type, row) {
+          const dataFormatada = new Date(data).toLocaleString('pt-MZ');
+          return `
+            <div class="last-login">
+              <div>${dataFormatada}</div>
+              <div class="small text-muted">Logins: ${row.totalLogins}</div>
+            </div>
+          `;
+        }
+      },
+      {
+        data: null,
+        orderable: false,
+        render: function(data, type, row) {
+          return `
+            <div class="btn-group" role="group">
+              <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes(${row.id})" title="Ver Detalhes">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-warning" onclick="editarUtilizador(${row.id})" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-info" onclick="gerenciarPermissoes(${row.id})" title="Permissões">
+                <i class="fas fa-key"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-secondary" onclick="resetarSenha(${row.id})" title="Resetar Senha">
+                <i class="fas fa-lock"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" onclick="alterarEstado(${row.id})" title="Bloquear/Desbloquear">
+                <i class="fas fa-ban"></i>
+              </button>
+            </div>
+          `;
+        }
+      }
+    ],
+    language: {
+      url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-PT.json'
+    },
+    pageLength: 25,
+    order: [[0, 'asc']],
+    responsive: true
+  });
+}
+
+// Carregar estatísticas
+function carregarEstatisticas() {
+  // Simular carregamento de estatísticas
+  setTimeout(function() {
+    $('#totalUtilizadores').text(utilizadores.length);
+    $('#utilizadoresActivos').text(utilizadores.filter(u => u.estado === 'activo').length);
+    $('#utilizadoresOnline').text(utilizadores.filter(u => u.actividade === 'online').length);
+    $('#perfisAtivos').text([...new Set(utilizadores.map(u => u.perfil))].length);
+    $('#contadorUtilizadores').text(utilizadores.length);
+  }, 500);
+}
+
+// Configurar filtros
+function configurarFiltros() {
+  $('#filtroNome, #filtroPerfil, #filtroEstado, #filtroLoja, #filtroActividade').on('change keyup', function() {
+    aplicarFiltros();
+  });
+}
+
+// Aplicar filtros
+function aplicarFiltros() {
+  const table = $('#utilizadoresTable').DataTable();
+  
+  // Filtro por nome/email
+  const nome = $('#filtroNome').val();
+  table.column(0).search(nome);
+  
+  // Filtro por perfil
+  const perfil = $('#filtroPerfil').val();
+  table.column(1).search(perfil);
+  
+  // Filtro por estado
+  const estado = $('#filtroEstado').val();
+  table.column(3).search(estado);
+  
+  table.draw();
+}
+
+// Limpar filtros
+function limparFiltros() {
+  $('#filtroNome, #filtroPerfil, #filtroEstado, #filtroLoja, #filtroActividade').val('');
+  $('#utilizadoresTable').DataTable().search('').columns().search('').draw();
+}
+
+// Ver detalhes do utilizador
+function verDetalhes(id) {
+  const utilizador = utilizadores.find(u => u.id === id);
+  if (!utilizador) return;
+  
+  const permissoesHtml = utilizador.permissoes.map(p => 
+    `<div class="permission-item">
+      <i class="fas fa-check text-success me-2"></i>${p.charAt(0).toUpperCase() + p.slice(1)}
+    </div>`
+  ).join('');
+  
+  const lojasHtml = utilizador.lojas.map(l => 
+    `<span class="loja-badge">${l}</span>`
+  ).join('');
+  
+  const content = `
+    <div class="row">
+      <div class="col-md-6">
+        <h6><i class="fas fa-user"></i> Informações Básicas</h6>
+        <table class="table table-sm">
+          <tr><td><strong>Nome:</strong></td><td>${utilizador.nome}</td></tr>
+          <tr><td><strong>Email:</strong></td><td>${utilizador.email}</td></tr>
+          <tr><td><strong>Código:</strong></td><td>${utilizador.codigo}</td></tr>
+          <tr><td><strong>Perfil:</strong></td><td><span class="perfil-badge perfil-${utilizador.perfil}">${utilizador.perfil}</span></td></tr>
+          <tr><td><strong>Estado:</strong></td><td><span class="status-badge status-${utilizador.estado}">${utilizador.estado.toUpperCase()}</span></td></tr>
+        </table>
+        
+        <h6><i class="fas fa-store"></i> Lojas Acessíveis</h6>
+        <div class="mb-3">${lojasHtml}</div>
+      </div>
+      <div class="col-md-6">
+        <h6><i class="fas fa-clock"></i> Actividade</h6>
+        <table class="table table-sm">
+          <tr><td><strong>Estado:</strong></td><td><span class="activity-indicator activity-${utilizador.actividade}"></span>${utilizador.actividade}</td></tr>
+          <tr><td><strong>Última Actividade:</strong></td><td>${new Date(utilizador.ultimaActividade).toLocaleString('pt-MZ')}</td></tr>
+          <tr><td><strong>Último Login:</strong></td><td>${new Date(utilizador.ultimoLogin).toLocaleString('pt-MZ')}</td></tr>
+          <tr><td><strong>Total de Logins:</strong></td><td>${utilizador.totalLogins}</td></tr>
+        </table>
+        
+        <h6><i class="fas fa-key"></i> Permissões</h6>
+        <div class="permissions-list">${permissoesHtml}</div>
+      </div>
+    </div>
+  `;
+  
+  $('#detalhesContent').html(content);
+  $('#detalhesModal').modal('show');
+}
+
+// Editar utilizador
+function editarUtilizador(id) {
+  if (id) {
+    window.location.href = `/pessoas/utilizadores/${id}/edit`;
+  } else {
+    // Se chamado do modal de detalhes
+    $('#detalhesModal').modal('hide');
+    // Aqui você pegaria o ID do utilizador atual
+    window.location.href = '/pessoas/utilizadores/1/edit';
+  }
+}
+
+// Gerenciar permissões
+function gerenciarPermissoes(id) {
+  // Implementar modal de permissões
+  alert('Funcionalidade de gerenciamento de permissões será implementada');
+}
+
+// Resetar senha
+function resetarSenha(id) {
+  if (confirm('Tem certeza que deseja resetar a senha deste utilizador?')) {
+    // Simular reset de senha
+    alert('Nova senha temporária enviada por email');
+  }
+}
+
+// Alterar estado do utilizador
+function alterarEstado(id) {
+  const utilizador = utilizadores.find(u => u.id === id);
+  if (!utilizador) return;
+  
+  const novoEstado = utilizador.estado === 'activo' ? 'bloqueado' : 'activo';
+  const acao = novoEstado === 'activo' ? 'activar' : 'bloquear';
+  
+  if (confirm(`Tem certeza que deseja ${acao} este utilizador?`)) {
+    utilizador.estado = novoEstado;
+    $('#utilizadoresTable').DataTable().clear().rows.add(utilizadores).draw();
+    carregarEstatisticas();
+  }
+}
+
+// Configurar upload
+function configurarUpload() {
+  const uploadArea = document.querySelector('.upload-area');
+  
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, preventDefaults, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, highlight, false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, unhighlight, false);
+  });
+  
+  function highlight(e) {
+    uploadArea.classList.add('dragover');
+  }
+  
+  function unhighlight(e) {
+    uploadArea.classList.remove('dragover');
+  }
+  
+  uploadArea.addEventListener('drop', handleDrop, false);
+  
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
+    if (files.length > 0) {
+      document.getElementById('fileInput').files = files;
+      processarArquivo(document.getElementById('fileInput'));
+    }
+  }
+}
+
+// Processar arquivo
+function processarArquivo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  // Validar tipo de arquivo
+  const allowedTypes = ['.xlsx', '.csv'];
+  const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+  
+  if (!allowedTypes.includes(fileExtension)) {
+    alert('Tipo de arquivo não suportado. Use apenas .xlsx ou .csv');
+    return;
+  }
+  
+  // Validar tamanho (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Arquivo muito grande. Tamanho máximo: 5MB');
+    return;
+  }
+  
+  // Mostrar informações do arquivo
+  document.querySelector('.upload-area p').innerHTML = `
+    <strong>${file.name}</strong><br>
+    <small class="text-muted">${(file.size / 1024).toFixed(1)} KB</small>
+  `;
+  
+  // Habilitar botão de importar
+  document.getElementById('btnImportar').disabled = false;
+}
+
+// Iniciar importação
+function iniciarImportacao() {
+  const fileInput = document.getElementById('fileInput');
+  if (!fileInput.files[0]) {
+    alert('Selecione um arquivo primeiro');
+    return;
+  }
+  
+  // Mostrar progresso
+  document.querySelector('.progress-container').style.display = 'block';
+  document.getElementById('btnImportar').disabled = true;
+  
+  // Simular progresso
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 15;
+    if (progress > 100) progress = 100;
+    
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('progressText').textContent = Math.round(progress) + '%';
+    
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        alert('Importação concluída com sucesso!');
+        $('#importModal').modal('hide');
+        // Recarregar dados
+        location.reload();
+      }, 500);
+    }
+  }, 200);
+}
+
+// Exportar para PDF
+function exportarPDF() {
+  // Simular exportação
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+  btn.disabled = true;
+  
+  setTimeout(function() {
+    window.open('/api/pessoas/utilizadores/export/pdf', '_blank');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }, 2000);
+}
+
+// Exportar para Excel
+function exportarExcel() {
+  // Simular exportação
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+  btn.disabled = true;
+  
+  setTimeout(function() {
+    window.open('/api/pessoas/utilizadores/export/excel', '_blank');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }, 2000);
+}
+
+// Exportar para CSV
+function exportarCSV() {
+  // Simular exportação
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+  btn.disabled = true;
+  
+  setTimeout(function() {
+    window.open('/api/pessoas/utilizadores/export/csv', '_blank');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }, 2000);
+}
+</script>

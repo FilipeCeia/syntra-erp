@@ -1,0 +1,173 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-clipboard-list"></i> Notas de Encomenda
+    </h1>
+    <a href="/estoque/encomendas/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Nova Encomenda
+    </a>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Encomendas Hoje
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Em Processamento
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">7</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-cog fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Concluídas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">89</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Encomendas -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-list"></i> Lista de Encomendas
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Data</th>
+                  <th>Fornecedor</th>
+                  <th>Produtos</th>
+                  <th>Valor Total</th>
+                  <th>Status</th>
+                  <th>Previsão</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>EN001</td>
+                  <td>15/01/2024</td>
+                  <td>Distribuidora Central Lda</td>
+                  <td>5 itens</td>
+                  <td>45.250,00 MT</td>
+                  <td><span class="badge badge-warning">Pendente</span></td>
+                  <td>20/01/2024</td>
+                  <td>
+                    <a href="/estoque/encomendas/1" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-success" title="Receber">
+                      <i class="fas fa-check"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-secondary" title="Imprimir">
+                      <i class="fas fa-print"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>EN002</td>
+                  <td>14/01/2024</td>
+                  <td>Fornecedor Norte SA</td>
+                  <td>3 itens</td>
+                  <td>28.750,00 MT</td>
+                  <td><span class="badge badge-info">Em Processamento</span></td>
+                  <td>18/01/2024</td>
+                  <td>
+                    <a href="/estoque/encomendas/2" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-secondary" title="Imprimir">
+                      <i class="fas fa-print"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>EN003</td>
+                  <td>12/01/2024</td>
+                  <td>Comercial Sul Lda</td>
+                  <td>8 itens</td>
+                  <td>67.890,00 MT</td>
+                  <td><span class="badge badge-success">Concluída</span></td>
+                  <td>15/01/2024</td>
+                  <td>
+                    <a href="/estoque/encomendas/3" class="btn btn-sm btn-info" title="Ver Detalhes">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-secondary" title="Imprimir">
+                      <i class="fas fa-print"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

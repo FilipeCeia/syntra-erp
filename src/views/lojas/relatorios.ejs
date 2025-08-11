@@ -1,0 +1,396 @@
+<!-- Relatórios Consolidados -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">Relatórios Consolidados</h1>
+      <p class="mb-0 text-muted">Análise de performance e dados consolidados de todas as lojas</p>
+    </div>
+    <div>
+      <button class="btn btn-success" onclick="exportarRelatorio()">
+        <i class="fas fa-download"></i> Exportar PDF
+      </button>
+      <button class="btn btn-primary" onclick="atualizarDados()">
+        <i class="fas fa-sync-alt"></i> Atualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros de Período -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Filtros de Período</h6>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/lojas/relatorios">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Data Início</label>
+              <input type="date" class="form-control" name="data_inicio" value="<%= filters.data_inicio %>">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Data Fim</label>
+              <input type="date" class="form-control" name="data_fim" value="<%= filters.data_fim %>">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">Lojas</label>
+              <select class="form-select" name="loja_id">
+                <option value="">Todas as lojas</option>
+                <% lojas.forEach(loja => { %>
+                  <option value="<%= loja.id %>" <%= filters.loja_id == loja.id ? 'selected' : '' %>><%= loja.nome %></option>
+                <% }); %>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="form-label">&nbsp;</label>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resumo Geral -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Vendas Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= resumo.vendas_total.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Lucro Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= resumo.lucro_total.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Total Funcionários
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= resumo.total_funcionarios %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-users fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Produtos Vendidos
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><%= resumo.produtos_vendidos.toLocaleString() %></div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-boxes fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="row mb-4">
+    <!-- Vendas por Loja -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Vendas por Loja</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="vendasPorLojaChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Produtos -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Top 5 Produtos</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-pie pt-4 pb-2">
+            <canvas id="topProdutosChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance por Loja -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Performance por Loja</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Loja</th>
+              <th>Vendas</th>
+              <th>Meta</th>
+              <th>% Meta</th>
+              <th>Lucro</th>
+              <th>Funcionários</th>
+              <th>Vendas/Funcionário</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lojas.forEach(loja => { %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary">
+                      <i class="fas fa-store text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500"><%= loja.codigo %></div>
+                    <strong><%= loja.nome %></strong>
+                  </div>
+                </div>
+              </td>
+              <td><%= loja.vendas.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></td>
+              <td><%= loja.meta.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></td>
+              <td>
+                <div class="progress">
+                  <div class="progress-bar <%= loja.percentual_meta >= 100 ? 'bg-success' : loja.percentual_meta >= 80 ? 'bg-warning' : 'bg-danger' %>" 
+                       role="progressbar" style="width: <%= Math.min(loja.percentual_meta, 100) %>%">
+                    <%= loja.percentual_meta.toFixed(1) %>%
+                  </div>
+                </div>
+              </td>
+              <td><%= loja.lucro.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></td>
+              <td><%= loja.funcionarios %></td>
+              <td><%= loja.vendas_por_funcionario.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'}) %></td>
+              <td>
+                <% if (loja.percentual_meta >= 100) { %>
+                  <span class="badge badge-success">Excelente</span>
+                <% } else if (loja.percentual_meta >= 80) { %>
+                  <span class="badge badge-warning">Bom</span>
+                <% } else { %>
+                  <span class="badge badge-danger">Abaixo</span>
+                <% } %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Análise de Transferências -->
+  <div class="row mb-4">
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Transferências Recentes</h6>
+        </div>
+        <div class="card-body">
+          <% transferencias.forEach(transferencia => { %>
+          <div class="d-flex align-items-center border-bottom py-3">
+            <div class="mr-3">
+              <div class="icon-circle bg-<%= transferencia.tipo === 'Produtos' ? 'primary' : 'success' %>">
+                <i class="fas fa-<%= transferencia.tipo === 'Produtos' ? 'exchange-alt' : 'user-friends' %> text-white"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1">
+              <div class="small text-gray-500"><%= transferencia.data.toLocaleDateString('pt-PT') %></div>
+              <div class="font-weight-bold"><%= transferencia.origem %> → <%= transferencia.destino %></div>
+              <div class="small"><%= transferencia.detalhes %></div>
+            </div>
+            <div>
+              <span class="badge badge-<%= transferencia.status === 'Concluída' ? 'success' : transferencia.status === 'Pendente' ? 'warning' : 'info' %>">
+                <%= transferencia.status %>
+              </span>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Indicadores de Eficiência</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6 border-right">
+              <div class="text-center">
+                <div class="h4 font-weight-bold text-primary"><%= indicadores.tempo_medio_transferencia %> dias</div>
+                <div class="small text-gray-500">Tempo Médio de Transferência</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-center">
+                <div class="h4 font-weight-bold text-success"><%= indicadores.taxa_sucesso %>%</div>
+                <div class="small text-gray-500">Taxa de Sucesso</div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-6 border-right">
+              <div class="text-center">
+                <div class="h4 font-weight-bold text-info"><%= indicadores.produtos_transferidos.toLocaleString() %></div>
+                <div class="small text-gray-500">Produtos Transferidos</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-center">
+                <div class="h4 font-weight-bold text-warning"><%= indicadores.funcionarios_transferidos %></div>
+                <div class="small text-gray-500">Funcionários Transferidos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alertas e Recomendações -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Alertas e Recomendações</h6>
+    </div>
+    <div class="card-body">
+      <% alertas.forEach(alerta => { %>
+      <div class="alert alert-<%= alerta.tipo %> alert-dismissible fade show" role="alert">
+        <i class="fas fa-<%= alerta.icone %> mr-2"></i>
+        <strong><%= alerta.titulo %>:</strong> <%= alerta.mensagem %>
+        <button type="button" class="close" data-dismiss="alert">
+          <span>&times;</span>
+        </button>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Gráfico de Vendas por Loja
+const ctxVendas = document.getElementById('vendasPorLojaChart').getContext('2d');
+const vendasChart = new Chart(ctxVendas, {
+  type: 'bar',
+  data: {
+    labels: <%= JSON.stringify(performance.map(p => p.nome)) %>,
+    datasets: [{
+      label: 'Vendas',
+      data: <%= JSON.stringify(performance.map(p => p.vendas)) %>,
+      backgroundColor: 'rgba(78, 115, 223, 0.8)',
+      borderColor: 'rgba(78, 115, 223, 1)',
+      borderWidth: 1
+    }, {
+      label: 'Meta',
+      data: <%= JSON.stringify(performance.map(p => p.meta)) %>,
+      backgroundColor: 'rgba(28, 200, 138, 0.8)',
+      borderColor: 'rgba(28, 200, 138, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return value.toLocaleString('pt-MZ', {style: 'currency', currency: 'MZN'});
+          }
+        }
+      }
+    }
+  }
+});
+
+// Gráfico de Top Produtos
+const ctxProdutos = document.getElementById('topProdutosChart').getContext('2d');
+const produtosChart = new Chart(ctxProdutos, {
+  type: 'doughnut',
+  data: {
+    labels: <%= JSON.stringify(top_produtos.map(p => p.nome)) %>,
+    datasets: [{
+      data: <%= JSON.stringify(top_produtos.map(p => p.vendas)) %>,
+      backgroundColor: [
+        '#4e73df',
+        '#1cc88a',
+        '#36b9cc',
+        '#f6c23e',
+        '#e74a3b'
+      ]
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }
+});
+
+function exportarRelatorio() {
+  alert('Funcionalidade de exportação em desenvolvimento');
+}
+
+function atualizarDados() {
+  location.reload();
+}
+</script>

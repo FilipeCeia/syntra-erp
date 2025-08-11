@@ -1,0 +1,463 @@
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Estatísticas de Planos -->
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3>4</h3>
+            <p>Planos Activos</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-cubes"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3>98</h3>
+            <p>Assinaturas Ativas</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <a href="/faturacao/assinaturas" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>1.250.000 MZN</h3>
+            <p>Receita Mensal</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+          <div class="inner">
+            <h3>15.000.000 MZN</h3>
+            <p>Receita Anual Projetada</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de Planos -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Planos Disponíveis</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-novo-plano">
+                <i class="fas fa-plus"></i> Novo Plano
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              
+              <!-- Plano Básico -->
+              <div class="col-md-3">
+                <div class="card card-outline card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Plano Básico</h3>
+                    <div class="card-tools">
+                      <span class="badge badge-success">Ativo</span>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <h2 class="text-center">1.500 MZN<small>/mês</small></h2>
+                    <p class="text-center">ou 15.000 MZN/ano</p>
+                    <hr>
+                    <ul class="list-unstyled">
+                      <li><i class="fas fa-check text-success"></i> 1 Usuário</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Vendas</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Estoque</li>
+                      <li><i class="fas fa-check text-success"></i> Relatórios Básicos</li>
+                      <li><i class="fas fa-times text-danger"></i> Gestão Financeira</li>
+                      <li><i class="fas fa-times text-danger"></i> Múltiplas Filiais</li>
+                      <li><i class="fas fa-times text-danger"></i> API de Integração</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-editar-plano">
+                        <i class="fas fa-edit"></i> Editar
+                      </button>
+                      <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Excluir
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Plano Profissional -->
+              <div class="col-md-3">
+                <div class="card card-outline card-success">
+                  <div class="card-header">
+                    <h3 class="card-title">Plano Profissional</h3>
+                    <div class="card-tools">
+                      <span class="badge badge-success">Ativo</span>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <h2 class="text-center">3.500 MZN<small>/mês</small></h2>
+                    <p class="text-center">ou 35.000 MZN/ano</p>
+                    <hr>
+                    <ul class="list-unstyled">
+                      <li><i class="fas fa-check text-success"></i> 3 Usuários</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Vendas</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Estoque</li>
+                      <li><i class="fas fa-check text-success"></i> Relatórios Avançados</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão Financeira</li>
+                      <li><i class="fas fa-times text-danger"></i> Múltiplas Filiais</li>
+                      <li><i class="fas fa-times text-danger"></i> API de Integração</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-editar-plano">
+                        <i class="fas fa-edit"></i> Editar
+                      </button>
+                      <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Excluir
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Plano Empresarial -->
+              <div class="col-md-3">
+                <div class="card card-outline card-warning">
+                  <div class="card-header">
+                    <h3 class="card-title">Plano Empresarial</h3>
+                    <div class="card-tools">
+                      <span class="badge badge-success">Ativo</span>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <h2 class="text-center">5.000 MZN<small>/mês</small></h2>
+                    <p class="text-center">ou 50.000 MZN/ano</p>
+                    <hr>
+                    <ul class="list-unstyled">
+                      <li><i class="fas fa-check text-success"></i> 10 Usuários</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Vendas</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Estoque</li>
+                      <li><i class="fas fa-check text-success"></i> Relatórios Avançados</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão Financeira</li>
+                      <li><i class="fas fa-check text-success"></i> Até 3 Filiais</li>
+                      <li><i class="fas fa-times text-danger"></i> API de Integração</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-editar-plano">
+                        <i class="fas fa-edit"></i> Editar
+                      </button>
+                      <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Excluir
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Plano Premium -->
+              <div class="col-md-3">
+                <div class="card card-outline card-danger">
+                  <div class="card-header">
+                    <h3 class="card-title">Plano Premium</h3>
+                    <div class="card-tools">
+                      <span class="badge badge-success">Ativo</span>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <h2 class="text-center">7.500 MZN<small>/mês</small></h2>
+                    <p class="text-center">ou 75.000 MZN/ano</p>
+                    <hr>
+                    <ul class="list-unstyled">
+                      <li><i class="fas fa-check text-success"></i> Usuários Ilimitados</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Vendas</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão de Estoque</li>
+                      <li><i class="fas fa-check text-success"></i> Relatórios Avançados</li>
+                      <li><i class="fas fa-check text-success"></i> Gestão Financeira</li>
+                      <li><i class="fas fa-check text-success"></i> Filiais Ilimitadas</li>
+                      <li><i class="fas fa-check text-success"></i> API de Integração</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-editar-plano">
+                        <i class="fas fa-edit"></i> Editar
+                      </button>
+                      <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Excluir
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Análise de Planos -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Distribuição de Assinaturas por Plano</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="planosChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="card card-success">
+          <div class="card-header">
+            <h3 class="card-title">Receita por Plano (Mensal)</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="receitaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Modal Novo Plano -->
+<div class="modal fade" id="modal-novo-plano">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h4 class="modal-title">Novo Plano</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nome_plano">Nome do Plano</label>
+            <input type="text" class="form-control" id="nome_plano" placeholder="Nome do plano">
+          </div>
+          <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea class="form-control" id="descricao" rows="3" placeholder="Descrição do plano"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="valor_mensal">Valor Mensal (MZN)</label>
+            <input type="text" class="form-control" id="valor_mensal" placeholder="0,00">
+          </div>
+          <div class="form-group">
+            <label for="valor_anual">Valor Anual (MZN)</label>
+            <input type="text" class="form-control" id="valor_anual" placeholder="0,00">
+          </div>
+          <div class="form-group">
+            <label for="max_usuarios">Número Máximo de Usuários</label>
+            <input type="number" class="form-control" id="max_usuarios" placeholder="1" min="1">
+          </div>
+          <div class="form-group">
+            <label for="max_filiais">Número Máximo de Filiais</label>
+            <input type="number" class="form-control" id="max_filiais" placeholder="1" min="1">
+          </div>
+          <div class="form-group">
+            <label>Recursos Incluídos</label>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="gestao_vendas" checked>
+              <label for="gestao_vendas" class="custom-control-label">Gestão de Vendas</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="gestao_estoque" checked>
+              <label for="gestao_estoque" class="custom-control-label">Gestão de Estoque</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="relatorios_basicos" checked>
+              <label for="relatorios_basicos" class="custom-control-label">Relatórios Básicos</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="relatorios_avancados">
+              <label for="relatorios_avancados" class="custom-control-label">Relatórios Avançados</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="gestao_financeira">
+              <label for="gestao_financeira" class="custom-control-label">Gestão Financeira</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="api_integracao">
+              <label for="api_integracao" class="custom-control-label">API de Integração</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select class="form-control" id="status">
+              <option>Ativo</option>
+              <option>Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Plano -->
+<div class="modal fade" id="modal-editar-plano">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h4 class="modal-title">Editar Plano</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="edit_nome_plano">Nome do Plano</label>
+            <input type="text" class="form-control" id="edit_nome_plano" value="Plano Profissional">
+          </div>
+          <div class="form-group">
+            <label for="edit_descricao">Descrição</label>
+            <textarea class="form-control" id="edit_descricao" rows="3">Plano ideal para pequenas empresas com necessidades de gestão financeira.</textarea>
+          </div>
+          <div class="form-group">
+            <label for="edit_valor_mensal">Valor Mensal (MZN)</label>
+            <input type="text" class="form-control" id="edit_valor_mensal" value="3.500,00">
+          </div>
+          <div class="form-group">
+            <label for="edit_valor_anual">Valor Anual (MZN)</label>
+            <input type="text" class="form-control" id="edit_valor_anual" value="35.000,00">
+          </div>
+          <div class="form-group">
+            <label for="edit_max_usuarios">Número Máximo de Usuários</label>
+            <input type="number" class="form-control" id="edit_max_usuarios" value="3" min="1">
+          </div>
+          <div class="form-group">
+            <label for="edit_max_filiais">Número Máximo de Filiais</label>
+            <input type="number" class="form-control" id="edit_max_filiais" value="1" min="1">
+          </div>
+          <div class="form-group">
+            <label>Recursos Incluídos</label>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="edit_gestao_vendas" checked>
+              <label for="edit_gestao_vendas" class="custom-control-label">Gestão de Vendas</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="edit_gestao_estoque" checked>
+              <label for="edit_gestao_estoque" class="custom-control-label">Gestão de Estoque</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="edit_relatorios_basicos" checked>
+              <label for="edit_relatorios_basicos" class="custom-control-label">Relatórios Básicos</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="edit_relatorios_avancados" checked>
+              <label for="edit_relatorios_avancados" class="custom-control-label">Relatórios Avançados</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="edit_gestao_financeira" checked>
+              <label for="edit_gestao_financeira" class="custom-control-label">Gestão Financeira</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" id="edit_api_integracao">
+              <label for="edit_api_integracao" class="custom-control-label">API de Integração</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit_status">Status</label>
+            <select class="form-control" id="edit_status">
+              <option selected>Ativo</option>
+              <option>Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-warning">Atualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page specific script -->
+<script>
+  $(function () {
+    // Gráfico de Distribuição de Assinaturas por Plano
+    var planosCtx = document.getElementById('planosChart').getContext('2d');
+    var planosChart = new Chart(planosCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Básico', 'Profissional', 'Empresarial', 'Premium'],
+        datasets: [{
+          data: [15, 35, 30, 20],
+          backgroundColor: ['#3c8dbc', '#00a65a', '#f39c12', '#f56954'],
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+      }
+    });
+    
+    // Gráfico de Receita por Plano
+    var receitaCtx = document.getElementById('receitaChart').getContext('2d');
+    var receitaChart = new Chart(receitaCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Básico', 'Profissional', 'Empresarial', 'Premium'],
+        datasets: [{
+          label: 'Receita Mensal (MZN)',
+          data: [22500, 122500, 150000, 150000],
+          backgroundColor: ['#3c8dbc', '#00a65a', '#f39c12', '#f56954'],
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  });
+</script>

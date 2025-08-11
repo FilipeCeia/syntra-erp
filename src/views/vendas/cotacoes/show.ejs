@@ -1,0 +1,680 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">
+        <i class="fas fa-file-contract"></i> Cotação #<%= cotacao.numero %>
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/vendas">Vendas</a></li>
+          <li class="breadcrumb-item"><a href="/vendas/cotacoes">Cotações</a></li>
+          <li class="breadcrumb-item active">Cotação #<%= cotacao.numero %></li>
+        </ol>
+      </nav>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="/vendas/cotacoes" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+          <i class="fas fa-cog"></i> Ações
+        </button>
+        <div class="dropdown-menu">
+          <% if (cotacao.status === 'Rascunho' || cotacao.status === 'Enviada') { %>
+            <a class="dropdown-item" href="/vendas/cotacoes/<%= cotacao.id %>/edit">
+              <i class="fas fa-edit"></i> Editar
+            </a>
+            <div class="dropdown-divider"></div>
+          <% } %>
+          
+          <% if (cotacao.status === 'Rascunho') { %>
+            <button class="dropdown-item" onclick="enviarCotacao()">
+              <i class="fas fa-paper-plane"></i> Enviar
+            </button>
+          <% } %>
+          
+          <% if (cotacao.status === 'Enviada' || cotacao.status === 'Aceita') { %>
+            <button class="dropdown-item" onclick="converterParaFactura()">
+              <i class="fas fa-file-invoice"></i> Converter em Factura
+            </button>
+          <% } %>
+          
+          <button class="dropdown-item" onclick="duplicarCotacao()">
+            <i class="fas fa-copy"></i> Duplicar
+          </button>
+          
+          <div class="dropdown-divider"></div>
+          
+          <button class="dropdown-item" onclick="imprimirCotacao()">
+            <i class="fas fa-print"></i> Imprimir
+          </button>
+          
+          <button class="dropdown-item" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar PDF
+          </button>
+          
+          <button class="dropdown-item" onclick="enviarPorEmail()">
+            <i class="fas fa-envelope"></i> Enviar por Email
+          </button>
+          
+          <% if (cotacao.status !== 'Cancelada' && cotacao.status !== 'Expirada') { %>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item text-danger" onclick="cancelarCotacao()">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Coluna Principal -->
+    <div class="col-lg-8">
+      <!-- Status e Informações Gerais -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-info-circle"></i> Informações da Cotação
+            </h6>
+            <span class="badge badge-<%= cotacao.status === 'Enviada' ? 'primary' : cotacao.status === 'Aceita' ? 'success' : cotacao.status === 'Rejeitada' ? 'danger' : cotacao.status === 'Expirada' ? 'warning' : cotacao.status === 'Cancelada' ? 'secondary' : 'info' %> badge-lg">
+              <%= cotacao.status %>
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <strong>Número:</strong><br>
+              <span class="text-muted"><%= cotacao.numero %></span>
+            </div>
+            <div class="col-md-3">
+              <strong>Série:</strong><br>
+              <span class="text-muted"><%= cotacao.serie %></span>
+            </div>
+            <div class="col-md-3">
+              <strong>Data de Criação:</strong><br>
+              <span class="text-muted"><%= new Date(cotacao.data_criacao).toLocaleDateString('pt-BR') %></span>
+            </div>
+            <div class="col-md-3">
+              <strong>Data de Validade:</strong><br>
+              <span class="text-muted <%= new Date(cotacao.data_validade) < new Date() ? 'text-danger' : '' %>">
+                <%= new Date(cotacao.data_validade).toLocaleDateString('pt-BR') %>
+                <% if (new Date(cotacao.data_validade) < new Date()) { %>
+                  <i class="fas fa-exclamation-triangle text-danger" title="Expirada"></i>
+                <% } %>
+              </span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Condições Comerciais:</strong><br>
+              <span class="text-muted"><%= cotacao.condicoes_comerciais || 'Não informado' %></span>
+            </div>
+            <div class="col-md-6">
+              <strong>Observações:</strong><br>
+              <span class="text-muted"><%= cotacao.observacoes || 'Nenhuma observação' %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dados do Cliente -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-user"></i> Dados do Cliente
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Nome:</strong><br>
+              <span class="text-muted"><%= cotacao.cliente.nome %></span>
+            </div>
+            <div class="col-md-6">
+              <strong>NUIT:</strong><br>
+              <span class="text-muted"><%= cotacao.cliente.nuit %></span>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <strong>Endereço Fiscal:</strong><br>
+              <span class="text-muted"><%= cotacao.cliente.endereco_fiscal %></span>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <strong>Telefone:</strong><br>
+              <span class="text-muted"><%= cotacao.cliente.telefone || 'Não informado' %></span>
+            </div>
+            <div class="col-md-6">
+              <strong>Email:</strong><br>
+              <span class="text-muted"><%= cotacao.cliente.email || 'Não informado' %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artigos da Cotação -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-shopping-cart"></i> Artigos
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th width="35%">Artigo</th>
+                  <th width="10%" class="text-center">Qtd</th>
+                  <th width="15%" class="text-right">Preço Unit.</th>
+                  <th width="10%" class="text-center">Desc. %</th>
+                  <th width="10%" class="text-center">IVA %</th>
+                  <th width="20%" class="text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% cotacao.artigos.forEach(artigo => { %>
+                  <% 
+                    const subtotal = artigo.quantidade * artigo.preco_unitario * (1 - artigo.desconto_percentual / 100);
+                  %>
+                  <tr>
+                    <td>
+                      <strong><%= artigo.nome %></strong>
+                      <% if (artigo.observacoes) { %>
+                        <br><small class="text-muted"><%= artigo.observacoes %></small>
+                      <% } %>
+                    </td>
+                    <td class="text-center"><%= artigo.quantidade %></td>
+                    <td class="text-right"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(artigo.preco_unitario) %></td>
+                    <td class="text-center"><%= artigo.desconto_percentual %>%</td>
+                    <td class="text-center"><%= artigo.taxa_iva %>%</td>
+                    <td class="text-right"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(subtotal) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+              <tfoot>
+                <tr class="table-info">
+                  <td colspan="5" class="text-right font-weight-bold">Subtotal:</td>
+                  <td class="text-right font-weight-bold">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_liquido + cotacao.valor_desconto) %>
+                  </td>
+                </tr>
+                <% if (cotacao.desconto_geral > 0) { %>
+                  <tr class="table-warning">
+                    <td colspan="5" class="text-right">Desconto Geral (<%= cotacao.desconto_geral %>%):</td>
+                    <td class="text-right text-danger">
+                      -<%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_desconto) %>
+                    </td>
+                  </tr>
+                <% } %>
+                <tr class="table-info">
+                  <td colspan="5" class="text-right font-weight-bold">Valor Líquido:</td>
+                  <td class="text-right font-weight-bold">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_liquido) %>
+                  </td>
+                </tr>
+                <tr class="table-info">
+                  <td colspan="5" class="text-right font-weight-bold">IVA:</td>
+                  <td class="text-right font-weight-bold">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_iva) %>
+                  </td>
+                </tr>
+                <tr class="table-success">
+                  <td colspan="5" class="text-right font-weight-bold h5">Total Geral:</td>
+                  <td class="text-right font-weight-bold h5">
+                    <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_total) %>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna Lateral -->
+    <div class="col-lg-4">
+      <!-- Resumo Financeiro -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-success">
+            <i class="fas fa-calculator"></i> Resumo Financeiro
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-6">Subtotal:</div>
+            <div class="col-6 text-right">
+              <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_liquido + cotacao.valor_desconto) %>
+            </div>
+          </div>
+          
+          <% if (cotacao.desconto_geral > 0) { %>
+            <div class="row mb-2">
+              <div class="col-6">Desconto (<%= cotacao.desconto_geral %>%):</div>
+              <div class="col-6 text-right text-danger">
+                -<%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_desconto) %>
+              </div>
+            </div>
+          <% } %>
+          
+          <div class="row mb-2">
+            <div class="col-6">Valor Líquido:</div>
+            <div class="col-6 text-right">
+              <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_liquido) %>
+            </div>
+          </div>
+          
+          <div class="row mb-2">
+            <div class="col-6">IVA:</div>
+            <div class="col-6 text-right">
+              <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_iva) %>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="row">
+            <div class="col-6"><strong>Total Geral:</strong></div>
+            <div class="col-6 text-right"><strong>
+              <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_total) %>
+            </strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informações de Validade -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-warning">
+            <i class="fas fa-clock"></i> Validade
+          </h6>
+        </div>
+        <div class="card-body">
+          <% 
+            const hoje = new Date();
+            const dataValidade = new Date(cotacao.data_validade);
+            const diasRestantes = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
+          %>
+          
+          <div class="text-center">
+            <% if (diasRestantes > 0) { %>
+              <div class="h4 text-success">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <p class="mb-1">Válida por mais</p>
+              <h5 class="text-success"><%= diasRestantes %> dias</h5>
+              <small class="text-muted">Expira em <%= dataValidade.toLocaleDateString('pt-BR') %></small>
+            <% } else if (diasRestantes === 0) { %>
+              <div class="h4 text-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <p class="mb-1">Expira</p>
+              <h5 class="text-warning">HOJE</h5>
+            <% } else { %>
+              <div class="h4 text-danger">
+                <i class="fas fa-times-circle"></i>
+              </div>
+              <p class="mb-1">Expirada há</p>
+              <h5 class="text-danger"><%= Math.abs(diasRestantes) %> dias</h5>
+              <small class="text-muted">Expirou em <%= dataValidade.toLocaleDateString('pt-BR') %></small>
+            <% } %>
+          </div>
+          
+          <% if (diasRestantes > 0 && diasRestantes <= 7) { %>
+            <div class="alert alert-warning mt-3 mb-0">
+              <i class="fas fa-exclamation-triangle"></i>
+              <strong>Atenção!</strong> Esta cotação expira em breve.
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Histórico de Status -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-info">
+            <i class="fas fa-history"></i> Histórico
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <% cotacao.historico.forEach((evento, index) => { %>
+              <div class="timeline-item <%= index === 0 ? 'active' : '' %>">
+                <div class="timeline-marker bg-<%= evento.status === 'Criada' ? 'info' : evento.status === 'Enviada' ? 'primary' : evento.status === 'Aceita' ? 'success' : evento.status === 'Rejeitada' ? 'danger' : 'secondary' %>"></div>
+                <div class="timeline-content">
+                  <h6 class="timeline-title"><%= evento.status %></h6>
+                  <p class="timeline-description"><%= evento.descricao %></p>
+                  <small class="text-muted">
+                    <i class="fas fa-clock"></i> <%= new Date(evento.data).toLocaleString('pt-BR') %>
+                    <% if (evento.usuario) { %>
+                      <br><i class="fas fa-user"></i> <%= evento.usuario %>
+                    <% } %>
+                  </small>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações Rápidas -->
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-bolt"></i> Ações Rápidas
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <% if (cotacao.status === 'Rascunho') { %>
+              <button type="button" class="btn btn-primary btn-block mb-2" onclick="enviarCotacao()">
+                <i class="fas fa-paper-plane"></i> Enviar Cotação
+              </button>
+            <% } %>
+            
+            <% if (cotacao.status === 'Enviada' || cotacao.status === 'Aceita') { %>
+              <button type="button" class="btn btn-success btn-block mb-2" onclick="converterParaFactura()">
+                <i class="fas fa-file-invoice"></i> Converter em Factura
+              </button>
+            <% } %>
+            
+            <button type="button" class="btn btn-info btn-block mb-2" onclick="enviarPorEmail()">
+              <i class="fas fa-envelope"></i> Enviar por Email
+            </button>
+            
+            <button type="button" class="btn btn-secondary btn-block mb-2" onclick="gerarPDF()">
+              <i class="fas fa-file-pdf"></i> Gerar PDF
+            </button>
+            
+            <button type="button" class="btn btn-outline-primary btn-block mb-2" onclick="duplicarCotacao()">
+              <i class="fas fa-copy"></i> Duplicar
+            </button>
+            
+            <% if (cotacao.status !== 'Cancelada' && cotacao.status !== 'Expirada') { %>
+              <button type="button" class="btn btn-outline-danger btn-block" onclick="cancelarCotacao()">
+                <i class="fas fa-times"></i> Cancelar
+              </button>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Cancelar Cotação -->
+<div class="modal fade" id="cancelarModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-exclamation-triangle text-warning"></i> Cancelar Cotação
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja cancelar esta cotação?</p>
+        <p class="text-muted">Esta ação não pode ser desfeita.</p>
+        
+        <div class="form-group">
+          <label for="motivoCancelamento">Motivo do cancelamento:</label>
+          <textarea class="form-control" id="motivoCancelamento" rows="3" 
+                    placeholder="Descreva o motivo do cancelamento..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-times"></i> Não, manter cotação
+        </button>
+        <button type="button" class="btn btn-danger" onclick="confirmarCancelamento()">
+          <i class="fas fa-check"></i> Sim, cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Enviar por Email -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-envelope"></i> Enviar Cotação por Email
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="emailForm">
+          <div class="form-group">
+            <label for="emailPara">Para: *</label>
+            <input type="email" class="form-control" id="emailPara" 
+                   value="<%= cotacao.cliente.email %>" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="emailCopia">Cópia (CC):</label>
+            <input type="email" class="form-control" id="emailCopia" 
+                   placeholder="email@exemplo.com">
+          </div>
+          
+          <div class="form-group">
+            <label for="emailAssunto">Assunto: *</label>
+            <input type="text" class="form-control" id="emailAssunto" 
+                   value="Cotação #<%= cotacao.numero %> - <%= cotacao.cliente.nome %>" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="emailMensagem">Mensagem:</label>
+            <textarea class="form-control" id="emailMensagem" rows="5">
+Caro(a) <%= cotacao.cliente.nome %>,
+
+Segue em anexo a cotação solicitada.
+
+Validade: <%= new Date(cotacao.data_validade).toLocaleDateString('pt-BR') %>
+Valor Total: <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(cotacao.valor_total) %>
+
+Ficamos à disposição para esclarecimentos.
+
+Atenciosamente,
+Equipe de Vendas
+            </textarea>
+          </div>
+          
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="incluirPDF" checked>
+            <label class="form-check-label" for="incluirPDF">
+              Incluir cotação em PDF como anexo
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="confirmarEnvioEmail()">
+          <i class="fas fa-paper-plane"></i> Enviar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 20px;
+  height: calc(100% + 10px);
+  width: 2px;
+  background-color: #e3e6f0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #e3e6f0;
+}
+
+.timeline-item.active .timeline-marker {
+  box-shadow: 0 0 0 2px #4e73df;
+}
+
+.timeline-title {
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.timeline-description {
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #5a5c69;
+}
+
+.badge-lg {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+}
+</style>
+
+<script>
+// Enviar cotação
+function enviarCotacao() {
+  if (confirm('Tem certeza que deseja enviar esta cotação?')) {
+    // Implementar envio
+    window.location.href = '/vendas/cotacoes/<%= cotacao.id %>/enviar';
+  }
+}
+
+// Converter para factura
+function converterParaFactura() {
+  if (confirm('Deseja converter esta cotação em factura?')) {
+    window.location.href = '/vendas/facturas/create?cotacao_id=<%= cotacao.id %>';
+  }
+}
+
+// Duplicar cotação
+function duplicarCotacao() {
+  if (confirm('Deseja criar uma nova cotação baseada nesta?')) {
+    window.location.href = '/vendas/cotacoes/create?duplicar=<%= cotacao.id %>';
+  }
+}
+
+// Imprimir cotação
+function imprimirCotacao() {
+  window.open('/vendas/cotacoes/<%= cotacao.id %>/print', '_blank');
+}
+
+// Gerar PDF
+function gerarPDF() {
+  window.open('/vendas/cotacoes/<%= cotacao.id %>/pdf', '_blank');
+}
+
+// Enviar por email
+function enviarPorEmail() {
+  $('#emailModal').modal('show');
+}
+
+// Cancelar cotação
+function cancelarCotacao() {
+  $('#cancelarModal').modal('show');
+}
+
+// Confirmar cancelamento
+function confirmarCancelamento() {
+  const motivo = document.getElementById('motivoCancelamento').value;
+  
+  if (!motivo.trim()) {
+    alert('Por favor, informe o motivo do cancelamento.');
+    return;
+  }
+  
+  // Implementar cancelamento
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/vendas/cotacoes/<%= cotacao.id %>/cancelar';
+  
+  const motivoInput = document.createElement('input');
+  motivoInput.type = 'hidden';
+  motivoInput.name = 'motivo';
+  motivoInput.value = motivo;
+  
+  form.appendChild(motivoInput);
+  document.body.appendChild(form);
+  form.submit();
+}
+
+// Confirmar envio de email
+function confirmarEnvioEmail() {
+  const para = document.getElementById('emailPara').value;
+  const assunto = document.getElementById('emailAssunto').value;
+  
+  if (!para || !assunto) {
+    alert('Por favor, preencha os campos obrigatórios.');
+    return;
+  }
+  
+  // Implementar envio de email
+  const formData = new FormData();
+  formData.append('para', para);
+  formData.append('copia', document.getElementById('emailCopia').value);
+  formData.append('assunto', assunto);
+  formData.append('mensagem', document.getElementById('emailMensagem').value);
+  formData.append('incluir_pdf', document.getElementById('incluirPDF').checked);
+  
+  fetch('/vendas/cotacoes/<%= cotacao.id %>/email', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Email enviado com sucesso!');
+      $('#emailModal').modal('hide');
+    } else {
+      alert('Erro ao enviar email: ' + data.message);
+    }
+  })
+  .catch(error => {
+    alert('Erro ao enviar email.');
+    console.error(error);
+  });
+}
+</script>
+
+<%- include('../../partials/footer') %>

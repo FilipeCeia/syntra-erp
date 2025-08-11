@@ -1,0 +1,224 @@
+
+
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+       
+        
+        <div>
+            <button class="btn btn-outline-secondary me-2" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+            <button class="btn btn-success" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Exportar Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="dataInicio" class="form-label">Data Início</label>
+                    <input type="date" class="form-control" id="dataInicio" name="dataInicio" value="<%= filtros.dataInicio %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="dataFim" class="form-label">Data Fim</label>
+                    <input type="date" class="form-control" id="dataFim" name="dataFim" value="<%= filtros.dataFim %>">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    <a href="/relatorios/fluxo-caixa" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Entradas</h6>
+                            <h3 class="mb-0"><%= resumo.totalEntradas %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-arrow-up fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Saídas</h6>
+                            <h3 class="mb-0"><%= resumo.totalSaidas %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-arrow-down fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Saldo Líquido</h6>
+                            <h3 class="mb-0"><%= resumo.saldoLiquido %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-balance-scale fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Saldo Atual</h6>
+                            <h3 class="mb-0"><%= resumo.saldoAtual %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Evolução do Fluxo de Caixa</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="fluxoChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Tabelas de Entradas e Saídas -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Entradas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% entradas.forEach(entrada => { %>
+                                <tr>
+                                    <td><%= entrada.data.toLocaleDateString('pt-PT') %></td>
+                                    <td><%= entrada.descricao %></td>
+                                    <td class="text-success"><%= entrada.valor %></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Saídas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% saidas.forEach(saida => { %>
+                                <tr>
+                                    <td><%= saida.data.toLocaleDateString('pt-PT') %></td>
+                                    <td><%= saida.descricao %></td>
+                                    <td class="text-danger"><%= saida.valor %></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gráfico de Fluxo de Caixa
+const ctx = document.getElementById('fluxoChart').getContext('2d');
+const fluxoChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: <%- JSON.stringify(graficoFluxo.labels) %>,
+        datasets: [
+            {
+                label: 'Entradas',
+                data: <%- JSON.stringify(graficoFluxo.entradas) %>,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            },
+            {
+                label: 'Saídas',
+                data: <%- JSON.stringify(graficoFluxo.saidas) %>,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.1
+            },
+            {
+                label: 'Saldo Acumulado',
+                data: <%- JSON.stringify(graficoFluxo.saldoAcumulado) %>,
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                tension: 0.1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+function exportToExcel() {
+    alert('Funcionalidade de exportação será implementada em breve!');
+}
+</script>
+

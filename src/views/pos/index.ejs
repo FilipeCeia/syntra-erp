@@ -1,0 +1,891 @@
+<!-- ====================================
+     src/views/pos/index.ejs
+     ==================================== -->
+<!-- Content Header -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+      
+        <span class="badge badge-success">Ativo</span>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item active">POS</li>
+        </ol>
+        <div class="mt-2">
+          <a href="/pos/configuracoes" class="btn btn-sm btn-secondary">
+            <i class="fas fa-cog"></i> Configurações
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Container para alertas -->
+    <div id="alertas-container"></div>
+    <div class="row">
+      <!-- Área de produtos -->
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Produtos</h3>
+            <div class="card-tools">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="input-group input-group-sm">
+                    <input type="text" id="search-produto" class="form-control" placeholder="Pesquisar produto, código ou código de barras..." autofocus>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default" onclick="buscarProdutos()">
+                        <i class="fas fa-search"></i>
+                      </button>
+                      <button type="button" class="btn btn-info" onclick="ativarLeitorCodigoBarras()" title="Ativar leitor de código de barras">
+                        <i class="fas fa-barcode"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <select class="form-control form-control-sm" id="filtro-categoria" onchange="buscarProdutos()">
+                    <option value="">Todas as categorias</option>
+                    <option value="1">Bebidas</option>
+                    <option value="2">Alimentação</option>
+                    <option value="3">Higiene e Limpeza</option>
+                    <option value="4">Eletrônicos</option>
+                    <option value="5">Vestuário</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Produtos Favoritos -->
+          <div class="card-body p-2">
+            <h6 class="text-muted mb-2">Produtos Favoritos</h6>
+            <div class="row">
+              <div class="col-md-3 mb-2">
+                <button class="btn btn-outline-primary btn-sm btn-block" 
+                        onclick="adicionarProdutoRapido(1, 'Coca-Cola 500ml', 45.00, 50)">
+                  <small>Coca-Cola 500ml</small><br>
+                  <strong>45.00 MT</strong>
+                </button>
+              </div>
+              <div class="col-md-3 mb-2">
+                <button class="btn btn-outline-primary btn-sm btn-block" 
+                        onclick="adicionarProdutoRapido(2, 'Pão Francês', 2.50, 100)">
+                  <small>Pão Francês</small><br>
+                  <strong>2.50 MT</strong>
+                </button>
+              </div>
+              <div class="col-md-3 mb-2">
+                <button class="btn btn-outline-primary btn-sm btn-block" 
+                        onclick="adicionarProdutoRapido(3, 'Arroz Branco 1kg', 85.00, 25)">
+                  <small>Arroz Branco 1kg</small><br>
+                  <strong>85.00 MT</strong>
+                </button>
+              </div>
+              <div class="col-md-3 mb-2">
+                <button class="btn btn-outline-primary btn-sm btn-block" 
+                        onclick="adicionarProdutoRapido(5, 'Leite UHT 1L', 65.00, 40)">
+                  <small>Leite UHT 1L</small><br>
+                  <strong>65.00 MT</strong>
+                </button>
+              </div>
+            </div>
+            <hr>
+          </div>
+          
+          <div class="card-body table-responsive p-0" style="height: 400px;">
+            <div id="loading-produtos" class="text-center p-4" style="display: none;">
+              <i class="fas fa-spinner fa-spin"></i> Carregando produtos...
+            </div>
+            <table class="table table-head-fixed text-nowrap" id="produtos-lista">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Produto</th>
+                  <th>Preço</th>
+                  <th>Stock</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="produtos-tbody">
+                <tr>
+                  <td>PROD001</td>
+                  <td>Coca-Cola 500ml</td>
+                  <td>45.00 MT</td>
+                  <td><span class="badge badge-success">50</span></td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" onclick="adicionarProduto(1, 'Coca-Cola 500ml', 45.00, 50)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PROD002</td>
+                  <td>Pão Francês</td>
+                  <td>2.50 MT</td>
+                  <td><span class="badge badge-success">100</span></td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" onclick="adicionarProduto(2, 'Pão Francês', 2.50, 100)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PROD003</td>
+                  <td>Arroz Branco 1kg</td>
+                  <td>85.00 MT</td>
+                  <td><span class="badge badge-success">25</span></td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" onclick="adicionarProduto(3, 'Arroz Branco 1kg', 85.00, 25)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PROD004</td>
+                  <td>Sabonete Dove</td>
+                  <td>35.00 MT</td>
+                  <td><span class="badge badge-success">30</span></td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" onclick="adicionarProduto(4, 'Sabonete Dove', 35.00, 30)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PROD005</td>
+                  <td>Leite UHT 1L</td>
+                  <td>65.00 MT</td>
+                  <td><span class="badge badge-success">40</span></td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" onclick="adicionarProduto(5, 'Leite UHT 1L', 65.00, 40)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Área do carrinho -->
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Carrinho de Compras</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" onclick="limparCarrinho()" title="Limpar carrinho">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Cliente -->
+          <div class="card-body p-2">
+            <div class="form-group mb-2">
+              <label for="cliente_id" class="form-label">Cliente:</label>
+              <select class="form-control form-control-sm" id="cliente_id">
+                <option value="1">Cliente Geral</option>
+                <option value="2">João Silva</option>
+                <option value="3">Maria Santos</option>
+                <option value="4">Pedro Costa</option>
+                <option value="5">Ana Oliveira</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Itens do carrinho -->
+          <div class="card-body table-responsive p-0" style="height: 300px;">
+            <table class="table table-sm" id="carrinho-lista">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qtd</th>
+                  <th>Preço</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="carrinho-tbody">
+                <tr id="carrinho-vazio">
+                  <td colspan="5" class="text-center text-muted">Carrinho vazio</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Totais -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <strong>Subtotal:</strong>
+              </div>
+              <div class="col-6 text-right">
+                <span id="subtotal-valor">0.00 MT</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <strong>Desconto:</strong>
+              </div>
+              <div class="col-6 text-right">
+                <input type="number" id="desconto-valor" class="form-control form-control-sm text-right" value="0" min="0" step="0.01" onchange="calcularTotal()">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <strong>IVA (17%):</strong>
+              </div>
+              <div class="col-6 text-right">
+                <span id="iva-valor">0.00 MT</span>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-6">
+                <h4><strong>Total:</strong></h4>
+              </div>
+              <div class="col-6 text-right">
+                <h4><strong><span id="total-valor">0.00 MT</span></strong></h4>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Botões de ação -->
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-6">
+                <button type="button" class="btn btn-warning btn-block" onclick="suspenderVenda()">
+                  <i class="fas fa-pause"></i> Suspender
+                </button>
+              </div>
+              <div class="col-6">
+                <button type="button" class="btn btn-success btn-block" onclick="finalizarVenda()" id="btn-finalizar" disabled>
+                  <i class="fas fa-check"></i> Finalizar
+                </button>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                <button type="button" class="btn btn-info btn-block" onclick="abrirModalPagamento()" id="btn-pagamento" disabled>
+                  <i class="fas fa-credit-card"></i> Processar Pagamento
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de Pagamento -->
+<div class="modal fade" id="modal-pagamento" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Processar Pagamento</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Resumo da Venda</h5>
+            <table class="table table-sm">
+              <tr>
+                <td>Subtotal:</td>
+                <td class="text-right" id="modal-subtotal">0.00 MT</td>
+              </tr>
+              <tr>
+                <td>Desconto:</td>
+                <td class="text-right" id="modal-desconto">0.00 MT</td>
+              </tr>
+              <tr>
+                <td>IVA:</td>
+                <td class="text-right" id="modal-iva">0.00 MT</td>
+              </tr>
+              <tr class="table-active">
+                <td><strong>Total:</strong></td>
+                <td class="text-right"><strong id="modal-total">0.00 MT</strong></td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <h5>Forma de Pagamento</h5>
+            <div class="form-group">
+              <label>Método:</label>
+              <select class="form-control" id="metodo-pagamento">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="cartao">Cartão</option>
+                <option value="transferencia">Transferência</option>
+                <option value="misto">Misto</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Valor Recebido:</label>
+              <input type="number" class="form-control" id="valor-recebido" step="0.01" min="0" onchange="calcularTroco()">
+            </div>
+            <div class="form-group">
+              <label>Troco:</label>
+              <input type="text" class="form-control" id="troco-valor" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="confirmarPagamento()">Confirmar Pagamento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Dados fictícios embutidos na view
+  let carrinho = [];
+  let subtotal = 0;
+  let desconto = 0;
+  let iva = 0.17; // 17% IVA
+  let total = 0;
+  let vendaSuspensa = null;
+  
+  // Configurações POS
+  let configPOS = {
+    pos_ativo: true,
+    impressora_termica: true,
+    leitor_codigo_barras: true,
+    gaveta_dinheiro: true,
+    verificar_stock: true,
+    bloquear_venda_sem_stock: false,
+    alerta_stock_baixo: true,
+    limite_stock_baixo: 5,
+    tema: 'claro',
+    tamanho_fonte: 'medio',
+    exibir_favoritos: true,
+    atalhos_teclado: true
+  };
+  
+  // Produtos fictícios
+  let produtos = [
+    {
+      id: 1,
+      codigo: 'PROD001',
+      nome: 'Coca-Cola 500ml',
+      preco_venda: 45.00,
+      stock: 50,
+      codigo_barras: '7894900011517',
+      categoria_id: 1,
+      iva_taxa: 17,
+      unidade: 'UN'
+    },
+    {
+      id: 2,
+      codigo: 'PROD002', 
+      nome: 'Pão Francês',
+      preco_venda: 2.50,
+      stock: 100,
+      codigo_barras: '7891234567890',
+      categoria_id: 2,
+      iva_taxa: 17,
+      unidade: 'UN'
+    },
+    {
+      id: 3,
+      codigo: 'PROD003',
+      nome: 'Arroz Branco 1kg',
+      preco_venda: 85.00,
+      stock: 25,
+      codigo_barras: '7890123456789',
+      categoria_id: 2,
+      iva_taxa: 17,
+      unidade: 'KG'
+    },
+    {
+      id: 4,
+      codigo: 'PROD004',
+      nome: 'Sabonete Dove',
+      preco_venda: 35.00,
+      stock: 30,
+      codigo_barras: '7891150056473',
+      categoria_id: 3,
+      iva_taxa: 17,
+      unidade: 'UN'
+    },
+    {
+      id: 5,
+      codigo: 'PROD005',
+      nome: 'Leite UHT 1L',
+      preco_venda: 65.00,
+      stock: 40,
+      codigo_barras: '7891000100103',
+      categoria_id: 2,
+      iva_taxa: 17,
+      unidade: 'L'
+    }
+  ];
+  
+  // Clientes fictícios
+  let clientes = [
+    { id: 1, nome: 'Cliente Geral', codigo: 'CLI001' },
+    { id: 2, nome: 'João Silva', codigo: 'CLI002' },
+    { id: 3, nome: 'Maria Santos', codigo: 'CLI003' },
+    { id: 4, nome: 'Pedro Costa', codigo: 'CLI004' },
+    { id: 5, nome: 'Ana Oliveira', codigo: 'CLI005' }
+  ];
+  
+  // Categorias fictícias
+  let categorias = [
+    { id: 1, nome: 'Bebidas', cor: '#007bff' },
+    { id: 2, nome: 'Alimentação', cor: '#28a745' },
+    { id: 3, nome: 'Higiene e Limpeza', cor: '#ffc107' },
+    { id: 4, nome: 'Eletrônicos', cor: '#dc3545' },
+    { id: 5, nome: 'Vestuário', cor: '#6f42c1' }
+  ];
+
+  // Inicialização
+  $(document).ready(function() {
+    inicializarPOS();
+    configurarTeclasRapidas();
+    
+    // Inicializar Select2 para clientes
+    $('#cliente_id').select2({
+      placeholder: 'Selecionar cliente...',
+      allowClear: true
+    });
+    
+    // Inicializar Select2 para categorias
+    $('#filtro-categoria').select2({
+      placeholder: 'Todas as categorias',
+      allowClear: true
+    });
+  });
+
+  function inicializarPOS() {
+    // Verificar se POS está ativo
+    if (!configPOS.pos_ativo) {
+      $('#pos-content').prepend(`
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          POS está desativado. Entre em contato com o administrador.
+        </div>
+      `);
+      $('button').prop('disabled', true);
+      return;
+    }
+    
+    // Configurar leitor de código de barras
+    if (configPOS.leitor_codigo_barras) {
+      configurarLeitorCodigoBarras();
+    }
+    
+    // Aplicar tema
+    aplicarTema();
+  }
+
+  function configurarLeitorCodigoBarras() {
+    let codigoBuffer = '';
+    let ultimaTecla = 0;
+    
+    $(document).keypress(function(e) {
+      let agora = new Date().getTime();
+      
+      if (agora - ultimaTecla > 100) {
+        codigoBuffer = '';
+      }
+      
+      ultimaTecla = agora;
+      
+      if (e.which === 13) { // Enter
+        if (codigoBuffer.length > 3) {
+          buscarProdutoPorCodigo(codigoBuffer);
+          codigoBuffer = '';
+        }
+      } else {
+        codigoBuffer += String.fromCharCode(e.which);
+      }
+    });
+  }
+
+  function aplicarTema() {
+    if (configPOS.tema === 'escuro') {
+      $('body').addClass('dark-mode');
+    }
+    
+    if (configPOS.tamanho_fonte === 'grande') {
+      $('body').addClass('fonte-grande');
+    } else if (configPOS.tamanho_fonte === 'pequeno') {
+      $('body').addClass('fonte-pequena');
+    }
+  }
+
+  function configurarTeclasRapidas() {
+    if (!configPOS.atalhos_teclado) return;
+    
+    $(document).keydown(function(e) {
+      if (e.ctrlKey) {
+        switch(e.which) {
+          case 70: // Ctrl+F - Foco na busca
+            e.preventDefault();
+            $('#search-produto').focus();
+            break;
+          case 78: // Ctrl+N - Nova venda
+            e.preventDefault();
+            limparCarrinho();
+            break;
+          case 83: // Ctrl+S - Suspender venda
+            e.preventDefault();
+            suspenderVenda();
+            break;
+          case 13: // Ctrl+Enter - Finalizar venda
+            e.preventDefault();
+            if (!$('#btn-finalizar').prop('disabled')) {
+              finalizarVenda();
+            }
+            break;
+        }
+      }
+    });
+  }
+
+  function buscarProdutos() {
+    let termo = $('#search-produto').val().toLowerCase();
+    let categoria = $('#filtro-categoria').val();
+    
+    let produtosFiltrados = produtos.filter(produto => {
+      let matchTermo = !termo || 
+        produto.nome.toLowerCase().includes(termo) ||
+        produto.codigo.toLowerCase().includes(termo) ||
+        produto.codigo_barras.includes(termo);
+      
+      let matchCategoria = !categoria || produto.categoria_id == categoria;
+      
+      return matchTermo && matchCategoria;
+    });
+    
+    atualizarListaProdutos(produtosFiltrados);
+  }
+
+  function atualizarListaProdutos(produtosList) {
+    let tbody = $('#produtos-tbody');
+    tbody.empty();
+    
+    if (produtosList.length === 0) {
+      tbody.append(`
+        <tr>
+          <td colspan="5" class="text-center text-muted">Nenhum produto encontrado</td>
+        </tr>
+      `);
+      return;
+    }
+    
+    produtosList.forEach(produto => {
+      let stockClass = produto.stock > configPOS.limite_stock_baixo ? 'success' : 'warning';
+      if (produto.stock === 0) stockClass = 'danger';
+      
+      tbody.append(`
+        <tr>
+          <td>${produto.codigo}</td>
+          <td>${produto.nome}</td>
+          <td>${produto.preco_venda.toFixed(2)} MT</td>
+          <td><span class="badge badge-${stockClass}">${produto.stock}</span></td>
+          <td>
+            <button class="btn btn-primary btn-sm" onclick="adicionarProduto(${produto.id}, '${produto.nome}', ${produto.preco_venda}, ${produto.stock})" ${produto.stock === 0 && configPOS.bloquear_venda_sem_stock ? 'disabled' : ''}>
+              <i class="fas fa-plus"></i>
+            </button>
+          </td>
+        </tr>
+      `);
+    });
+  }
+
+  function buscarProdutoPorCodigo(codigo) {
+    let produto = produtos.find(p => p.codigo_barras === codigo || p.codigo === codigo);
+    
+    if (produto) {
+      adicionarProduto(produto.id, produto.nome, produto.preco_venda, produto.stock);
+      $('#search-produto').val('');
+    } else {
+      mostrarAlerta('Produto não encontrado', 'warning');
+    }
+  }
+
+  function adicionarProduto(id, nome, preco, stockDisponivel) {
+    // Verificar se produto já está no carrinho
+    let itemExistente = carrinho.find(item => item.id === id);
+    
+    if (itemExistente) {
+      if (itemExistente.quantidade >= stockDisponivel && configPOS.verificar_stock) {
+        mostrarAlerta('Stock insuficiente', 'warning');
+        return;
+      }
+      itemExistente.quantidade++;
+      itemExistente.total = itemExistente.quantidade * itemExistente.preco;
+    } else {
+      if (stockDisponivel === 0 && configPOS.bloquear_venda_sem_stock) {
+        mostrarAlerta('Produto sem stock', 'warning');
+        return;
+      }
+      
+      carrinho.push({
+        id: id,
+        nome: nome,
+        preco: preco,
+        quantidade: 1,
+        total: preco,
+        stockDisponivel: stockDisponivel
+      });
+    }
+    
+    atualizarCarrinho();
+    calcularTotal();
+  }
+
+  function adicionarProdutoRapido(id, nome, preco, stockDisponivel) {
+    adicionarProduto(id, nome, preco, stockDisponivel);
+  }
+
+  function removerProduto(id) {
+    carrinho = carrinho.filter(item => item.id !== id);
+    atualizarCarrinho();
+    calcularTotal();
+  }
+
+  function alterarQuantidade(id, novaQuantidade) {
+    let item = carrinho.find(item => item.id === id);
+    
+    if (item) {
+      if (novaQuantidade <= 0) {
+        removerProduto(id);
+        return;
+      }
+      
+      if (novaQuantidade > item.stockDisponivel && configPOS.verificar_stock) {
+        mostrarAlerta('Quantidade maior que o stock disponível', 'warning');
+        return;
+      }
+      
+      item.quantidade = novaQuantidade;
+      item.total = item.quantidade * item.preco;
+      
+      atualizarCarrinho();
+      calcularTotal();
+    }
+  }
+
+  function atualizarCarrinho() {
+    let tbody = $('#carrinho-tbody');
+    tbody.empty();
+    
+    if (carrinho.length === 0) {
+      tbody.append(`
+        <tr id="carrinho-vazio">
+          <td colspan="5" class="text-center text-muted">Carrinho vazio</td>
+        </tr>
+      `);
+      $('#btn-finalizar, #btn-pagamento').prop('disabled', true);
+      return;
+    }
+    
+    carrinho.forEach(item => {
+      tbody.append(`
+        <tr>
+          <td>
+            <small>${item.nome}</small><br>
+            <small class="text-muted">${item.preco.toFixed(2)} MT</small>
+          </td>
+          <td>
+            <input type="number" class="form-control form-control-sm" value="${item.quantidade}" min="1" max="${item.stockDisponivel}" onchange="alterarQuantidade(${item.id}, this.value)" style="width: 60px;">
+          </td>
+          <td>${item.preco.toFixed(2)}</td>
+          <td>${item.total.toFixed(2)}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" onclick="removerProduto(${item.id})">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        </tr>
+      `);
+    });
+    
+    $('#btn-finalizar, #btn-pagamento').prop('disabled', false);
+  }
+
+  function calcularTotal() {
+    subtotal = carrinho.reduce((sum, item) => sum + item.total, 0);
+    desconto = parseFloat($('#desconto-valor').val()) || 0;
+    let subtotalComDesconto = subtotal - desconto;
+    let ivaValor = subtotalComDesconto * iva;
+    total = subtotalComDesconto + ivaValor;
+    
+    $('#subtotal-valor').text(subtotal.toFixed(2) + ' MT');
+    $('#iva-valor').text(ivaValor.toFixed(2) + ' MT');
+    $('#total-valor').text(total.toFixed(2) + ' MT');
+  }
+
+  function limparCarrinho() {
+    carrinho = [];
+    $('#desconto-valor').val(0);
+    atualizarCarrinho();
+    calcularTotal();
+    $('#search-produto').focus();
+  }
+
+  function suspenderVenda() {
+    if (carrinho.length === 0) {
+      mostrarAlerta('Carrinho vazio', 'warning');
+      return;
+    }
+    
+    vendaSuspensa = {
+      carrinho: [...carrinho],
+      cliente_id: $('#cliente_id').val(),
+      desconto: $('#desconto-valor').val(),
+      timestamp: new Date()
+    };
+    
+    limparCarrinho();
+    mostrarAlerta('Venda suspensa com sucesso', 'success');
+  }
+
+  function recuperarVenda() {
+    if (!vendaSuspensa) {
+      mostrarAlerta('Nenhuma venda suspensa', 'info');
+      return;
+    }
+    
+    carrinho = [...vendaSuspensa.carrinho];
+    $('#cliente_id').val(vendaSuspensa.cliente_id).trigger('change');
+    $('#desconto-valor').val(vendaSuspensa.desconto);
+    
+    atualizarCarrinho();
+    calcularTotal();
+    
+    vendaSuspensa = null;
+    mostrarAlerta('Venda recuperada com sucesso', 'success');
+  }
+
+  function abrirModalPagamento() {
+    if (carrinho.length === 0) {
+      mostrarAlerta('Carrinho vazio', 'warning');
+      return;
+    }
+    
+    // Atualizar valores no modal
+    $('#modal-subtotal').text(subtotal.toFixed(2) + ' MT');
+    $('#modal-desconto').text($('#desconto-valor').val() + ' MT');
+    $('#modal-iva').text((total - subtotal + parseFloat($('#desconto-valor').val())).toFixed(2) + ' MT');
+    $('#modal-total').text(total.toFixed(2) + ' MT');
+    
+    $('#valor-recebido').val(total.toFixed(2));
+    calcularTroco();
+    
+    $('#modal-pagamento').modal('show');
+  }
+
+  function calcularTroco() {
+    let valorRecebido = parseFloat($('#valor-recebido').val()) || 0;
+    let troco = valorRecebido - total;
+    
+    $('#troco-valor').val(troco >= 0 ? troco.toFixed(2) + ' MT' : '0.00 MT');
+  }
+
+  function confirmarPagamento() {
+    let valorRecebido = parseFloat($('#valor-recebido').val()) || 0;
+    
+    if (valorRecebido < total) {
+      mostrarAlerta('Valor recebido insuficiente', 'warning');
+      return;
+    }
+    
+    // Simular processamento da venda
+    let vendaData = {
+      cliente_id: $('#cliente_id').val(),
+      itens: carrinho,
+      subtotal: subtotal,
+      desconto: parseFloat($('#desconto-valor').val()),
+      iva: total - subtotal + parseFloat($('#desconto-valor').val()),
+      total: total,
+      metodo_pagamento: $('#metodo-pagamento').val(),
+      valor_recebido: valorRecebido,
+      troco: valorRecebido - total
+    };
+    
+    // Aqui seria feita a chamada AJAX para processar a venda
+    processarVenda(vendaData);
+  }
+
+  function processarVenda(vendaData) {
+    // Simular processamento
+    setTimeout(() => {
+      let numeroVenda = 'VND' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+      
+      mostrarAlerta(`Venda ${numeroVenda} processada com sucesso!`, 'success');
+      
+      // Limpar carrinho e fechar modal
+      limparCarrinho();
+      $('#modal-pagamento').modal('hide');
+      
+      // Opção de imprimir recibo
+      if (configPOS.impressora_termica) {
+        if (confirm('Deseja imprimir o recibo?')) {
+          imprimirRecibo(numeroVenda, vendaData);
+        }
+      }
+      
+    }, 1000);
+  }
+
+  function imprimirRecibo(numeroVenda, vendaData) {
+    // Simular impressão
+    mostrarAlerta('Recibo enviado para impressão', 'info');
+  }
+
+  function finalizarVenda() {
+    abrirModalPagamento();
+  }
+
+  function ativarLeitorCodigoBarras() {
+    mostrarAlerta('Leitor de código de barras ativado. Escaneie um produto.', 'info');
+    $('#search-produto').focus();
+  }
+
+  function mostrarAlerta(mensagem, tipo) {
+    let alertClass = {
+      'success': 'alert-success',
+      'warning': 'alert-warning', 
+      'danger': 'alert-danger',
+      'info': 'alert-info'
+    }[tipo] || 'alert-info';
+    
+    let alerta = `
+      <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+        ${mensagem}
+        <button type="button" class="close" data-dismiss="alert">
+          <span>&times;</span>
+        </button>
+      </div>
+    `;
+    
+    $('#alertas-container').prepend(alerta);
+    
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+      $('#alertas-container .alert').first().fadeOut();
+    }, 5000);
+  }
+
+  // Buscar produtos na inicialização
+  $(document).ready(function() {
+    buscarProdutos();
+  });
+</script>

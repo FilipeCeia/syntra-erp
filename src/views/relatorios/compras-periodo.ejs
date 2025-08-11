@@ -1,0 +1,200 @@
+
+
+
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div>
+            <button class="btn btn-outline-secondary me-2" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+            <button class="btn btn-success" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Exportar Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="dataInicio" class="form-label">Data Início</label>
+                    <input type="date" class="form-control" id="dataInicio" name="dataInicio" value="<%= filtros.dataInicio %>">
+                </div>
+                <div class="col-md-3">
+                    <label for="dataFim" class="form-label">Data Fim</label>
+                    <input type="date" class="form-control" id="dataFim" name="dataFim" value="<%= filtros.dataFim %>">
+                </div>
+                <div class="col-md-3">
+                    <label for="fornecedor" class="form-label">Fornecedor</label>
+                    <select class="form-select" id="fornecedor" name="fornecedor">
+                        <option value="">Todos os Fornecedores</option>
+                        <option value="1" <%= filtros.fornecedor === '1' ? 'selected' : '' %>>TechSupply Lda</option>
+                        <option value="2" <%= filtros.fornecedor === '2' ? 'selected' : '' %>>Global Import</option>
+                        <option value="3" <%= filtros.fornecedor === '3' ? 'selected' : '' %>>Distribuidora Central</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    <a href="/relatorios/compras-periodo" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total de Compras</h6>
+                            <h3 class="mb-0"><%= resumo.totalCompras %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-bag fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Valor Total</h6>
+                            <h3 class="mb-0"><%= resumo.valorTotal %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Ticket Médio</h6>
+                            <h3 class="mb-0"><%= resumo.ticketMedio %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Fornecedores</h6>
+                            <h3 class="mb-0"><%= resumo.totalFornecedores %></h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-truck fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Evolução das Compras</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="comprasChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Tabela de Compras -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Detalhes das Compras</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Data</th>
+                            <th>Documento</th>
+                            <th>Fornecedor</th>
+                            <th>Valor s/ IVA</th>
+                            <th>IVA</th>
+                            <th>Valor Total</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% compras.forEach(compra => { %>
+                        <tr>
+                            <td><%= compra.data.toLocaleDateString('pt-PT') %></td>
+                            <td><%= compra.documento %></td>
+                            <td><%= compra.fornecedor %></td>
+                            <td><%= compra.valorSemIva %></td>
+                            <td><%= compra.iva %></td>
+                            <td><%= compra.valorTotal %></td>
+                            <td>
+                                <% if (compra.estado === 'Pago') { %>
+                                    <span class="badge bg-success">Pago</span>
+                                <% } else if (compra.estado === 'Pendente') { %>
+                                    <span class="badge bg-warning">Pendente</span>
+                                <% } else { %>
+                                    <span class="badge bg-danger">Vencido</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gráfico de Compras
+const ctx = document.getElementById('comprasChart').getContext('2d');
+const comprasChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: <%- JSON.stringify(graficoCompras.labels) %>,
+        datasets: [{
+            label: 'Valor das Compras',
+            data: <%- JSON.stringify(graficoCompras.valores) %>,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+function exportToExcel() {
+    alert('Funcionalidade de exportação será implementada em breve!');
+}
+</script>
+

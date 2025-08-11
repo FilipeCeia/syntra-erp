@@ -1,0 +1,204 @@
+
+
+
+<!-- Filtros -->
+<div class="row mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <form method="GET" class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-control">
+              <option value="">Todos</option>
+              <option value="pendente">Pendente</option>
+              <option value="aplicada">Aplicada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Cliente</label>
+            <input type="text" name="cliente" class="form-control" placeholder="Nome do cliente">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Data Início</label>
+            <input type="date" name="data_inicio" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Data Fim</label>
+            <input type="date" name="data_fim" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <div>
+              <button type="submit" class="btn btn-primary">Filtrar</button>
+              <a href="/financas/notas-credito" class="btn btn-secondary">Limpar</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lista de Notas de Crédito -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Lista de Notas de Crédito</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped" id="notasCreditoTable">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Data Emissão</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Motivo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NC-001</td>
+                <td>Ana Costa</td>
+                <td>22/01/2024</td>
+                <td>3.500,00 MT</td>
+                <td><span class="badge badge-warning">Pendente</span></td>
+                <td>Devolução de mercadoria</td>
+                <td>
+                  <a href="/financas/notas-credito/1" class="btn btn-sm btn-info" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="/financas/notas-credito/1/edit" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button class="btn btn-sm btn-success" onclick="aplicarNota(1)" title="Aplicar">
+                    <i class="fas fa-check"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>NC-002</td>
+                <td>Pedro Oliveira</td>
+                <td>21/01/2024</td>
+                <td>1.800,00 MT</td>
+                <td><span class="badge badge-success">Aplicada</span></td>
+                <td>Desconto comercial</td>
+                <td>
+                  <a href="/financas/notas-credito/2" class="btn btn-sm btn-info" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="/financas/notas-credito/2/edit" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>NC-003</td>
+                <td>Luisa Fernandes</td>
+                <td>20/01/2024</td>
+                <td>2.200,00 MT</td>
+                <td><span class="badge badge-warning">Pendente</span></td>
+                <td>Erro de faturação</td>
+                <td>
+                  <a href="/financas/notas-credito/3" class="btn btn-sm btn-info" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="/financas/notas-credito/3/edit" class="btn btn-sm btn-warning" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button class="btn btn-sm btn-success" onclick="aplicarNota(3)" title="Aplicar">
+                    <i class="fas fa-check"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Aplicação -->
+<div class="modal fade" id="aplicarNotaModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Aplicar Nota de Crédito</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="aplicarNotaForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Data de Aplicação</label>
+            <input type="date" class="form-control" name="data_aplicacao" required>
+          </div>
+          <div class="form-group">
+            <label>Forma de Aplicação</label>
+            <select class="form-control" name="forma_aplicacao" required>
+              <option value="">Selecione...</option>
+              <option value="desconto_fatura">Desconto em Fatura</option>
+              <option value="reembolso">Reembolso</option>
+              <option value="credito_conta">Crédito em Conta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Observações</label>
+            <textarea class="form-control" name="observacoes" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Aplicar Nota</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('#notasCreditoTable').DataTable({
+    language: {
+      url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json'
+    },
+    responsive: true,
+    order: [[2, 'desc']]
+  });
+});
+
+function aplicarNota(id) {
+  $('#aplicarNotaModal').modal('show');
+  $('#aplicarNotaForm').attr('action', '/financas/notas-credito/' + id + '/aplicar');
+}
+
+$('#aplicarNotaForm').on('submit', function(e) {
+  e.preventDefault();
+  
+  $.ajax({
+    url: $(this).attr('action'),
+    method: 'POST',
+    data: $(this).serialize(),
+    success: function(response) {
+      if (response.success) {
+        toastr.success('Nota de crédito aplicada com sucesso!');
+        $('#aplicarNotaModal').modal('hide');
+        location.reload();
+      } else {
+        toastr.error(response.message || 'Erro ao aplicar nota de crédito');
+      }
+    },
+    error: function() {
+      toastr.error('Erro ao aplicar nota de crédito');
+    }
+  });
+});
+</script>

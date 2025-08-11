@@ -1,0 +1,676 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Crescimento & Métricas</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item">Relatórios Globais</li>
+          <li class="breadcrumb-item active">Crescimento & Métricas</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="filtroForm">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Período</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected>Último mês</option>
+                  <option>Últimos 3 meses</option>
+                  <option>Últimos 6 meses</option>
+                  <option>Último ano</option>
+                  <option>Personalizado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Segmento</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected>Todos</option>
+                  <option>Comércio</option>
+                  <option>Serviços</option>
+                  <option>Indústria</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Região</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected>Todas</option>
+                  <option>Norte</option>
+                  <option>Sul</option>
+                  <option>Centro</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <div class="form-group w-100">
+                <button type="submit" class="btn btn-primary btn-block">Aplicar Filtros</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Estatísticas Rápidas -->
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3>+15%</h3>
+            <p>Crescimento de Clientes</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3>+22%</h3>
+            <p>Crescimento de Receita</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>8%</h3>
+            <p>Taxa de Conversão</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-percentage"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>5%</h3>
+            <p>Taxa de Cancelamento</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-user-minus"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráficos -->
+    <div class="row">
+      <!-- Crescimento de Clientes -->
+      <div class="col-md-6">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Crescimento de Clientes</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="crescimentoClientesChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Crescimento de Receita -->
+      <div class="col-md-6">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Crescimento de Receita</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="crescimentoReceitaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <!-- Distribuição por Segmento -->
+      <div class="col-md-4">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Distribuição por Segmento</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="segmentoChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Distribuição por Plano -->
+      <div class="col-md-4">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Distribuição por Plano</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="planoChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Distribuição por Região -->
+      <div class="col-md-4">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Distribuição por Região</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="regiaoChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Métricas de Crescimento -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Métricas de Crescimento</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Métrica</th>
+              <th>Último Mês</th>
+              <th>Mês Anterior</th>
+              <th>Variação</th>
+              <th>Tendência</th>
+              <th>Meta</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Novos Clientes</td>
+              <td>8</td>
+              <td>6</td>
+              <td><span class="text-success">+33.3%</span></td>
+              <td><i class="fas fa-arrow-up text-success"></i></td>
+              <td>10</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+            <tr>
+              <td>Receita Mensal</td>
+              <td>R$ 28.750</td>
+              <td>R$ 25.400</td>
+              <td><span class="text-success">+13.2%</span></td>
+              <td><i class="fas fa-arrow-up text-success"></i></td>
+              <td>R$ 30.000</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+            <tr>
+              <td>Valor Médio por Cliente</td>
+              <td>R$ 684</td>
+              <td>R$ 650</td>
+              <td><span class="text-success">+5.2%</span></td>
+              <td><i class="fas fa-arrow-up text-success"></i></td>
+              <td>R$ 700</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+            <tr>
+              <td>Taxa de Conversão</td>
+              <td>8%</td>
+              <td>7.5%</td>
+              <td><span class="text-success">+0.5%</span></td>
+              <td><i class="fas fa-arrow-up text-success"></i></td>
+              <td>10%</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+            <tr>
+              <td>Taxa de Retenção</td>
+              <td>87%</td>
+              <td>85%</td>
+              <td><span class="text-success">+2%</span></td>
+              <td><i class="fas fa-arrow-up text-success"></i></td>
+              <td>90%</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+            <tr>
+              <td>Taxa de Cancelamento</td>
+              <td>5%</td>
+              <td>5.5%</td>
+              <td><span class="text-success">-0.5%</span></td>
+              <td><i class="fas fa-arrow-down text-success"></i></td>
+              <td>4%</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+            <tr>
+              <td>Usuários por Cliente</td>
+              <td>3.2</td>
+              <td>3.0</td>
+              <td><span class="text-success">+6.7%</span></td>
+              <td><i class="fas fa-arrow-up text-success"></i></td>
+              <td>3.5</td>
+              <td><span class="badge bg-warning">Em Progresso</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Projeções de Crescimento -->
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Projeções de Crescimento</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="chart">
+              <canvas id="projecaoClientesChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart">
+              <canvas id="projecaoReceitaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Scripts específicos para esta página -->
+<script>
+  $(function () {
+    // Inicializa Select2
+    $('.select2').select2();
+    
+    // Dados para o gráfico de crescimento de clientes
+    var crescimentoClientesData = {
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [{
+        label: 'Novos Clientes',
+        backgroundColor: 'rgba(60,141,188,0.9)',
+        borderColor: 'rgba(60,141,188,0.8)',
+        pointRadius: 3,
+        pointColor: '#3b8bba',
+        pointStrokeColor: 'rgba(60,141,188,1)',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data: [3, 4, 5, 6, 5, 7, 6, 8, 7, 8, 6, 8]
+      }]
+    };
+
+    // Configuração do gráfico de crescimento de clientes
+    var crescimentoClientesOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          beginAtZero: true
+        }
+      }
+    };
+
+    // Cria o gráfico de crescimento de clientes
+    var crescimentoClientesCanvas = $('#crescimentoClientesChart').get(0).getContext('2d');
+    new Chart(crescimentoClientesCanvas, {
+      type: 'line',
+      data: crescimentoClientesData,
+      options: crescimentoClientesOptions
+    });
+
+    // Dados para o gráfico de crescimento de receita
+    var crescimentoReceitaData = {
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [{
+        label: 'Receita Mensal (R$)',
+        backgroundColor: 'rgba(60,141,188,0.9)',
+        borderColor: 'rgba(60,141,188,0.8)',
+        pointRadius: 3,
+        pointColor: '#3b8bba',
+        pointStrokeColor: 'rgba(60,141,188,1)',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data: [18500, 19250, 21000, 22750, 24500, 26000, 27500, 28750, 30000, 31250, 32500, 33750]
+      }]
+    };
+
+    // Configuração do gráfico de crescimento de receita
+    var crescimentoReceitaOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return 'R$ ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+          }
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': R$ ' + 
+                     context.raw.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            callback: function(value) {
+              return 'R$ ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+          }
+        }
+      }
+    };
+
+    // Cria o gráfico de crescimento de receita
+    var crescimentoReceitaCanvas = $('#crescimentoReceitaChart').get(0).getContext('2d');
+    new Chart(crescimentoReceitaCanvas, {
+      type: 'line',
+      data: crescimentoReceitaData,
+      options: crescimentoReceitaOptions
+    });
+
+    // Dados para o gráfico de distribuição por segmento
+    var segmentoData = {
+      labels: ['Comércio', 'Serviços', 'Indústria', 'Outros'],
+      datasets: [{
+        data: [40, 35, 20, 5],
+        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef']
+      }]
+    };
+
+    // Configuração do gráfico de distribuição por segmento
+    var segmentoOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        position: 'right'
+      }
+    };
+
+    // Cria o gráfico de distribuição por segmento
+    var segmentoCanvas = $('#segmentoChart').get(0).getContext('2d');
+    new Chart(segmentoCanvas, {
+      type: 'pie',
+      data: segmentoData,
+      options: segmentoOptions
+    });
+
+    // Dados para o gráfico de distribuição por plano
+    var planoData = {
+      labels: ['Básico', 'Profissional', 'Enterprise'],
+      datasets: [{
+        data: [25, 45, 30],
+        backgroundColor: ['#f56954', '#00a65a', '#f39c12']
+      }]
+    };
+
+    // Configuração do gráfico de distribuição por plano
+    var planoOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        position: 'right'
+      }
+    };
+
+    // Cria o gráfico de distribuição por plano
+    var planoCanvas = $('#planoChart').get(0).getContext('2d');
+    new Chart(planoCanvas, {
+      type: 'pie',
+      data: planoData,
+      options: planoOptions
+    });
+
+    // Dados para o gráfico de distribuição por região
+    var regiaoData = {
+      labels: ['Norte', 'Sul', 'Centro'],
+      datasets: [{
+        data: [30, 45, 25],
+        backgroundColor: ['#f56954', '#00a65a', '#f39c12']
+      }]
+    };
+
+    // Configuração do gráfico de distribuição por região
+    var regiaoOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        position: 'right'
+      }
+    };
+
+    // Cria o gráfico de distribuição por região
+    var regiaoCanvas = $('#regiaoChart').get(0).getContext('2d');
+    new Chart(regiaoCanvas, {
+      type: 'pie',
+      data: regiaoData,
+      options: regiaoOptions
+    });
+
+    // Dados para o gráfico de projeção de clientes
+    var projecaoClientesData = {
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [
+        {
+          label: 'Clientes Atuais',
+          backgroundColor: 'rgba(60,141,188,0.9)',
+          borderColor: 'rgba(60,141,188,0.8)',
+          pointRadius: 3,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(60,141,188,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data: [30, 32, 35, 38, 40, 42, 45, 48, 50, 52, 55, 58]
+        },
+        {
+          label: 'Projeção',
+          backgroundColor: 'rgba(210, 214, 222, 0.1)',
+          borderColor: 'rgba(210, 214, 222, 1)',
+          pointRadius: 3,
+          pointColor: 'rgba(210, 214, 222, 1)',
+          pointStrokeColor: '#c1c7d1',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          borderDash: [5, 5],
+          data: [58, 62, 66, 70, 74, 78, 82, 86, 90, 94, 98, 102]
+        }
+      ]
+    };
+
+    // Configuração do gráfico de projeção de clientes
+    var projecaoClientesOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: true
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: false
+          }
+        }]
+      }
+    };
+
+    // Cria o gráfico de projeção de clientes
+    var projecaoClientesCanvas = $('#projecaoClientesChart').get(0).getContext('2d');
+    new Chart(projecaoClientesCanvas, {
+      type: 'line',
+      data: projecaoClientesData,
+      options: projecaoClientesOptions
+    });
+
+    // Dados para o gráfico de projeção de receita
+    var projecaoReceitaData = {
+      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      datasets: [
+        {
+          label: 'Receita Atual (R$)',
+          backgroundColor: 'rgba(60,141,188,0.9)',
+          borderColor: 'rgba(60,141,188,0.8)',
+          pointRadius: 3,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(60,141,188,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data: [18500, 19250, 21000, 22750, 24500, 26000, 27500, 28750, 30000, 31250, 32500, 33750]
+        },
+        {
+          label: 'Projeção (R$)',
+          backgroundColor: 'rgba(210, 214, 222, 0.1)',
+          borderColor: 'rgba(210, 214, 222, 1)',
+          pointRadius: 3,
+          pointColor: 'rgba(210, 214, 222, 1)',
+          pointStrokeColor: '#c1c7d1',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          borderDash: [5, 5],
+          data: [33750, 35000, 36250, 37500, 38750, 40000, 41250, 42500, 43750, 45000, 46250, 47500]
+        }
+      ]
+    };
+
+    // Configuração do gráfico de projeção de receita
+    var projecaoReceitaOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true
+        },
+        tooltip: {
+        callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': R$ ' + 
+                     context.raw.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+          }
+      }
+    };
+
+    // Cria o gráfico de projeção de receita
+    var projecaoReceitaCanvas = $('#projecaoReceitaChart').get(0).getContext('2d');
+    new Chart(projecaoReceitaCanvas, {
+      type: 'line',
+      data: projecaoReceitaData,
+      options: projecaoReceitaOptions
+    });
+  });
+</script>

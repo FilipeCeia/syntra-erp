@@ -1,0 +1,214 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-chart-line"></i> Dashboard Compras
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/compras/mercadoria/create" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Nova Compra
+      </a>
+      <a href="/compras/despesas/create" class="btn btn-info btn-sm">
+        <i class="fas fa-receipt"></i> Nova Despesa
+      </a>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="row">
+    <!-- Compras Hoje -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Compras Hoje
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                45.250,00 MT
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compras do Mês -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Compras do Mês
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                1.245.780,50 MT
+              </div>
+              <div class="text-xs text-success">
+                <i class="fas fa-arrow-up"></i> +12.5%
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compras Pendentes -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Compras Pendentes
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                8
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fornecedores Ativos -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Fornecedores Ativos
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                24
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-truck fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Compras Recentes -->
+    <div class="col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-list"></i> Compras Recentes
+          </h6>
+          <a href="/compras/mercadoria" class="btn btn-sm btn-outline-primary">
+            Ver Todas
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Fornecedor</th>
+                  <th>Tipo</th>
+                  <th>Valor</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CMP-2024-001</td>
+                  <td>Fornecedor ABC Lda</td>
+                  <td><span class="badge badge-primary">Mercadoria</span></td>
+                  <td>25.450,00 MT</td>
+                  <td>15/01/2024</td>
+                  <td><span class="badge badge-success">Pago</span></td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CMP-2024-002</td>
+                  <td>Tech Solutions Lda</td>
+                  <td><span class="badge badge-warning">Despesa</span></td>
+                  <td>8.750,00 MT</td>
+                  <td>14/01/2024</td>
+                  <td><span class="badge badge-warning">Pendente</span></td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CMP-2024-003</td>
+                  <td>Distribuidora XYZ</td>
+                  <td><span class="badge badge-primary">Mercadoria</span></td>
+                  <td>45.200,00 MT</td>
+                  <td>13/01/2024</td>
+                  <td><span class="badge badge-success">Pago</span></td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Ver">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Fornecedores -->
+    <div class="col-lg-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-trophy"></i> Top Fornecedores
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <div class="small text-gray-500">Fornecedor ABC Lda</div>
+            <div class="font-weight-bold">125.450,00 MT</div>
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: 80%"></div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="small text-gray-500">Tech Solutions Lda</div>
+            <div class="font-weight-bold">98.750,00 MT</div>
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="small text-gray-500">Distribuidora XYZ</div>
+            <div class="font-weight-bold">76.890,00 MT</div>
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-info" role="progressbar" style="width: 50%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

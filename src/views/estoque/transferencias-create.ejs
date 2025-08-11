@@ -1,0 +1,237 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-plus"></i> Nova Transferência
+    </h1>
+    <a href="/estoque/transferencias" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-exchange-alt"></i> Dados da Transferência
+          </h6>
+        </div>
+        <div class="card-body">
+          <form id="formTransferencia">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="lojaOrigem">Loja de Origem *</label>
+                  <select class="form-control" id="lojaOrigem" required>
+                    <option value="">Selecione a loja de origem</option>
+                    <option value="1">Loja Central</option>
+                    <option value="2">Loja Norte</option>
+                    <option value="3">Loja Sul</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="lojaDestino">Loja de Destino *</label>
+                  <select class="form-control" id="lojaDestino" required>
+                    <option value="">Selecione a loja de destino</option>
+                    <option value="1">Loja Central</option>
+                    <option value="2">Loja Norte</option>
+                    <option value="3">Loja Sul</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="dataTransferencia">Data da Transferência *</label>
+                  <input type="date" class="form-control" id="dataTransferencia" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="responsavel">Responsável *</label>
+                  <select class="form-control" id="responsavel" required>
+                    <option value="">Selecione o responsável</option>
+                    <option value="1">João Silva</option>
+                    <option value="2">Maria Santos</option>
+                    <option value="3">Pedro Costa</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea class="form-control" id="observacoes" rows="3" placeholder="Observações sobre a transferência..."></textarea>
+            </div>
+
+            <hr>
+
+            <!-- Produtos -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">Produtos para Transferência</h5>
+              <button type="button" class="btn btn-primary btn-sm" onclick="adicionarProduto()">
+                <i class="fas fa-plus"></i> Adicionar Produto
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tabelaProdutos">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Estoque Atual</th>
+                    <th>Quantidade</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4" class="text-center text-muted">
+                      Nenhum produto adicionado
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="form-group mt-4">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Criar Transferência
+              </button>
+              <a href="/estoque/transferencias" class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Adicionar Produto -->
+<div class="modal fade" id="modalProduto" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Adicionar Produto</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="produtoSelect">Produto *</label>
+          <select class="form-control" id="produtoSelect">
+            <option value="">Selecione um produto</option>
+            <option value="1" data-estoque="45">Arroz Carolino 5kg</option>
+            <option value="2" data-estoque="32">Óleo de Cozinha 1L</option>
+            <option value="3" data-estoque="28">Açúcar Cristal 2kg</option>
+            <option value="4" data-estoque="67">Farinha de Trigo 1kg</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="estoqueAtual">Estoque Atual</label>
+          <input type="text" class="form-control" id="estoqueAtual" readonly>
+        </div>
+        <div class="form-group">
+          <label for="quantidadeTransferir">Quantidade a Transferir *</label>
+          <input type="number" class="form-control" id="quantidadeTransferir" min="1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="confirmarProduto()">Adicionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function adicionarProduto() {
+  $('#modalProduto').modal('show');
+}
+
+$('#produtoSelect').change(function() {
+  const estoque = $(this).find(':selected').data('estoque');
+  $('#estoqueAtual').val(estoque || '');
+});
+
+function confirmarProduto() {
+  const produtoId = $('#produtoSelect').val();
+  const produtoNome = $('#produtoSelect option:selected').text();
+  const estoque = $('#estoqueAtual').val();
+  const quantidade = $('#quantidadeTransferir').val();
+  
+  if (!produtoId || !quantidade) {
+    alert('Preencha todos os campos obrigatórios');
+    return;
+  }
+  
+  if (parseInt(quantidade) > parseInt(estoque)) {
+    alert('Quantidade não pode ser maior que o estoque atual');
+    return;
+  }
+  
+  // Remover linha "Nenhum produto"
+  if ($('#tabelaProdutos tbody tr').length === 1 && $('#tabelaProdutos tbody tr td').attr('colspan')) {
+    $('#tabelaProdutos tbody').empty();
+  }
+  
+  // Adicionar produto à tabela
+  const linha = `
+    <tr>
+      <td>${produtoNome}</td>
+      <td>${estoque}</td>
+      <td>${quantidade}</td>
+      <td>
+        <button type="button" class="btn btn-sm btn-danger" onclick="removerProduto(this)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+  `;
+  
+  $('#tabelaProdutos tbody').append(linha);
+  
+  // Limpar modal
+  $('#produtoSelect').val('');
+  $('#estoqueAtual').val('');
+  $('#quantidadeTransferir').val('');
+  $('#modalProduto').modal('hide');
+}
+
+function removerProduto(btn) {
+  $(btn).closest('tr').remove();
+  
+  // Se não há mais produtos, mostrar mensagem
+  if ($('#tabelaProdutos tbody tr').length === 0) {
+    $('#tabelaProdutos tbody').html(`
+      <tr>
+        <td colspan="4" class="text-center text-muted">
+          Nenhum produto adicionado
+        </td>
+      </tr>
+    `);
+  }
+}
+
+$('#formTransferencia').submit(function(e) {
+  e.preventDefault();
+  
+  // Validar se há produtos
+  if ($('#tabelaProdutos tbody tr').length === 1 && $('#tabelaProdutos tbody tr td').attr('colspan')) {
+    alert('Adicione pelo menos um produto à transferência');
+    return;
+  }
+  
+  // Simular envio
+  alert('Transferência criada com sucesso!');
+  window.location.href = '/estoque/transferencias';
+});
+</script>

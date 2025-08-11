@@ -1,0 +1,343 @@
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Estatísticas de Pagamentos -->
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3>1.250.000 MZN</h3>
+            <p>Total Recebido (Ano)</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3>125.000 MZN</h3>
+            <p>Recebido (Mês Atual)</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>85.000 MZN</h3>
+            <p>Pendente</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>45.000 MZN</h3>
+            <p>Vencido</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <a href="#" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráficos e Filtros -->
+    <div class="row">
+      <!-- Gráfico de Pagamentos por Mês -->
+      <div class="col-md-8">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Pagamentos Recebidos por Mês</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="pagamentosChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Filtros -->
+      <div class="col-md-4">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Filtros</h3>
+          </div>
+          <div class="card-body">
+            <form action="" method="GET">
+              <div class="form-group">
+                <label>Status:</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected="selected">Todos</option>
+                  <option>Pagos</option>
+                  <option>Pendentes</option>
+                  <option>Vencidos</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Cliente:</label>
+                <select class="form-control select2" style="width: 100%;">
+                  <option selected="selected">Todos</option>
+                  <option>Empresa ABC Ltda</option>
+                  <option>Comércio XYZ</option>
+                  <option>Loja 123</option>
+                  <option>Restaurante Delícia</option>
+                  <option>Farmácia Saúde</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Período:</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <input type="text" class="form-control float-right" id="reservation">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Filtrar</button>
+              <button type="reset" class="btn btn-default">Limpar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lista de Pagamentos -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Lista de Pagamentos</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-novo-pagamento">
+                <i class="fas fa-plus"></i> Registrar Pagamento
+              </button>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nº Fatura</th>
+                  <th>Cliente/Empresa</th>
+                  <th>Data Pagamento</th>
+                  <th>Valor</th>
+                  <th>Método</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>FAT-2023-001</td>
+                  <td>Empresa ABC Ltda</td>
+                  <td>15/01/2023</td>
+                  <td>5.000,00 MZN</td>
+                  <td>Transferência Bancária</td>
+                  <td><span class="badge bg-success">Confirmado</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>FAT-2023-002</td>
+                  <td>Comércio XYZ</td>
+                  <td>20/01/2023</td>
+                  <td>3.500,00 MZN</td>
+                  <td>M-Pesa</td>
+                  <td><span class="badge bg-success">Confirmado</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>FAT-2023-003</td>
+                  <td>Loja 123</td>
+                  <td>-</td>
+                  <td>1.500,00 MZN</td>
+                  <td>-</td>
+                  <td><span class="badge bg-warning">Pendente</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>FAT-2023-004</td>
+                  <td>Restaurante Delícia</td>
+                  <td>25/02/2023</td>
+                  <td>7.500,00 MZN</td>
+                  <td>Cartão de Crédito</td>
+                  <td><span class="badge bg-success">Confirmado</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-print"></i></button>
+                    <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>FAT-2023-005</td>
+                  <td>Farmácia Saúde</td>
+                  <td>-</td>
+                  <td>3.500,00 MZN</td>
+                  <td>-</td>
+                  <td><span class="badge bg-danger">Vencido</span></td>
+                  <td>
+                    <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+              <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Modal Novo Pagamento -->
+<div class="modal fade" id="modal-novo-pagamento">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h4 class="modal-title">Registrar Pagamento</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="fatura">Fatura</label>
+            <select class="form-control select2" id="fatura" style="width: 100%;">
+              <option selected disabled>Selecione uma fatura</option>
+              <option>FAT-2023-003 - Loja 123 (1.500,00 MZN)</option>
+              <option>FAT-2023-005 - Farmácia Saúde (3.500,00 MZN)</option>
+              <option>FAT-2023-008 - Supermercado Bom Preço (2.800,00 MZN)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="data_pagamento">Data de Pagamento</label>
+            <div class="input-group date" id="data_pagamento" data-target-input="nearest">
+              <input type="text" class="form-control datetimepicker-input" data-target="#data_pagamento">
+              <div class="input-group-append" data-target="#data_pagamento" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="valor">Valor Pago (MZN)</label>
+            <input type="text" class="form-control" id="valor" placeholder="0,00">
+          </div>
+          <div class="form-group">
+            <label for="metodo">Método de Pagamento</label>
+            <select class="form-control" id="metodo">
+              <option>Transferência Bancária</option>
+              <option>Cartão de Crédito</option>
+              <option>M-Pesa</option>
+              <option>Dinheiro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="referencia">Referência/Comprovante</label>
+            <input type="text" class="form-control" id="referencia" placeholder="Nº de referência ou comprovante">
+          </div>
+          <div class="form-group">
+            <label for="observacoes">Observações</label>
+            <textarea class="form-control" id="observacoes" rows="3" placeholder="Observações adicionais"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success">Confirmar Pagamento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page specific script -->
+<script>
+  $(function () {
+    // Gráfico de Pagamentos por Mês
+    var ctx = document.getElementById('pagamentosChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        datasets: [{
+          label: 'Pagamentos Recebidos (MZN)',
+          data: [65000, 85000, 95000, 81000, 125000, 110000, 120000, 130000, 150000, 160000, 175000, 190000],
+          backgroundColor: 'rgba(60,141,188,0.9)',
+          borderColor: 'rgba(60,141,188,0.8)',
+          pointRadius: false,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(60,141,188,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+    
+    //Date range picker
+    $('#reservation').daterangepicker();
+  });
+</script>

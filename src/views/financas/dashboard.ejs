@@ -1,0 +1,201 @@
+
+
+
+<!-- Resumo Financeiro -->
+<div class="row">
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.contasReceber.total) %></h3>
+        <p>Contas a Receber</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-arrow-down"></i>
+      </div>
+      <a href="/financas/contas-receber" class="small-box-footer">
+        Ver Detalhes <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.contasPagar.total) %></h3>
+        <p>Contas a Pagar</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-arrow-up"></i>
+      </div>
+      <a href="/financas/contas-pagar" class="small-box-footer">
+        Ver Detalhes <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.saldoCaixa) %></h3>
+        <p>Saldo em Caixa</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-cash-register"></i>
+      </div>
+      <a href="/financas/caixa" class="small-box-footer">
+        Ver Detalhes <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-primary">
+      <div class="inner">
+        <h3><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.saldoBancos) %></h3>
+        <p>Saldo em Bancos</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-university"></i>
+      </div>
+      <a href="/financas/bancos" class="small-box-footer">
+        Ver Detalhes <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Fluxo Diário -->
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-chart-line mr-1"></i>
+          Fluxo de Caixa Diário
+        </h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="info-box">
+              <span class="info-box-icon bg-success"><i class="fas fa-plus"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Entradas</span>
+                <span class="info-box-number"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.fluxoDiario.entradas) %></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="info-box">
+              <span class="info-box-icon bg-danger"><i class="fas fa-minus"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Saídas</span>
+                <span class="info-box-number"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.fluxoDiario.saidas) %></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="info-box">
+              <span class="info-box-icon bg-info"><i class="fas fa-equals"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Saldo</span>
+                <span class="info-box-number"><%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.fluxoDiario.saldo) %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          Alertas Financeiros
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-warning">
+          <h5><i class="icon fas fa-exclamation-triangle"></i> Atenção!</h5>
+          <%= resumoFinanceiro.contasReceber.vencidas > 0 ? `${new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.contasReceber.vencidas)} em contas vencidas` : 'Nenhuma conta vencida' %>
+        </div>
+        <div class="alert alert-info">
+          <h5><i class="icon fas fa-info"></i> Informação</h5>
+          <%= resumoFinanceiro.contasPagar.aVencer > 0 ? `${new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(resumoFinanceiro.contasPagar.aVencer)} a pagar este mês` : 'Nenhuma conta a vencer' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Movimentos Recentes -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-list mr-1"></i>
+          Movimentos Recentes
+        </h3>
+        <div class="card-tools">
+          <a href="/financas/fluxo-caixa" class="btn btn-primary btn-sm">
+            <i class="fas fa-eye"></i> Ver Todos
+          </a>
+        </div>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% movimentosRecentes.forEach(function(movimento) { %>
+            <tr>
+              <td><%= movimento.data.toLocaleDateString('pt-MZ') %></td>
+              <td>
+                <span class="badge <%= movimento.tipo === 'Recebimento' ? 'badge-success' : movimento.tipo === 'Pagamento' ? 'badge-danger' : 'badge-info' %>">
+                  <%= movimento.tipo %>
+                </span>
+              </td>
+              <td><%= movimento.descricao %></td>
+              <td class="<%= movimento.valor > 0 ? 'text-success' : 'text-danger' %>">
+                <%= new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(Math.abs(movimento.valor)) %>
+              </td>
+              <td>
+                <span class="badge <%= movimento.status === 'Confirmado' ? 'badge-success' : 'badge-warning' %>">
+                  <%= movimento.status %>
+                </span>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Inicializar tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+  
+  // Auto-refresh a cada 5 minutos
+  setTimeout(function() {
+    location.reload();
+  }, 300000);
+});
+</script>

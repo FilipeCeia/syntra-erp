@@ -1,0 +1,470 @@
+<div class="container-fluid">
+  <!-- Header da página -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-0 text-gray-800">
+        <i class="fas fa-barcode text-primary me-2"></i>
+        Códigos de Barras
+      </h1>
+      <p class="text-muted mb-0">Geração e gestão de códigos de barras para produtos</p>
+    </div>
+    <div>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#gerarCodigoModal">
+        <i class="fas fa-plus me-2"></i>
+        Gerar Código
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="GET" class="row g-3">
+        <div class="col-md-4">
+          <label for="search" class="form-label">Pesquisar</label>
+          <input type="text" class="form-control" id="search" name="search" 
+                 placeholder="Código, produto ou descrição..." value="">
+        </div>
+        <div class="col-md-3">
+          <label for="tipo" class="form-label">Tipo</label>
+          <select class="form-select" id="tipo" name="tipo">
+            <option value="">Todos os tipos</option>
+            <option value="EAN13">EAN-13</option>
+            <option value="EAN8">EAN-8</option>
+            <option value="CODE128">CODE-128</option>
+            <option value="CODE39">CODE-39</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" id="status" name="status">
+            <option value="">Todos</option>
+            <option value="1">Ativo</option>
+            <option value="0">Inativo</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">&nbsp;</label>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-outline-primary">
+              <i class="fas fa-search me-1"></i>
+              Filtrar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela de códigos de barras -->
+  <div class="card">
+    <div class="card-header">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="fas fa-list me-2"></i>
+        Lista de Códigos de Barras
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th width="10%">Código</th>
+              <th width="25%">Produto</th>
+              <th width="15%">Tipo</th>
+              <th width="15%">Código de Barras</th>
+              <th width="10%">Status</th>
+              <th width="15%">Data Criação</th>
+              <th width="10%">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dados fictícios -->
+            <tr>
+              <td>
+                <span class="badge bg-secondary">CB001</span>
+              </td>
+              <td>
+                <div>
+                  <strong>Smartphone Samsung Galaxy A54</strong>
+                  <br>
+                  <small class="text-muted">Categoria: Eletrônicos</small>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-info">EAN-13</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <code class="me-2">7891234567890</code>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('7891234567890')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-success">Ativo</span>
+              </td>
+              <td>
+                <small>15/01/2024</small>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="badge bg-secondary">CB002</span>
+              </td>
+              <td>
+                <div>
+                  <strong>Notebook Dell Inspiron 15</strong>
+                  <br>
+                  <small class="text-muted">Categoria: Informática</small>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-info">CODE-128</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <code class="me-2">DELL15INS2024</code>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('DELL15INS2024')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-success">Ativo</span>
+              </td>
+              <td>
+                <small>16/01/2024</small>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="badge bg-secondary">CB003</span>
+              </td>
+              <td>
+                <div>
+                  <strong>Camiseta Polo Masculina</strong>
+                  <br>
+                  <small class="text-muted">Categoria: Vestuário</small>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-info">EAN-8</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <code class="me-2">12345678</code>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('12345678')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-success">Ativo</span>
+              </td>
+              <td>
+                <small>17/01/2024</small>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="badge bg-secondary">CB004</span>
+              </td>
+              <td>
+                <div>
+                  <strong>Livro "Programação Web"</strong>
+                  <br>
+                  <small class="text-muted">Categoria: Livros</small>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-info">EAN-13</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <code class="me-2">9788535902778</code>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('9788535902778')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-warning">Inativo</span>
+              </td>
+              <td>
+                <small>18/01/2024</small>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="badge bg-secondary">CB005</span>
+              </td>
+              <td>
+                <div>
+                  <strong>Mouse Wireless Logitech</strong>
+                  <br>
+                  <small class="text-muted">Categoria: Acessórios</small>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-info">CODE-39</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <code class="me-2">LOG-MW-2024</code>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('LOG-MW-2024')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-success">Ativo</span>
+              </td>
+              <td>
+                <small>19/01/2024</small>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginação -->
+      <nav aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center mt-4">
+          <li class="page-item disabled">
+            <span class="page-link">Anterior</span>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">1</span>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page=2">2</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page=3">3</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page=2">Próximo</a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Informações da paginação -->
+      <div class="text-center text-muted">
+        <small>Mostrando 5 de 23 códigos de barras</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para gerar código de barras -->
+<div class="modal fade" id="gerarCodigoModal" tabindex="-1" aria-labelledby="gerarCodigoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gerarCodigoModalLabel">
+          <i class="fas fa-barcode me-2"></i>
+          Gerar Código de Barras
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="gerarCodigoForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="produto" class="form-label">Produto *</label>
+                <select class="form-select" id="produto" name="produto" required>
+                  <option value="">Selecione um produto</option>
+                  <option value="1">Smartphone Samsung Galaxy A54</option>
+                  <option value="2">Notebook Dell Inspiron 15</option>
+                  <option value="3">Camiseta Polo Masculina</option>
+                  <option value="4">Livro "Programação Web"</option>
+                  <option value="5">Mouse Wireless Logitech</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="tipoCodigo" class="form-label">Tipo de Código *</label>
+                <select class="form-select" id="tipoCodigo" name="tipoCodigo" required>
+                  <option value="">Selecione o tipo</option>
+                  <option value="EAN13">EAN-13 (Padrão internacional)</option>
+                  <option value="EAN8">EAN-8 (Versão compacta)</option>
+                  <option value="CODE128">CODE-128 (Alfanumérico)</option>
+                  <option value="CODE39">CODE-39 (Simples)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="codigoPersonalizado" class="form-label">Código Personalizado</label>
+                <input type="text" class="form-control" id="codigoPersonalizado" name="codigoPersonalizado" 
+                       placeholder="Deixe vazio para gerar automaticamente">
+                <small class="form-text text-muted">Se não informado, será gerado automaticamente</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="quantidade" class="form-label">Quantidade *</label>
+                <input type="number" class="form-control" id="quantidade" name="quantidade" 
+                       value="1" min="1" max="100" required>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" 
+                      placeholder="Observações adicionais sobre o código de barras..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="gerarCodigo()">
+          <i class="fas fa-barcode me-2"></i>
+          Gerar Código
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copiarCodigo(codigo) {
+  navigator.clipboard.writeText(codigo).then(function() {
+    // Mostrar toast de sucesso
+    const toast = document.createElement('div');
+    toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed';
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999;';
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="fas fa-check me-2"></i>
+          Código copiado: ${codigo}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    // Remover o toast após 3 segundos
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }).catch(function(err) {
+    console.error('Erro ao copiar código: ', err);
+  });
+}
+
+function gerarCodigo() {
+  const form = document.getElementById('gerarCodigoForm');
+  const formData = new FormData(form);
+  
+  // Validar campos obrigatórios
+  if (!formData.get('produto') || !formData.get('tipoCodigo') || !formData.get('quantidade')) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
+  }
+  
+  // Simular geração de código
+  const modal = bootstrap.Modal.getInstance(document.getElementById('gerarCodigoModal'));
+  modal.hide();
+  
+  // Mostrar toast de sucesso
+  const toast = document.createElement('div');
+  toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed';
+  toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999;';
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="fas fa-check me-2"></i>
+        Código de barras gerado com sucesso!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  const bsToast = new bootstrap.Toast(toast);
+  bsToast.show();
+  
+  // Remover o toast e recarregar a página após 2 segundos
+  setTimeout(() => {
+    toast.remove();
+    window.location.reload();
+  }, 2000);
+}
+</script>

@@ -1,0 +1,482 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      <i class="fas fa-plus-circle"></i> Nova Encomenda
+    </h1>
+    <div class="btn-group" role="group">
+      <a href="/estoque/encomendas" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+      <button type="button" class="btn btn-info btn-sm" onclick="salvarRascunho()">
+        <i class="fas fa-save"></i> Salvar Rascunho
+      </button>
+    </div>
+  </div>
+
+  <!-- Formulário de Encomenda -->
+  <form id="formEncomenda" action="/estoque/encomendas" method="POST">
+    <div class="row">
+      <!-- Informações Gerais -->
+      <div class="col-md-8">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              <i class="fas fa-info-circle"></i> Informações da Encomenda
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="numero">Número da Encomenda</label>
+                  <input type="text" class="form-control" id="numero" name="numero" value="ENC-2024-<%=Math.floor(Math.random()*1000).toString().padStart(3,'0')%>" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="data">Data da Encomenda</label>
+                  <input type="date" class="form-control" id="data" name="data" value="<%=new Date().toISOString().split('T')[0]%>" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fornecedor">Fornecedor</label>
+                  <select class="form-control select2" id="fornecedor" name="fornecedor" required>
+                    <option value="">Selecione um fornecedor</option>
+                    <option value="1">Distribuidora Maputo Lda</option>
+                    <option value="2">Fornecimentos Centrais SA</option>
+                    <option value="3">Importadora Beira</option>
+                    <option value="4">Comercial Nampula</option>
+                    <option value="5">Atacadista Matola</option>
+                    <option value="6">Distribuidora Norte</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="lojaDestino">Loja de Destino</label>
+                  <select class="form-control select2" id="lojaDestino" name="lojaDestino" required>
+                    <option value="">Selecione a loja</option>
+                    <option value="1">Loja Central - Maputo</option>
+                    <option value="2">Filial Matola</option>
+                    <option value="3">Filial Beira</option>
+                    <option value="4">Filial Nampula</option>
+                    <option value="5">Armazém Principal</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="dataPrevista">Data Prevista de Entrega</label>
+                  <input type="date" class="form-control" id="dataPrevista" name="dataPrevista" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="prioridade">Prioridade</label>
+                  <select class="form-control" id="prioridade" name="prioridade" required>
+                    <option value="">Selecione a prioridade</option>
+                    <option value="Baixa">Baixa</option>
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Urgente">Urgente</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder="Observações adicionais sobre a encomenda..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo -->
+      <div class="col-md-4">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-success">
+              <i class="fas fa-calculator"></i> Resumo
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal:</span>
+              <span id="subtotal">0,00 MT</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>IVA (17%):</span>
+              <span id="iva">0,00 MT</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <strong>Total:</strong>
+              <strong id="total">0,00 MT</strong>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <span>Total de Itens:</span>
+              <span id="totalItens">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-info">
+              <i class="fas fa-user"></i> Responsável
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="responsavel">Responsável pela Encomenda</label>
+              <select class="form-control" id="responsavel" name="responsavel" required>
+                <option value="">Selecione o responsável</option>
+                <option value="João Silva">João Silva</option>
+                <option value="Maria Santos">Maria Santos</option>
+                <option value="Carlos Machado">Carlos Machado</option>
+                <option value="Ana Pereira">Ana Pereira</option>
+                <option value="Pedro Nunes">Pedro Nunes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Itens da Encomenda -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">
+          <i class="fas fa-list"></i> Itens da Encomenda
+        </h6>
+        <button type="button" class="btn btn-primary btn-sm" onclick="adicionarItem()">
+          <i class="fas fa-plus"></i> Adicionar Item
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="tabelaItens">
+            <thead>
+              <tr>
+                <th width="25%">Artigo</th>
+                <th width="15%">Quantidade</th>
+                <th width="10%">Unidade</th>
+                <th width="15%">Preço Unit.</th>
+                <th width="15%">Total</th>
+                <th width="15%">Observações</th>
+                <th width="5%">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="itensEncomenda">
+              <!-- Itens serão adicionados dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="alert alert-info" id="alertaVazio" style="display: none;">
+          <i class="fas fa-info-circle"></i> Nenhum item adicionado. Clique em "Adicionar Item" para começar.
+        </div>
+      </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow mb-4">
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="button" class="btn btn-info" onclick="salvarRascunho()">
+              <i class="fas fa-save"></i> Salvar como Rascunho
+            </button>
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-check"></i> Criar Encomenda
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Modal para Adicionar Item -->
+<div class="modal fade" id="modalAdicionarItem" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-plus-circle"></i> Adicionar Item à Encomenda
+        </h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formItem">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="itemArtigo">Artigo</label>
+                <select class="form-control select2" id="itemArtigo" required>
+                  <option value="">Selecione um artigo</option>
+                  <option value="1" data-preco="25.50" data-unidade="Unidade">Arroz Branco 5kg</option>
+                  <option value="2" data-preco="45.00" data-unidade="Litro">Óleo de Cozinha</option>
+                  <option value="3" data-preco="15.75" data-unidade="Kg">Açúcar Refinado</option>
+                  <option value="4" data-preco="35.20" data-unidade="Unidade">Farinha de Trigo 1kg</option>
+                  <option value="5" data-preco="12.50" data-unidade="Unidade">Sal Refinado 1kg</option>
+                  <option value="6" data-preco="8.90" data-unidade="Unidade">Macarrão 500g</option>
+                  <option value="7" data-preco="22.00" data-unidade="Unidade">Feijão Preto 1kg</option>
+                  <option value="8" data-preco="18.50" data-unidade="Unidade">Milho em Grão 1kg</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="itemQuantidade">Quantidade</label>
+                <input type="number" class="form-control" id="itemQuantidade" min="1" step="0.01" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="itemUnidade">Unidade</label>
+                <input type="text" class="form-control" id="itemUnidade" readonly>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="itemPreco">Preço Unitário (MT)</label>
+                <input type="number" class="form-control" id="itemPreco" step="0.01" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="itemTotal">Total (MT)</label>
+                <input type="text" class="form-control" id="itemTotal" readonly>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="itemObservacoes">Observações</label>
+            <textarea class="form-control" id="itemObservacoes" rows="2" placeholder="Observações específicas do item..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="confirmarItem()">
+          <i class="fas fa-plus"></i> Adicionar Item
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let itensEncomenda = [];
+let contadorItens = 0;
+
+$(document).ready(function() {
+  // Inicializar Select2
+  $('.select2').select2({
+    theme: 'bootstrap4',
+    width: '100%'
+  });
+  
+  // Definir data mínima para entrega (amanhã)
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  document.getElementById('dataPrevista').min = amanha.toISOString().split('T')[0];
+  
+  // Mostrar alerta se não há itens
+  verificarItensVazios();
+});
+
+// Adicionar item
+function adicionarItem() {
+  $('#modalAdicionarItem').modal('show');
+  limparFormularioItem();
+}
+
+// Quando selecionar artigo, preencher preço e unidade
+$('#itemArtigo').on('change', function() {
+  const option = $(this).find('option:selected');
+  const preco = option.data('preco') || 0;
+  const unidade = option.data('unidade') || '';
+  
+  $('#itemPreco').val(preco);
+  $('#itemUnidade').val(unidade);
+  calcularTotalItem();
+});
+
+// Calcular total do item quando quantidade ou preço mudar
+$('#itemQuantidade, #itemPreco').on('input', calcularTotalItem);
+
+function calcularTotalItem() {
+  const quantidade = parseFloat($('#itemQuantidade').val()) || 0;
+  const preco = parseFloat($('#itemPreco').val()) || 0;
+  const total = quantidade * preco;
+  
+  $('#itemTotal').val(total.toFixed(2));
+}
+
+// Confirmar adição do item
+function confirmarItem() {
+  const artigo = $('#itemArtigo option:selected');
+  const quantidade = parseFloat($('#itemQuantidade').val());
+  const preco = parseFloat($('#itemPreco').val());
+  
+  if (!artigo.val() || !quantidade || !preco) {
+    toastr.error('Preencha todos os campos obrigatórios!');
+    return;
+  }
+  
+  const item = {
+    id: ++contadorItens,
+    artigoId: artigo.val(),
+    artigoNome: artigo.text(),
+    quantidade: quantidade,
+    unidade: $('#itemUnidade').val(),
+    precoUnitario: preco,
+    total: quantidade * preco,
+    observacoes: $('#itemObservacoes').val()
+  };
+  
+  itensEncomenda.push(item);
+  adicionarLinhaTabela(item);
+  calcularTotais();
+  
+  $('#modalAdicionarItem').modal('hide');
+  toastr.success('Item adicionado com sucesso!');
+}
+
+// Adicionar linha na tabela
+function adicionarLinhaTabela(item) {
+  const linha = `
+    <tr data-item-id="${item.id}">
+      <td>${item.artigoNome}</td>
+      <td class="text-center">${item.quantidade}</td>
+      <td>${item.unidade}</td>
+      <td class="text-right">${item.precoUnitario.toLocaleString('pt-PT', {minimumFractionDigits: 2})} MT</td>
+      <td class="text-right">${item.total.toLocaleString('pt-PT', {minimumFractionDigits: 2})} MT</td>
+      <td>${item.observacoes || '-'}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-danger btn-sm" onclick="removerItem(${item.id})" title="Remover">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+  `;
+  
+  $('#itensEncomenda').append(linha);
+  verificarItensVazios();
+}
+
+// Remover item
+function removerItem(itemId) {
+  Swal.fire({
+    title: 'Remover Item?',
+    text: 'Esta ação não pode ser desfeita.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sim, remover!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Remover do array
+      itensEncomenda = itensEncomenda.filter(item => item.id !== itemId);
+      
+      // Remover da tabela
+      $(`tr[data-item-id="${itemId}"]`).remove();
+      
+      calcularTotais();
+      verificarItensVazios();
+      
+      toastr.success('Item removido com sucesso!');
+    }
+  });
+}
+
+// Calcular totais
+function calcularTotais() {
+  const subtotal = itensEncomenda.reduce((sum, item) => sum + item.total, 0);
+  const iva = subtotal * 0.17;
+  const total = subtotal + iva;
+  
+  $('#subtotal').text(subtotal.toLocaleString('pt-PT', {minimumFractionDigits: 2}) + ' MT');
+  $('#iva').text(iva.toLocaleString('pt-PT', {minimumFractionDigits: 2}) + ' MT');
+  $('#total').text(total.toLocaleString('pt-PT', {minimumFractionDigits: 2}) + ' MT');
+  $('#totalItens').text(itensEncomenda.length);
+}
+
+// Verificar se há itens
+function verificarItensVazios() {
+  if (itensEncomenda.length === 0) {
+    $('#alertaVazio').show();
+    $('#tabelaItens').hide();
+  } else {
+    $('#alertaVazio').hide();
+    $('#tabelaItens').show();
+  }
+}
+
+// Limpar formulário do item
+function limparFormularioItem() {
+  $('#formItem')[0].reset();
+  $('#itemArtigo').val('').trigger('change');
+  $('#itemTotal').val('');
+}
+
+// Salvar rascunho
+function salvarRascunho() {
+  toastr.info('Funcionalidade de rascunho será implementada em breve.');
+}
+
+// Submissão do formulário
+$('#formEncomenda').on('submit', function(e) {
+  e.preventDefault();
+  
+  if (itensEncomenda.length === 0) {
+    toastr.error('Adicione pelo menos um item à encomenda!');
+    return;
+  }
+  
+  // Aqui seria feita a submissão real
+  Swal.fire({
+    title: 'Criar Encomenda?',
+    text: 'Confirma a criação desta encomenda?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sim, criar!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Simular criação
+      Swal.fire('Criada!', 'A encomenda foi criada com sucesso.', 'success')
+        .then(() => {
+          window.location.href = '/estoque/encomendas';
+        });
+    }
+  });
+});
+</script>

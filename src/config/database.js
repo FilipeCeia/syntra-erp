@@ -2,128 +2,83 @@ const { Sequelize } = require('sequelize');
 
 console.log('🔧 Iniciando configuração do banco de dados...');
 
+// 🌐 Usa DATABASE_URL diretamente das variáveis de ambiente
+const DATABASE_URL = process.env.DATABASE_URL;
 
-const DB_CONFIG = {
-  username: '2pyeg9cr8kqguxl0xj3l', // <-- Atualizado
-  password: 'pscale_pw_gURPhTIOctDdZ9Y3BO0kFN6haN8wJHoiH2RIO44D8Qm', 
-  host: 'aws.connect.psdb.cloud',
-  database: 'syntra-erp',
-  port: 3306
-};
+if (!DATABASE_URL) {
+  console.error('❌ Erro: DATABASE_URL não está definida nas variáveis de ambiente!');
+  process.exit(1);
+}
 
-console.log('📋 Configurações do banco:');
-console.log(`   Host: ${DB_CONFIG.host}`);
-console.log(`   Database: ${DB_CONFIG.database}`);
-console.log(`   Username: ${DB_CONFIG.username}`);
-console.log(`   Port: ${DB_CONFIG.port}`);
-console.log(`   Password: ${DB_CONFIG.password.substring(0, 10)}...`);
+console.log('📋 Usando DATABASE_URL para conexão com o banco de dados.');
 
-// Criando conexão Sequelize
-const sequelize = new Sequelize(
-  DB_CONFIG.database,
-  DB_CONFIG.username,
-  DB_CONFIG.password,
-  {
-    host: DB_CONFIG.host,
-    port: DB_CONFIG.port,
-    dialect: 'mysql',
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      },
-      connectTimeout: 60000,
-      acquireTimeout: 60000,
-      timeout: 60000,
-    },
-    logging: (sql) => {
-      console.log('🔍 SQL Query:', sql.substring(0, 100) + '...');
-    },
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    },
-    define: {
-      timestamps: true,
-      underscored: false,
-      freezeTableName: true
-    },
-    retry: {
-      match: [
-        /ETIMEDOUT/,
-        /EHOSTUNREACH/,
-        /ECONNRESET/,
-        /ECONNREFUSED/,
-        /ESOCKETTIMEDOUT/,
-        /EPIPE/,
-        /EAI_AGAIN/,
-        /SequelizeConnectionError/,
-        /SequelizeConnectionRefusedError/,
-        /SequelizeHostNotFoundError/,
-        /SequelizeHostNotReachableError/,
-        /SequelizeInvalidConnectionError/,
-        /SequelizeConnectionTimedOutError/
-      ],
-      max: 3
+// ✅ Configuração do Sequelize usando a DATABASE_URL
+const sequelize = new Sequelize(DATABASE_URL, {
+  dialect: 'mysql',
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: true // Essencial para PlanetScale
     }
-  }
-);
+  },
+  logging: (sql) => {
+    console.log('🔍 SQL Query:', sql.substring(0, 100) + '...');
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  define: {
+    timestamps: true,
+    underscored: false,
+    freezeTableName: true
+  },
+  retry: {
+    match: [
+      /ETIMEDOUT/,
+      /EHOSTUNREACH/,
+      /ECONNRESET/,
+      /ECONNREFUSED/,
+      /ESOCKETTIMEDOUT/,
+      /SequelizeConnectionError/,
+      /SequelizeConnectionRefusedError/,
+      /SequelizeHostNotFoundError/,
+      /SequelizeHostNotReachableError/,
+      /SequelizeConnectionTimedOutError/
+    ],
+    max: 3
+  },
+  // ⚠️ Timeout de conexão (em ms)
+  connectTimeout: 60000
+});
 
 console.log('⚙️ Sequelize instanciado com sucesso');
 
-// Função para testar conexão com logs detalhados
+// 🔁 Função para testar a conexão (opcional em produção)
 async function testConnection() {
   console.log('🔄 Tentando conectar ao PlanetScale...');
-  
+
   try {
-    // Teste de autenticação
-    console.log('📡 Executando authenticate()...');
     await sequelize.authenticate();
-    
     console.log('✅ Conexão com PlanetScale estabelecida com sucesso!');
-    console.log('📊 Detalhes da conexão:');
-    console.log(`   ├── Host: ${DB_CONFIG.host}`);
-    console.log(`   ├── Database: ${DB_CONFIG.database}`);
-    console.log(`   ├── Dialect: mysql`);
-    console.log(`   ├── SSL: Ativo (require: true, rejectUnauthorized: false)`);
-    console.log(`   └── Pool: max=5, min=0`);
-    
-    // Teste de query simples
-    try {
-      console.log('🔍 Testando query simples...');
-      const [results] = await sequelize.query('SELECT 1 as test');
-      console.log('✅ Query teste executada:', results);
-    } catch (queryError) {
-      console.log('⚠️ Erro na query teste:', queryError.message);
-    }
-    
+
+    // Teste simples
+    const [results] = await sequelize.query('SELECT 1 + 1 AS result');
+    console.log('🔢 Query teste bem-sucedida:', results[0]);
+
   } catch (error) {
-    console.error('❌ ERRO na conexão com PlanetScale!');
-    console.error('📝 Detalhes do erro:');
-    console.error(`   ├── Tipo: ${error.constructor.name}`);
-    console.error(`   ├── Mensagem: ${error.message}`);
-    console.error(`   ├── Code: ${error.code || 'N/A'}`);
-    console.error(`   └── SQL State: ${error.sqlState || 'N/A'}`);
-    
-    if (error.original) {
-      console.error('🔍 Erro original:');
-      console.error(`   ├── Tipo: ${error.original.constructor.name}`);
-      console.error(`   ├── Mensagem: ${error.original.message}`);
-      console.error(`   └── Code: ${error.original.code || 'N/A'}`);
-    }
-    
-    // Sugestões de troubleshooting
-    console.error('🛠️ Possíveis soluções:');
-    console.error('   1. Verifique se as credenciais estão corretas');
-    console.error('   2. Verifique se o banco "syntra-erp" existe no PlanetScale');
-    console.error('   3. Verifique se a connection string está ativa');
-    console.error('   4. Verifique se há firewall bloqueando a conexão');
+    console.error('❌ FALHA NA CONEXÃO COM O BANCO DE DADOS!');
+    console.error('📝 Mensagem:', error.message);
+    console.error('🔍 Código:', error.original?.code || error.code);
+    console.error('🛠️ Dica: Verifique se a DATABASE_URL está correta e ativa no PlanetScale.');
+
+    // Interrompe o app se não conseguir conectar
+    process.exit(1);
   }
 }
 
-// Executar teste apenas se não for ambiente de teste
+// 🚀 Executa o teste de conexão apenas se não for ambiente de teste
 if (process.env.NODE_ENV !== 'test') {
   console.log('🚀 Ambiente:', process.env.NODE_ENV || 'development');
   testConnection();
@@ -131,13 +86,13 @@ if (process.env.NODE_ENV !== 'test') {
   console.log('🧪 Modo teste - conexão não será testada automaticamente');
 }
 
-// Event listeners para monitorar conexão (usando hooks do Sequelize)
+// 🔗 Hooks para monitorar conexões (opcional)
 sequelize.addHook('afterConnect', () => {
-  console.log('🔗 Nova conexão estabelecida');
+  console.log('🔗 Nova conexão ao banco estabelecida');
 });
 
 sequelize.addHook('beforeDisconnect', () => {
-  console.log('🔌 Conexão será desconectada');
+  console.log('🔌 Conexão será encerrada');
 });
 
 console.log('📦 Módulo database.js carregado com sucesso');

@@ -131,13 +131,13 @@ if (process.env.NODE_ENV !== 'test') {
   console.log('🧪 Modo teste - conexão não será testada automaticamente');
 }
 
-// Event listeners para monitorar conexão
-sequelize.connectionManager.on('connect', () => {
+// Event listeners para monitorar conexão (usando hooks do Sequelize)
+sequelize.addHook('afterConnect', () => {
   console.log('🔗 Nova conexão estabelecida');
 });
 
-sequelize.connectionManager.on('disconnect', () => {
-  console.log('🔌 Conexão desconectada');
+sequelize.addHook('beforeDisconnect', () => {
+  console.log('🔌 Conexão será desconectada');
 });
 
 console.log('📦 Módulo database.js carregado com sucesso');

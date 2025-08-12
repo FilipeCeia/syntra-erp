@@ -2,10 +2,10 @@ const { Sequelize } = require('sequelize');
 
 console.log('🔧 Iniciando configuração do banco de dados...');
 
-// Dados de conexão diretos (extraídos da sua URL)
+
 const DB_CONFIG = {
-  username: '5ka8560r5c3a0tdlmrvj',
-  password: 'pscale_pw_E9Vlz5kwLlx6LKm8VQwapaaf71S5Tt0sPlFs9l67ssd',
+  username: '2pyeg9cr8kqguxl0xj3l', // <-- Atualizado
+  password: 'pscale_pw_gURPhTIOctDdZ9Y3BO0kFN6haN8wJHoiH2RIO44D8Qm', 
   host: 'aws.connect.psdb.cloud',
   database: 'syntra-erp',
   port: 3306
